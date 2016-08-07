@@ -15,11 +15,11 @@ int main(){
     unsigned long i=0;
     GPFCON = GPF4_OUT|GPF5_OUT |GPF6_OUT;
     while(1){
-        wait(300000);
-        GPFDAT =  1<<i;
-        if(i++ > 8){
-            i=0;
+        GPFDAT =  (~(1<<i));
+        if(i++ > 6){
+            i=4;
         }
+        wait(90000);
     }
 
 }
