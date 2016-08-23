@@ -15,4 +15,4 @@ _start:
    ldr lr, =halt_loop
    ldr pc, =main
 halt_loop:
-   bl halt_loop
+   b halt_loop

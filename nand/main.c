@@ -8,7 +8,7 @@
 
 
 void wait (volatile unsigned long dly){
-    int i=0;
+    unsigned long i=0;
     for (i = 0; i < dly; ++i) {
 
     }
@@ -21,7 +21,7 @@ int main(void){
     gpfcon = gpf4_out | gpf5_out| gpf6_out;
     //fprintf(stderr,"hello!\n");
     while(1){
-        wait(10000);
+        wait(30000);
         gpfdat = (~(i<<4));
         if(++i ==8){
             i=0;

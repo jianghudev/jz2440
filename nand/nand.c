@@ -66,7 +66,7 @@ static    void nand_reset(void){
 static    void nand_idle(void){
     int i=0;
     volatile unsigned char * p= (volatile unsigned char *)&s3c2440Nand->nfstat;
-    while(*p & BUSY){
+    while(!(*p & BUSY)){
         for (i = 0; i < 10; ++i) {
 
         }
@@ -145,7 +145,7 @@ void nand_read(unsigned char*buf, unsigned long start_addr,int size){
     }
     nand_select_chip();
 
-    for (i = start_addr; i < (start_addr+size); ++i) {
+    for (i = start_addr; i < (start_addr+size); ) {
         write_cmd(0);
         write_addr(i);
 

@@ -30,7 +30,7 @@ void memsetup(){
         0x00000030,
         0x00000030,
     };
-    for (i = 0; i < 13; ++i) {
+    for (i = 0; i < 13; i++) {
         p[i]= mem_cfg_val[i];
     }
 }
