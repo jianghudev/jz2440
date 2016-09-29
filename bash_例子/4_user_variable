@@ -1,0 +1,8 @@
+#!/bin/bash
+day=10
+guest="peter"
+echo "$guest checked in $day days ago"
+day=5
+guest="david"
+echo "$guest checked in $day days ago"
+

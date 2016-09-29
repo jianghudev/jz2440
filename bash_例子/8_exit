@@ -1,0 +1,6 @@
+#!/bin/bash
+val1=10
+val2=30
+val3=$[val1*val2]
+echo val3=$val3
+exit $val3
