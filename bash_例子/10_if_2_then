@@ -1,0 +1,6 @@
+#!/bin/bash
+if make ;then
+    echo the secound way for ifthen
+else
+    echo test ifthenelse
+fi

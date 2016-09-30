@@ -1,0 +1,5 @@
+#!/bin/bash
+if date
+then
+    echo "it works"
+fi
