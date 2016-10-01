@@ -1,0 +1,9 @@
+#!/bin/bash
+val1=10
+val2=11
+if [ $val1 -ge $val2 ]
+then 
+    echo $val1 >= $val2
+else
+    echo "$val1 <= $val2"
+fi
