@@ -1,0 +1,22 @@
+#!/bin/bash
+val1=baseball
+val2=hockkey
+val3=Baseball
+
+
+if [ $val1 \> $val2 ]
+then
+        echo " $val1 is greater than $val2 "
+else
+        echo " $val1 is less than $val2 "
+fi
+
+
+
+
+if [ $val1 \> $val3 ]
+then
+        echo " $val1 is greater than $val3 "
+else
+        echo " $val1 is less than $val3 "
+fi

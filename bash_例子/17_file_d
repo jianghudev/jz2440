@@ -1,0 +1,9 @@
+#!/bin/bash
+if [ -d $HOME ]
+then 
+    echo " $HOME dir exists "
+    cd $HOME
+    ls -a
+else
+    echo "this is a error in you $HOME dir "
+fi

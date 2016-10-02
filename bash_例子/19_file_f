@@ -1,0 +1,16 @@
+#!/bin/bash
+
+if [ -e $HOME  ]
+then
+    echo " $HOME is exist ."
+    echo " is  $HOME/Display   a file ? "
+    if [ -f $HOME/Display ]
+    then
+        echo " $HOME/Display is  a file ."
+    else
+        echo " $HOME/Display is not  a file ! "
+    fi
+else
+    echo "sorry $HOME is not exist"
+
+fi

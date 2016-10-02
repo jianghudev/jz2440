@@ -1,0 +1,10 @@
+#!/bin/bash
+testuser=gpd830
+if [ $USER != $testuser ]
+then
+    echo "this is not $testuser"
+else
+    echo "welcome $testuser"
+fi
+
+

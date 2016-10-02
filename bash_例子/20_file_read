@@ -1,0 +1,16 @@
+#!/bin/bash
+
+pwfile=/etc/shadow
+
+if [ -f $pwfile ]
+then 
+    if [ -r $pwfile ]
+    then
+        tail $pwfile
+    else
+        echo " can not read $pwfile !  "
+    fi
+     
+else
+    echo " $pwfile is not exist! "
+fi

@@ -1,0 +1,16 @@
+#!/bin/bash
+
+if [ -e /tmp ]
+then
+    echo " /tmp exist "
+    if [ -e /tmp/jh_tmp ]
+    then 
+        echo "appending to /tmp/jh_tmp "
+        date >>  /tmp/jh_tmp
+    else
+        echo "creating new file  jh_tmp  "
+        date > /tmp/jh_tmp
+    fi
+else
+    echo " /tmp is error! "
+fi
