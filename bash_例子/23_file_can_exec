@@ -1,0 +1,15 @@
+#!/bin/bash
+
+file=22_file_write
+
+if [ -x $file ]
+then 
+    echo "you can run the $file script "
+    ./$file
+    chmod u-x $file
+else
+    echo "sorry can not exec the $file script"
+    chmod u+x $file
+fi
+
+

@@ -1,0 +1,17 @@
+#!/bin/bash
+
+case $USER in
+rich | barbaara)
+    echo "welcome . $USER "
+    echo "please enjoy your visit " ;;
+root)
+    echo "welcome . $USER, is it root ?? ";;
+testing)
+    echo "special testing account ";;
+jessica)
+    echo "do not forget to log off when you are done.";;
+jh)
+    echo "welcome $USER , is it jh ? ### ";;
+*)
+    echo "sorry you are not allowed here";;
+esac

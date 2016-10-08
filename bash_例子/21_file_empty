@@ -1,0 +1,20 @@
+#!/bin/bash
+
+
+file=/tmp/jh_1008_test_file
+touch $file
+if [ -s $file ]
+then 
+    echo " the $file exists and has data in it !"
+else
+    echo " the $file exists and is empty !"
+fi
+
+date > $file
+
+if [ -s $file ]
+then 
+    echo " 2 the $file has data in it !"
+else
+    echo "2 the $file exists and is empty !"
+fi

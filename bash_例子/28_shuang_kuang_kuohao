@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if [[ $USER == j* ]]
+then
+    echo "hello $USER "
+else
+    echo " sorry i do not know you ! "
+fi

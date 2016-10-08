@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if [ ./23_file_can_exec -nt ./24_file_owner ] 
+then
+    echo "the file23  is  new than  file24 "
+else
+    echo "the file23  is  old  than  file24 "
+fi

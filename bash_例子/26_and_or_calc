@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if [ -d /home/driver_d/ ] && [ -w /home/driver_d/jh_software ]
+then
+    echo " exists and /home/driver_d/jh_software is writtable !"
+else
+    echo " i can not write to dir /home/driver_d/jh_software "
+fi

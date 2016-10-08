@@ -1,0 +1,10 @@
+#!/bin/bash
+
+file=/etc/passwd
+
+if [ -O $file ]
+then
+    echo "you are the owner of the $file "
+else
+    echo "you are not the owner  $file  "
+fi

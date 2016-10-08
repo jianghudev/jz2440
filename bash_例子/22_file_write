@@ -1,0 +1,25 @@
+#!/bin/bash
+
+logfile=/tmp/jh_log_1008_file
+touch $logfile
+chmod u-w $logfile
+now=`date +%Y%m%d-%H%M`
+echo value now is = $now
+
+if [ -w $logfile ]
+then 
+    echo "the program ram at : $now "  > $logfile
+    echo "the first attempt successed"
+else
+    echo "the first attempt failed"
+fi
+
+chmod u+w $logfile
+
+if [ -w $logfile ]
+then 
+    echo "the program ram at : $now "  > $logfile
+    echo "the second attempt successed "
+else
+    echo "the second attempt failed!"
+fi
