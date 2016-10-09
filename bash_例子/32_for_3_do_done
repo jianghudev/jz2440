@@ -1,0 +1,9 @@
+#!/bin/bash
+
+list="beijing shanghai tianjin chongqing xian nanyang"
+list=$list" guilin liuzhou"
+
+for state in $list
+do
+    echo have you ever visited $state?
+done

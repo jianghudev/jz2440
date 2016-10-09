@@ -1,0 +1,7 @@
+#!/bin/bash
+for test in alabama alaska arizona arkansas california colorado
+do
+    echo the next state is $test
+done
+
+echo "the last state we visited was $test "

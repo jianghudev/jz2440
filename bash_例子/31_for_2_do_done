@@ -1,0 +1,6 @@
+#!/bin/bash
+
+for test in beijing "shang hai" "tian jin" xian "chong qing" "shen zhen"
+do
+    echo now going to $test
+done
