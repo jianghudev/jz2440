@@ -1,0 +1,23 @@
+#!/bin/bash
+
+file="/tmp/jh_1009_tmp_file"
+
+IFS_old=$IFS
+
+IFS=$'\n'
+
+
+for state in `cat $file`
+do
+    echo "1 visit beautiful $state "
+done
+
+
+
+IFS=$IFS_old
+
+for state in `cat $file`
+do
+    echo "2 visit beautiful $state "
+done
+

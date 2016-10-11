@@ -1,0 +1,14 @@
+#!/bin/bash
+
+for file in /home/driver_d/* /home/driver_d/bad_file
+do
+    if [ -d "$file" ]
+    then
+        echo "$file is dir"
+    elif [ -f "$file" ]
+    then
+        echo "$file is file "
+    else
+        echo "$file is not exists!  "
+    fi
+done

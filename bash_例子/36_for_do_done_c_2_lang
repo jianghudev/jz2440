@@ -1,0 +1,6 @@
+#!/bin/bash
+
+for (( a=1,b=10; a<20; a++, b++ ))
+do
+    echo $a-$b = $[$a-$b]
+done
