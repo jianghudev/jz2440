@@ -1,0 +1,10 @@
+#!/bin/bash
+
+for a in  1 2 3
+do
+    echo in $a loop
+    for b in 1 2 3
+    do
+        echo "   in $b loop"
+    done
+done
