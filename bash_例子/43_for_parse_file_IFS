@@ -1,0 +1,20 @@
+#!/bin/bash
+
+IFS_old=$IFS
+echo ifs_0=$IFS
+echo ifs_1=$IFS_old
+IFS=$"\n"
+
+for entry in `cat /etc/passwd`
+do
+    echo "values in  $entry - "
+    IFS=:
+    for value in $entry
+    do
+#        echo "      $value"
+        echo "      $entry"
+    done
+done
+
+IFS=$IFS_old
+echo ifs="$IFS"

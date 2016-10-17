@@ -1,0 +1,15 @@
+#!/bin/bash
+
+
+val=1
+
+while [ $val -lt 10 ]
+do
+    if [ $val -gt 5 ]
+    then
+        break
+    fi 
+    echo "iteration : $val "
+    val=$[val + 1 ]
+done
+echo "the while loop is completed! "

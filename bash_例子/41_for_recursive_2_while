@@ -1,0 +1,15 @@
+#!/bin/bash
+
+
+val1=5
+
+while [ $val1 -ge 0 ]
+do
+    echo "outer loop: $val1 "
+    for (( val2=1; val2<3; val2++ ))
+    do
+        val3=$[ val1*val2 ]    
+        echo "      inner loop: $val1 * $val2 =  $val3 "
+    done
+    val1=$[ val1 -1 ]
+done
