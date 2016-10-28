@@ -1,0 +1,14 @@
+#!/bin/bash
+
+val=0
+
+while echo "while iteration : $val"
+    [ $val -lt 15 ]
+do
+    if [ $val -gt 5 ]  && [ $val -lt 10 ]
+    then
+        continue
+    fi
+    echo "  inside iteration number:$val "
+    val=$[ val+1 ]
+done
