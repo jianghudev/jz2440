@@ -1,0 +1,14 @@
+#!/bin/bash
+
+for file in /home/jh/*
+do
+    if [ -d "$file" ]
+    then
+        echo "$file is a dir"
+    else
+        echo "$file is a file"
+    fi
+done > for_do_done_output.txt
+echo "  for do done finish!"
+
+
