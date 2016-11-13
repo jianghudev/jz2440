@@ -1,0 +1,17 @@
+#!/bin/bash
+
+function addarr {
+    local sum=0
+    local newarr=(`echo "$@"`)
+    for value in ${newarr[*]}
+    do
+        sum=$[$sum+$value]
+    done
+    echo $sum
+}
+
+myarray=(1 2 3 4 5)
+echo "the original array is : ${myarray[*]}"
+arg1=`echo ${myarray[*]}`
+result=`addarr $arg1`
+echo "the result is $result"

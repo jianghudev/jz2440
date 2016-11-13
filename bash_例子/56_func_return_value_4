@@ -1,0 +1,10 @@
+#!/bin/bash
+
+
+function db {
+    read -p "enter a value: " value
+    echo $[value*2]
+}
+
+result=`db`
+echo "the new value is $result"

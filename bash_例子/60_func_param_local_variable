@@ -1,0 +1,19 @@
+#!/bin/bash
+
+function fun {
+    local temp=$[ $value + 5 ]
+    local result=$[ $temp *2 ]
+}
+
+
+temp=4
+value=6
+
+fun
+echo "the result is $result"
+if [ $temp -gt $value ]
+then
+    echo "temp is $temp ,it bigger"
+else
+    echo "temp is $temp, it smaller"
+fi

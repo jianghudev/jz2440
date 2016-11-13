@@ -1,0 +1,10 @@
+#!/bin/bash
+
+mytest=(zero one two three four five)
+
+echo $mytest
+
+echo ${mytest[2]}
+
+
+echo ${mytest[*]}

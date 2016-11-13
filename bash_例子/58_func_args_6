@@ -1,0 +1,14 @@
+#!/bin/bash
+
+
+function fun7 {
+    echo $[$1*$2]
+}
+
+if [ $# -eq 2 ]
+then
+    value=`fun7 $1 $2 `
+    echo "the result is $value"
+else
+    echo "usage : 58_func_args_6 a b"
+fi
