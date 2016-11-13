@@ -1,0 +1,10 @@
+#!/bin/bash
+
+fun() {
+    ls -l badfile
+    echo "this is a bad cmd!"
+}
+
+echo "testing the funcion:"
+fun
+echo "the exit status is : $? "

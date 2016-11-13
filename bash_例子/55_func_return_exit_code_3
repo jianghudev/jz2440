@@ -1,0 +1,10 @@
+#!/bin/bash
+
+function db {
+    read -p "enter a value: " value
+    echo "doubling the value "
+    return $[value*2 ]
+    }
+
+db 
+echo "the new value is $? "
