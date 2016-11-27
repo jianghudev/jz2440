@@ -1,0 +1,5 @@
+line 1
+line 2
+line 3
+# gawk 'BEGIN{print "the 71_gawk_2 file contents:"} {print $0}' 71_gawk_2
+# gawk 'BEGIN{print "the 71_gawk_2 file contents:"} {print $0} END{print "end of file!"}' 71_gawk_2
