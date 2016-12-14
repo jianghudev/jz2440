@@ -186,8 +186,8 @@ public class ItemDetailFragment extends Fragment {
 
             mEpInStr = "";
             mEpInTV = (TextView) mActivity.findViewById(R.id.epInTv);
-            mEpInTV.setText("");
-            //mEpInTV.setMaxHeight(500);
+            //mEpInTV.setText("");
+            mEpInTV.setMaxHeight(100);
             //mEpInTV.setMovementMethod(new ScrollingMovementMethod());//会死机
             mEpInStart = (Button) mActivity.findViewById(R.id.epInStart);
             mEpInStop = (Button) mActivity.findViewById(R.id.epInStop);
@@ -253,8 +253,10 @@ public class ItemDetailFragment extends Fragment {
                 case MSG_UPDATE_EP_IN_DATA: {
                     if (mEpInPolling) {
                         String txt = Usb.readFromEndpoit(mUsbConnection, mEpIn, mShowInHex.isChecked());
+                        Log.d(MainActivity.TAG, "__jh__ read data is= " + txt + "\n");
                         if (txt != null) {
-                            mEpInStr += txt;
+                            //mEpInStr += txt;
+                            mEpInStr = txt;
                             mEpInTV.setText(mEpInStr);
                         }
                         mHandler.sendEmptyMessageDelayed(MSG_UPDATE_EP_IN_DATA, 200);
@@ -269,9 +271,23 @@ public class ItemDetailFragment extends Fragment {
                         int ret = 0;
                         if (mInOutHex.isChecked()) {
                             byte buf[] = HexString2Bytes(txt);
-                            ret = ret = Usb.sendToEndpoint(mUsbConnection, mEpOut, buf);
+                            ret = Usb.sendToEndpoint(mUsbConnection, mEpOut, buf);
                         } else {
-                            ret = Usb.sendToEndpoint(mUsbConnection, mEpOut, txt.getBytes());
+                            byte sendData[]= new byte[3];
+                            try {
+                                byte char0 =  (byte)txt.charAt(0);
+                                int char1 = Integer.parseInt(String.valueOf(txt.charAt(1)));
+                                int char2 = Integer.parseInt(String.valueOf(txt.charAt(2)));
+
+                                Log.d(MainActivity.TAG, "send str[012]= " + char0 +char1+char2+ "\n");
+                                sendData[0]=char0;
+                                sendData[1]=(byte)char1;
+                                sendData[2]=(byte)char2;
+                            } catch (NumberFormatException e) {
+                                e.printStackTrace();
+                            }
+
+                            ret = Usb.sendToEndpoint(mUsbConnection, mEpOut, sendData);
                         }
 
                         Toast.makeText(mActivity.getApplicationContext(), "Sent result is: " + ret, Toast.LENGTH_SHORT).show();
