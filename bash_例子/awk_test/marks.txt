@@ -1,0 +1,5 @@
+1)  amit    physics 80
+2)  rahul   maths   90
+3)  shyam   Boilogy 87
+4)  kedar   english 85
+5)  hari    history 89
