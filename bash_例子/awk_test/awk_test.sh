@@ -8,4 +8,7 @@
 
 
 # 2维数组的用法
-awk -f 2_direction_array_test.awk  emp.dat
+# awk -f 2_direction_array_test.awk  emp.dat
+
+# 2维数组的第2中用法
+gawk -f course_jh_2.awk register.dat

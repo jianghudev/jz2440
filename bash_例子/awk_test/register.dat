@@ -1,6 +1,6 @@
-mary    o.s.    arch.   discrete
-steve   d.s.    algorithm   arch.
-wang    discrete    graphics    o.s.
-lisa    graphics    a.i.
+mary    os    arch   discrete
+steve   ds    algorithm   arch
+wang    discrete    graphics    os
+lisa    graphics    ai
 lily    discrete    algorithm
 
