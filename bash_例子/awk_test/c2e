@@ -1,0 +1,30 @@
+awk '
+BEGIN{
+    while ( getline < ARGV[1]){
+        english[++n] =$1;
+        chinese[n]=$2;
+    }
+    ARGV[1]="-";
+    srand();
+    question();
+}
+
+{
+    if($1 != english[ind]){
+        print "try again!"
+    }else{
+        print "\n you are right! please enter to continue---"
+        getline;
+        question();
+    }
+}
+
+function question(){
+    ind =int(rand()*n)+1; 
+    system("clear");
+    printf ("ind=%d n=%d\n",ind,n);
+    print "press \"ctrl-d\" to exit  ";
+    printf("\n %s", chinese[ind]"的英文是： ");
+    }
+
+' $*

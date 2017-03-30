@@ -1,0 +1,8 @@
+#  ./see_arg first_arg second_arg
+awk '
+BEGIN{
+    for(i=0;i<ARGC;i++)
+        print ARGV[i];
+}
+
+' $*
