@@ -1,0 +1,68 @@
+From 28c464d54de41010bf93627fc2a03d7a724ab9bb Mon Sep 17 00:00:00 2001
+From: sylar <hubin_jiang@htc.com>
+Date: Thu, 13 Apr 2017 13:48:22 +0800
+Subject: [PATCH] =?UTF-8?q?=E2=80=9D=E6=B5=8B=E8=AF=95bash=E7=9A=84?=
+ =?UTF-8?q?=E5=87=BD=E6=95=B0=E7=94=A8=E6=B3=95=E2=80=9C?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ "bash_\344\276\213\345\255\220/date_format.sh"   |  5 +++++
+ "bash_\344\276\213\345\255\220/log_20170411.log" | 10 ++++++++++
+ "bash_\344\276\213\345\255\220/test_function.sh" | 14 ++++++++++++++
+ 3 files changed, 29 insertions(+)
+ create mode 100755 "bash_\344\276\213\345\255\220/date_format.sh"
+ create mode 100644 "bash_\344\276\213\345\255\220/log_20170411.log"
+ create mode 100755 "bash_\344\276\213\345\255\220/test_function.sh"
+
+diff --git "a/bash_\344\276\213\345\255\220/date_format.sh" "b/bash_\344\276\213\345\255\220/date_format.sh"
+new file mode 100755
+index 0000000..c11c6ca
+--- /dev/null
++++ "b/bash_\344\276\213\345\255\220/date_format.sh"
+@@ -0,0 +1,5 @@
++#!/bin/bash
++
++string=`date +%Y%m%d`
++
++ls /usr/local/ > log_${string}.log
+diff --git "a/bash_\344\276\213\345\255\220/log_20170411.log" "b/bash_\344\276\213\345\255\220/log_20170411.log"
+new file mode 100644
+index 0000000..88fa372
+--- /dev/null
++++ "b/bash_\344\276\213\345\255\220/log_20170411.log"
+@@ -0,0 +1,10 @@
++bin
++doc
++etc
++games
++include
++lib
++man
++sbin
++share
++src
+diff --git "a/bash_\344\276\213\345\255\220/test_function.sh" "b/bash_\344\276\213\345\255\220/test_function.sh"
+new file mode 100755
+index 0000000..40dd250
+--- /dev/null
++++ "b/bash_\344\276\213\345\255\220/test_function.sh"
+@@ -0,0 +1,14 @@
++#!/bin/bash
++
++function fun1 {
++    echo "this is a example! "
++}
++
++
++count=1
++while [ $count -le 5 ]
++do
++    fun1
++    echo "count=$count"
++    count=$[ count +1 ]
++done
+-- 
+2.11.0
+
