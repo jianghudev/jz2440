@@ -1,0 +1,3 @@
+AUTOMAKE_OPTIONS=foreign
+bin_PROGRAMS=hello_world
+hello_world_SOURCES=hello_world.c hello_world.h
