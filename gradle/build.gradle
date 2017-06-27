@@ -1,0 +1,91 @@
+task hello1 << {
+    println 'hello1' 
+}
+task hello2 << {
+    doLast{
+        println 'hello2' 
+    }
+}
+
+task hello3 << {
+    doFirst{
+        println 'hello3' 
+    }
+}
+
+task showtask << {
+    println tasks.class
+    println tasks.size()
+}
+
+
+//// gradle showtask
+
+
+tasks.create(name: 'hello4') << {
+    println 'hello4' 
+}
+
+///// gradle hello4
+
+
+task hello5(dependsOn: hello4) << {
+    println  "hello5"    
+}
+
+///// gradle hello5
+
+task hello6() << {
+    println  "hello6"    
+}
+hello6.dependsOn hello5
+
+
+
+
+task hello7() << {
+    description = "this is hello7"
+    println  description
+}
+
+///// gradle hello7
+
+task hello8() << {
+    println  description
+}
+hello8() {
+    description = "this is hello8"
+}
+
+///// gradle hello8
+
+
+task hello9() << {
+    println  description
+}
+hello9() {
+    description = "this is hello9"
+}
+
+///// gradle hello9
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

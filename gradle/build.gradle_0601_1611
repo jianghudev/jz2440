@@ -1,0 +1,20 @@
+task helloworld << {
+    println "hello world !"
+
+}
+
+task copyFile(type: Copy){
+    from 'xml'
+    into 'destination'
+}
+
+task taskB(){
+    //do thing 
+}
+
+task taskA(dependsOn: taskB){
+    //do thing 
+}
+
+
+
