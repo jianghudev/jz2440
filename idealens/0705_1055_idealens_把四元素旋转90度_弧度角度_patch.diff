@@ -1,0 +1,82 @@
+diff --git a/UsbDevice/HmdIdealens/src/main/java/com/htc/vr/UsbDevice/HmdIdealens/UsbReaderManager.java b/UsbDevice/HmdIdealens/src/main/java/com/htc/vr/UsbDevice/HmdIdealens/UsbReaderManager.java
+index 2960b23..8c2809f 100755
+--- a/UsbDevice/HmdIdealens/src/main/java/com/htc/vr/UsbDevice/HmdIdealens/UsbReaderManager.java
++++ b/UsbDevice/HmdIdealens/src/main/java/com/htc/vr/UsbDevice/HmdIdealens/UsbReaderManager.java
+@@ -80,6 +80,28 @@ public class UsbReaderManager {
+                     Log.d(TAG,"head_qt"+ "quaternion = (" + mUsbData.quatW + ", " + mUsbData.quatX + ", " + mUsbData.quatY + ", " + mUsbData.quatZ + ")");
+                 }
+ 
++
++
++				Vector  up_y = new Vector();
++				up_y.x=0.0f;
++				up_y.y=1.0f;
++				up_y.z=0.0f;
++				Quaternion rotation90 =jh_AngleAxis(90.0f,up_y);
++				Quaternion old_quat = new Quaternion();
++				old_quat.w = mUsbData.quatW;
++				old_quat.x = mUsbData.quatX;
++				old_quat.y = mUsbData.quatY;
++				old_quat.z = mUsbData.quatZ;
++				Quaternion new_quat=jh_Multiplication_QQ(old_quat,rotation90);
++				mUsbData.quatW = new_quat.w;
++				mUsbData.quatX = new_quat.x;
++				mUsbData.quatY = new_quat.y;
++				mUsbData.quatZ = new_quat.z;
++                if (isShowData && (count % INTERVAL == 0)) {
++                    Log.d(TAG,"head_qt_90"+ "quaternion = (" + mUsbData.quatW + ", " + mUsbData.quatX + ", " + mUsbData.quatY + ", " + mUsbData.quatZ + ")");
++                }
++
++
+ 				// ------------- Rotation: Quaternion to Euler ------------
+                 if (isShowData && (count % INTERVAL == 0)) {
+                     Quaternion quat = new Quaternion();
+@@ -253,4 +275,48 @@ public class UsbReaderManager {
+     //    if (isShowLog)
+     //        Log.d(TAG, msg);
+     //}
++
++
++
++
++
++double jh_Deg2Rad(double deg)
++{
++	return deg * (3.14159265 / 180);
++}
++
++Vector jh_Normalize(Vector vect)
++{
++	double magnitude = Math.sqrt(vect.x*vect.x + vect.y*vect.y + vect.z*vect.z);
++	vect.x = vect.x / magnitude;
++	vect.y = vect.y / magnitude;
++	vect.z = vect.z / magnitude;
++	return vect;
++}
++
++Quaternion jh_Multiplication_QQ(Quaternion lhs, Quaternion rhs)
++{
++	Quaternion result = new Quaternion();
++	result.w = lhs.w*rhs.w - lhs.x*rhs.x - lhs.y*rhs.y - lhs.z*rhs.z;
++	result.x = lhs.w*rhs.x + lhs.x*rhs.w + lhs.y*rhs.z - lhs.z*rhs.y;
++	result.y = lhs.w*rhs.y + lhs.y*rhs.w + lhs.z*rhs.x - lhs.x*rhs.z;
++	result.z = lhs.w*rhs.z + lhs.z*rhs.w + lhs.x*rhs.y - lhs.y*rhs.x;
++	return result;
++}
++
++Quaternion jh_AngleAxis(double angle, Vector axis)
++{
++	Quaternion rotation = new Quaternion();
++	Vector normal = jh_Normalize(axis);
++	rotation.x = normal.x*Math.sin(Deg2Rad(angle / 2));
++	rotation.y = normal.y*Math.sin(Deg2Rad(angle / 2));
++	rotation.z = normal.z*Math.sin(Deg2Rad(angle / 2));
++	rotation.w = Math.cos(Deg2Rad(angle / 2));
++
++	return rotation;
++}
++
++
++
++	
+ }
