@@ -1,13 +1,13 @@
 task hello1 << {
     println 'hello1' 
 }
-task hello2 << {
+task hello2 {
     doLast{
         println 'hello2' 
     }
 }
 
-task hello3 << {
+task hello3  {
     doFirst{
         println 'hello3' 
     }
@@ -69,19 +69,223 @@ hello9() {
 
 ///// gradle hello9
 
+task wrapper(type: Wrapper){
+    gradleVersion = '2.4'
+}
+
+task log1(){
+    logger.quiet('quiet message !');
+    logger.error('error message !');
+    logger.warn('warn message !');
+    logger.lifecycle('lifecycle message !');
+    logger.info('info message !');
+    logger.debug('debug message !');
+}
+
+
+task printStringVar << {
+    def name = 'jianghu'
+    println '单引号的结果为： ${name} ' ;
+    println "双引号的结果为： ${name} "
+}
+
+task printlist  <<{
+    def numlist = [1, 2,3,4,5,6]
+    println numlist.getClass().name
+    println numlist[1];
+    println numlist[-1];
+    println numlist[-2];
+    println numlist[1..4];
+    numlist.each{
+        println it
+    }
+}
+
+task printmap <<{
+    def map1 = ['width':1024, 'height':768]
+    println map1.getClass().name
+    println map1['width']
+    println map1.height
+
+    map1.each {
+        println "key=" + it.key +" value="+ it.value
+    }
+}
+
+task invokemethod << {
+    method1(1,2)
+    method1 1,2
+}
+def method1(int a, int b){
+    println a+b;
+}
+
+task print_return_value << {
+    def add1 = method2 1,2
+    def add2 = method2 5,3
+    println "add1="+add1 + " add2="+add2
+}
+def method2(int a,int b){
+    if(a>b){
+        a
+    }else{
+        b
+    }
+}
+
+task hello_closure << {
+    custom_each {
+        println it
+    }
+}
+def custom_each(Closure c){
+    for(int i in 1..12){
+       // closure(i)
+       c(i)
+    }
+}
+
+task hello_2_args_closure <<{
+    eachmap {
+        k,v -> println "key=" + k + " value="+ v
+    }
+}
+def eachmap(closure){
+    def map1 = [name:'jianghu',age:34]
+    map1.each{
+        closure(it.key,it.value)
+    }
+
+}
+
+task hello_delegate << {
+    new Delegate().test{
+        println "thisObject= "+ thisObject.getClass();
+        println "owner= "+ owner.getClass();
+        println "delegate= "+ delegate.getClass();
+        delegate_method1()
+        it.delegate_method1()
+
+    }
+}
+def delegate_method1(){
+    println "context this:"+ this.getClass() + " in root"
+    println "method1 in root"
+}
+
+class Delegate{
+    def delegate_method1(){
+        println "delegate this:"+ this.getClass() + " in delegate"
+        println "method1 in delegate"
+    }
+    def test(Closure<Delegate> closure){
+        closure(this)
+    }
+}
+
+
+
+class enclosing{
+    void run(){
+        def thisObject_1 = {
+            getThisObject()
+        }
+        println thisObject_1()
+    }
+}
+task print_enclosing <<{
+    new enclosing().run()
+}
 
 
 
 
 
+class myOwner{
+    String name;
+    def p= new person(name:'Lisi')
+    def t= new thing(name:'Phone')
+    def upperCaseName = {delegate.name.toUpperCase() }
+
+    void run(){
+        upperCaseName.delegate= p
+        println upperCaseName()
+        upperCaseName.delegate= t
+        println upperCaseName()
+    }
+    class person{
+        String name;
+    }
+
+    class thing{
+        String name;
+    }
+}
+
+task hello_delegate_owner_first << {
+    new myOwner().run()
+}
+
+class owner_first_delegate_first{
+    class person{
+        String name
+        int age
+        def fetch_age = {age}
+    }
+    class thing{
+        String name
+    }
+    void run(){
+        def p= new person(name:'lisi',age:20)
+        def t= new thing(name:'book')
+        def cl=p.fetch_age;
+        cl.delegate=p;
+        println cl()
+        cl.delegate=t;
+        println cl()
+        cl.resolveStrategy = Closure.DELEGATE_ONLY
+        cl.delegate=p;
+        println cl()
+        cl.delegate=t;
+        try{
+            cl()
+            assert false
+        }catch(Exception e){
+            println "age is not defined"
+        }
+        
+    }
+}
+
+task hello_owner_first_delegate_first << {
+    new owner_first_delegate_first().run()
+}
 
 
+task config_closure << {
+    person {
+        name = 'lisi'
+        age = 20
+        dump_person()
+    }
+}
 
-
-
-
-
-
+class myPerson{
+    String name
+    int age
+    def dump_person(){
+        println "name="+ name + " age="+ age;
+    }
+}
+def person(closure){
+    //myPerson my_p = new myPerson();
+    def my_p = new myPerson();
+    int aa = 3;
+    closure.delegate =my_p;
+    closure.setResolveStrategy(Closure.DELEGATE_FIRST)
+    closure(my_p);
+    //closure();
+}
 
 
 
