@@ -1,3 +1,11 @@
+subprojects{
+    repositories{
+        jcenter()
+    }
+}
+
+
+
 task hello1 << {
     println 'hello1' 
 }
@@ -289,6 +297,131 @@ def person(closure){
 
 
 
+/*************************************************************************/
+task simple_task1{
+    doFirst{
+        println simple_task1.name+" doFirst"
+    }
+    doLast{
+        println simple_task1.name+" doLast"
+    }
+}
+
+tasks.create('simple_task2'){
+    doFirst{
+        println simple_task2.name+" doFirst"
+    }
+    doLast{
+        println simple_task2.name+" doLast"
+    }
+}
+
+
+task ex35hello << {
+    println ex35hello.name+ " haha"
+}
+task ex35world << {
+    println ex35world.name+ " haha"
+}
+task ex35main(){
+    dependsOn ex35hello, ex35world
+    doLast{
+        println ex35main.name + " end"
+    }
+}
+
+ex35hello.doFirst{
+    println "ex35hello"+ " dofirst"
+}
+ex35hello.doLast{
+    println project.hasProperty('ex35hello')
+    println "ex35hello"+ "doLast"
+}
+
+ext.ext_age =18
+ext {
+    ext_phone = 222221;
+    ext_address = 'shanghai'
+}
+
+apply plugin: 'java'
+
+sourceSets.all {
+    ext.resourceDir =null;
+}
+sourceSets{
+    main{
+        resourceDir = 'main/res'
+    }
+    test{
+        resourceDir = 'test/res'
+    }
+}
+
+task ext_prop << {
+    println "age="+ ext_age
+    println "phone="+ ext_phone
+    println "address="+ ext_address
+    sourceSets.each{
+        println it.name + "的resourceDir是 "+ it.resourceDir
+    }
+// ext_prop.type   ext_prop.overwrite ext_prop.action
+    println "" + ext_prop.group    + ext_prop.dependsOn +  ext_prop.description ;
+}
+
+
+task my42accessTask << {
+    println my42accessTask.name + " main process"
+}
+
+tasks['my42accessTask'].doLast{
+    println my42accessTask.name + " dolast"
+    println tasks.findByPath('ext_prop');
+    println tasks.getByPath('my42accessTask');
+    println tasks.findByPath('xxxxxxxxxxx');
+
+    println tasks.findByName('ext_prop');
+    println tasks.getByName('my42accessTask');
+    println tasks.findByName('xxxxxxxxxxx');
+}
+
+def Task jh_task_group_desc = task(jh_task_group_desc)
+jh_task_group_desc.group = BasePlugin.BUILD_GROUP
+jh_task_group_desc.description = '这是1个构建的引导任务'
+jh_task_group_desc.doLast {
+    println "group:" + group +" description: "+ description
+}
+
+
+
+task jh_group_desc_2   {
+    group = BasePlugin.BUILD_GROUP
+    description = "这是另外1个任务"
+    doLast{
+        println "group:" + group +" description: "+ description
+    }
+}
+
+jh_group_desc_2.doLast{
+    println 'doLast func'
+}
+
+
+task first_self_last(type:my_class_action) {
+    doFirst{
+        println 'exec do first!'
+    }
+    doLast{
+        println 'exec do last!'
+    }
+}
+
+class my_class_action extends DefaultTask {
+    @TaskAction
+    def doSelf(){
+        println 'exec do self!'
+    }
+}
 
 
 
