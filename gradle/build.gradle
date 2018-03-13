@@ -423,6 +423,47 @@ class my_class_action extends DefaultTask {
     }
 }
 
+task my_order1 << {
+    println "name: "+ my_order1.name
+}
+task my_order2 << {
+    println "name: "+ my_order2.name
+}
+my_order1.mustRunAfter(my_order2)
+
+my_order1.enabled = false
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

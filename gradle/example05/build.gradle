@@ -1,0 +1,28 @@
+
+
+buildscript{
+    dependencies{
+        classpath files('libs/example04.jar')
+    }
+}
+
+apply plugin: 'jh.plugin'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

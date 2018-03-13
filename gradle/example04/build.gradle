@@ -1,0 +1,59 @@
+
+
+
+
+apply plugin: 'groovy'
+repositories{
+    mavenCentral()
+}
+
+dependencies{
+    compile 'org.codehaus.groovy:groovy-all:2.4.5'
+    testCompile 'junit:junit:4.12'
+}
+
+apply plugin:my_local_plugin 
+
+class my_local_plugin implements Plugin<Project> {
+    void apply(Project p){
+        p.task('my_plugin_task') << {
+            println "我们自定义的插件 创建的1个任务 "
+        }
+    }
+}
+
+class my_4_example06 {
+    void run(){
+        println 'name='+my_4_example06.getName()+" run!"
+    }
+}
+
+
+
+apply plugin: 'groovy'
+
+dependencies{
+    compile gradleApi()
+    compile localGroovy()
+}
+
+
+buildscript {
+    dependencies{
+        classpath files('build/libs/example04.jar')
+    }
+}
+apply plugin: 'jh.plugin'
+
+
+
+
+
+
+
+
+
+
+
+
+

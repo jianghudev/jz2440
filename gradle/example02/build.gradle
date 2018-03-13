@@ -1,0 +1,122 @@
+
+final String BUILD_ALL = 'all'
+final String BUILD_SHOUFA = 'shoufa'
+final String BUILD_EXCLUDE_SHOUFA = 'exclude_shoufa'
+
+task qq_release << {
+    println "打qq的包"
+}
+task baidu_release << {
+    println "打baidu的包"
+}
+task huawei_release << {
+    println "打huawei的包"
+}
+task xiaomi_release << {
+    println "打xiaomi的包"
+}
+task my_build {
+    group = BasePlugin.BUILD_GROUP
+    description = "打渠道包"
+    dependsOn qq_release ,baidu_release ,huawei_release ,xiaomi_release
+}
+
+qq_release.onlyIf{
+    def execute = false
+    if(project.hasProperty('build_app')){
+        def build_app = project.property('build_app')
+        if(BUILD_SHOUFA.equals(build_app)|| BUILD_ALL.equals(build_app)){
+            execute = true;
+        }else{
+            execute = false;
+        }
+    }else{
+            execute = true;
+    }
+    execute
+}
+baidu_release.onlyIf{
+    def execute = false
+    if(project.hasProperty('build_app')){
+        def build_app = project.property('build_app')
+        if(BUILD_SHOUFA.equals(build_app)|| BUILD_ALL.equals(build_app)){
+            execute = true;
+        }else{
+            execute = false;
+        }
+    }else{
+            execute = true;
+    }
+    execute
+}
+huawei_release.onlyIf{
+    def execute = false
+    if(project.hasProperty('build_app')){
+        def build_app = project.property('build_app')
+        if(BUILD_EXCLUDE_SHOUFA.equals(build_app)|| BUILD_ALL.equals(build_app)){
+            execute = true;
+        }else{
+            execute = false;
+        }
+    }else{
+            execute = true;
+    }
+    execute
+}
+xiaomi_release.onlyIf{
+    def execute = false
+    if(project.hasProperty('build_app')){
+        def build_app = project.property('build_app')
+        if(BUILD_EXCLUDE_SHOUFA.equals(build_app)|| BUILD_ALL.equals(build_app)){
+            execute = true;
+        }else{
+            execute = false;
+        }
+    }else{
+            execute = true;
+    }
+    execute
+}
+
+/*
+tasks.addRule("对该规则的1个描述，便于调试 查看等"){ String taskname ->
+    task(taskname) << {
+        println "this task:" + taskname + " is not exist, please check!"
+    }
+}
+*/
+task task_rule {
+//    dependsOn no_exist_jh_task
+}
+
+apply plugin: 'java'
+apply from: 'version.gralde'
+
+apply {
+    plugin 'java'
+}
+
+task script_plugin_task << {
+    println "version name=" + version_name +" code=" + version_code
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,29 @@
+apply plugin: 'java'
+
+
+sourceSets {
+    vip{
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

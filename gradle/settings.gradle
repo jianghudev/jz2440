@@ -4,4 +4,26 @@ include ':example02'
 project(':example02').projectDir = new File(rootDir,'example02')
 
 
+//include ':example03'
+//project(':example03').projectDir = new File(rootDir,'example03')
+
+
+include ':example04'
+project(':example04').projectDir = new File(rootDir,'example04')
+
+
+
+
+include ':example05'
+project(':example05').projectDir = new File(rootDir,'example05')
+
+
+include ':example06'
+project(':example06').projectDir = new File(rootDir,'example06')
+
+
+
+include ':example07'
+project(':example07').projectDir = new File(rootDir,'example07')
+
 

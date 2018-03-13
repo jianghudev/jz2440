@@ -1,0 +1,39 @@
+
+task android_task1 << {
+    println "name=" + android_task1.name 
+}
+
+
+buildscript{
+    repositories{
+        jcenter()
+    }
+    dependencies{
+        classpath 'com.android.tools.build:gradle:1.5.0'
+    }
+}
+
+apply plugin: 'com.android.application'
+
+android {
+    buildToolsVersion = '19.0.1'
+    compileSdkVersion = 19
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
