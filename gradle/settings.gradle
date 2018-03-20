@@ -26,4 +26,26 @@ project(':example06').projectDir = new File(rootDir,'example06')
 include ':example07'
 project(':example07').projectDir = new File(rootDir,'example07')
 
+include ':example08'
+project(':example08').projectDir = new File(rootDir,'example08')
+
+
+include ':example09'
+project(':example09').projectDir = new File(rootDir,'example09')
+
+
+include ':example11'
+project(':example11').projectDir = new File(rootDir,'example11')
+
+
+include ":example12"
+project(":example12").projectDir = new File(rootDir, "example12")
+
+
+include ":example13"
+project(":example13").projectDir = new File (rootDir,"example13")
+
+
+include ':example14'
+project(":example14").projectDir = new File (rootDir ,'example14')
 
