@@ -1,0 +1,65 @@
+buildscript{
+    repositories{
+        google()
+        jcenter()
+    }
+    dependencies{
+        classpath 'com.android.tools.build:gradle:3.0.1'
+    }
+}
+
+apply plugin: 'com.android.application'
+android{
+    compileSdkVersion 23
+
+    useLibrary 'org.apache.http.legacy'
+
+    defaultConfig{
+        applicationId 'org.flysnow.app.example92'
+        minSdkVersion 14
+        targetSdkVersion 23
+        versionCode 1
+        versionName '1.0.0'
+
+        flavorDimensions 'kehu'
+    }
+    buildTypes{
+        release{
+            minifyEnabled false
+            zipAlignEnabled true
+        }
+    }
+    productFlavors {
+        _htc_flavor{
+            dimension 'kehu'
+        }
+        my_flavor{
+            dimension 'kehu'
+        }
+    }
+
+    applicationVariants.all { var->
+        var.outputs.all{op->
+            if(op.outputFile!=null && op.outputFile.name.endsWith('.apk') && 'release'.equals(var.buildType.name) ){
+                    def flavor_name= var.flavorName.startsWith('_')? var.flavorName.substring(1):var.flavorName
+                    //def apkfile = new File(op.outputFile.getParent(),project.name+'_'+flavor_name+"_v"+var.versionName+'_'+buildTime()+'.apk')
+                    //op.outputFile = apkfile
+                    def apkfile = project.name+'_'+flavor_name+"_v"+var.versionName+'_'+buildTime()+'.apk'
+                    outputFileName = apkfile
+                }
+        }
+    }
+}
+
+def buildTime(){
+    def date = new Date()
+    def fmt_d = date.format('yyyyMMdd')
+    return fmt_d
+}
+
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
+}
+

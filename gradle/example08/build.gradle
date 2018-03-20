@@ -1,0 +1,49 @@
+apply plugin : 'java'
+
+
+task sourceSets_task_jh << {
+    sourceSets.all{
+        println name
+    }
+}
+
+
+
+subprojects {
+    apply plugin 'java'
+    resositories {
+        mavenCentral()
+    }
+    dependencies{
+        testCompile 'junit:junit:4.12'
+    }
+
+}
+
+
+
+task publishJar(type : Jar)
+
+group 'example08'
+version '1.0.0'
+
+
+artifacts {
+    archives publishJar
+}
+
+uploadArchives {
+    repositories{
+        flatDir {
+            name 'libs'
+            dirs "$projectDir/libs"
+        }
+        mavenLocal()
+    }
+}
+
+
+apply plugin: 'idea'
+apply plugin: 'eclipse'
+
+
