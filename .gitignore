@@ -3,3 +3,4 @@
 /gradle/.gradle/*
 /gradle/example16/build/*
 /grpc/*
+gradle/build/*
