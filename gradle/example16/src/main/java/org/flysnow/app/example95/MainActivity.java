@@ -18,7 +18,12 @@ public class MainActivity extends Activity {
             resultBuild.append(name);
             resultBuild.append("\n");
         }
+        resultBuild.append(BuildConfig.jh_release1);
+        resultBuild.append("\n");
+        String tmp_s = getResources().getString(R.string.res_value);
+        resultBuild.append(tmp_s);
         ((TextView)findViewById(android.R.id.text1)).setText(resultBuild);
+
     }
 
 }

@@ -19,24 +19,50 @@ android{
         versionName '1.0.0'
         flavorDimensions 'client'
     }
+    signingConfigs{
+        def sfile = '/home/jh/.android/debug.keystore'
+        def spassword = 'android'
+        def kalias = 'androiddebugkey'
+        def kpassword = 'android'
+        jh_debug {
+            storeFile file(sfile)
+            storePassword spassword
+            keyAlias kalias
+            keyPassword kpassword
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             zipAlignEnabled true
+            buildConfigField 'String','jh_release1','"it is released by jh1"'
+            buildConfigField 'int','jh_num1','1'
+            resValue 'string','res_value','res value release 欢迎!'
+            signingConfig signingConfigs.jh_debug
+        }
+        debug {
+            buildConfigField 'String','jh_release1','"it is debug by jh1"'
+            buildConfigField 'int','jh_num1','111'
+            resValue 'string','res_value','res value debug 欢迎!'
         }
     }
     productFlavors{
         google{
             dimension 'client'
+            buildConfigField 'String','jh_release2','"it is released by jh2"'
+            buildConfigField 'int','jh_num2','2'
         }
         baidu{
             dimension 'client'
+            buildConfigField 'String','jh_release3','"it is released by jh3"'
+            buildConfigField 'int','jh_num3','3'
         }
     }
     productFlavors.all {fl->
         manifestPlaceholders.put('client_channel',name)
     }
+
 }
 dependencies{
     compile fileTree(dir: 'libs', include: ['*.jar'])
