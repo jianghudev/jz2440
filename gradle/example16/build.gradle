@@ -18,6 +18,7 @@ android{
         versionCode 1
         versionName '1.0.0'
         flavorDimensions 'client'
+        resConfigs 'zh','en'
     }
     signingConfigs{
         def sfile = '/home/jh/.android/debug.keystore'
@@ -33,13 +34,14 @@ android{
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             zipAlignEnabled true
             buildConfigField 'String','jh_release1','"it is released by jh1"'
             buildConfigField 'int','jh_num1','1'
             resValue 'string','res_value','res value release 欢迎!'
             signingConfig signingConfigs.jh_debug
+            shrinkResources true
         }
         debug {
             buildConfigField 'String','jh_release1','"it is debug by jh1"'
@@ -61,6 +63,15 @@ android{
     }
     productFlavors.all {fl->
         manifestPlaceholders.put('client_channel',name)
+    }
+    adbOptions {
+        timeOutInMs = 5*1000 //秒
+        installOptions '-r'
+    }
+    compileOptions{
+        encoding = 'utf-8'
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
 
 }
