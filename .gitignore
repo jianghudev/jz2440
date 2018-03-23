@@ -1,2 +1,5 @@
 *.o
 /gradle/build/*
+/gradle/.gradle/*
+/gradle/example16/build/*
+/grpc/*
