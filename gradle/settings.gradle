@@ -55,3 +55,6 @@ project(':example15').projectDir = new File (rootDir,'example15')
 include ':example16'
 project(':example16').projectDir = new File(rootDir,"example16")
 
+
+include ':example17'
+project(':example17').projectDir = new File(rootDir,'example17')
