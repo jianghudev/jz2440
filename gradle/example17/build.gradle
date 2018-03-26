@@ -13,16 +13,17 @@ buildscript {
 
 apply plugin: 'com.android.application'
 
+
 android {
 
     compileSdkVersion 23
 
-    sourceSets{
-        main{
-            jni.srcDirs = [] //disable automatic ndk-build call
-            jniLibs.srcDirs = ['src/main/jniLibs']  // 设置目标so的存放路径
-        }
-    }
+//    sourceSets{
+//        main{
+//            jni.srcDirs = [] //disable automatic ndk-build call
+//            jniLibs.srcDirs = ['src/main/jniLibs']  // 设置目标so的存放路径
+//        }
+//    }
     defaultConfig {
         applicationId "org.flysnow.app.example131"
         minSdkVersion 14
@@ -30,9 +31,21 @@ android {
         versionCode 1
         versionName '1.0.0'
 
-        ndk {
-            moduleName 'jh_hello'
-            abiFilter 'armeabi-v7a'
+        externalNativeBuild{// 使用cmake工具
+            cmake{
+                cppFlags ''
+                abiFilters 'arm64-v8a', 'armeabi', 'armeabi-v7a', 'x86', 'x86_64' //生成多个版本的so文件
+                //abiFilters  'armeabi'
+            }
+        }
+//        ndk {
+//            moduleName 'jh_hello'
+//            abiFilter 'armeabi-v7a'
+//        }
+    }
+    externalNativeBuild{ // 配置CMakeLists.txt的路径
+        cmake {
+            path 'CMakeLists.txt' // 设置所要编写的c源码位置，以及编译后so文件的名字
         }
     }
     buildTypes {
