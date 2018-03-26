@@ -18,12 +18,12 @@ android {
 
     compileSdkVersion 23
 
-//    sourceSets{
-//        main{
-//            jni.srcDirs = [] //disable automatic ndk-build call
-//            jniLibs.srcDirs = ['src/main/jniLibs']  // 设置目标so的存放路径
-//        }
-//    }
+    sourceSets{
+        main{
+            jni.srcDirs = [] //disable automatic ndk-build call
+    //        jniLibs.srcDirs = ['src/main/jniLibs']  // 设置目标so的存放路径
+        }
+    }
     defaultConfig {
         applicationId "org.flysnow.app.example131"
         minSdkVersion 14
@@ -31,23 +31,23 @@ android {
         versionCode 1
         versionName '1.0.0'
 
-        externalNativeBuild{// 使用cmake工具
-            cmake{
-                cppFlags ''
-                abiFilters 'arm64-v8a', 'armeabi', 'armeabi-v7a', 'x86', 'x86_64' //生成多个版本的so文件
-                //abiFilters  'armeabi'
-            }
-        }
+//        externalNativeBuild{// 使用cmake工具
+//            cmake{
+//                cppFlags ''
+//                abiFilters 'arm64-v8a', 'armeabi', 'armeabi-v7a', 'x86', 'x86_64' //生成多个版本的so文件
+//                //abiFilters  'armeabi'
+//            }
+//        }
 //        ndk {
 //            moduleName 'jh_hello'
 //            abiFilter 'armeabi-v7a'
 //        }
     }
-    externalNativeBuild{ // 配置CMakeLists.txt的路径
-        cmake {
-            path 'CMakeLists.txt' // 设置所要编写的c源码位置，以及编译后so文件的名字
-        }
-    }
+//    externalNativeBuild{ // 配置CMakeLists.txt的路径
+//        cmake {
+//            path 'CMakeLists.txt' // 设置所要编写的c源码位置，以及编译后so文件的名字
+//        }
+//    }
     buildTypes {
         release {
             minifyEnabled true
@@ -55,7 +55,61 @@ android {
             zipAlignEnabled true
         }
     }
+
+    tasks.withType(JavaCompile) {
+        //compileTask -> compileTask.dependsOn 'ndkBuild','copyThirdso', 'copyJniLibs'
+        compileTask -> compileTask.dependsOn 'ndkBuild','copyJniLibs'
+    }
 }
+
+
+//task ndkBuild(type: Exec) {//设置新的so的生成目录
+////    def ndkBuildingDir = project.plugins.findPlugin('com.android.application').sdkHandler.getNdkFolder().absolutePath ;
+//    def ndkBuildingDir = project.android.ndkDirectory;
+//    commandLine ndkBuildingDir + "/ndk-build", 
+//        '-C', 'src/main/jni', 
+//        "NDK_OUT=$buildDir/intermediates/ndk/obj", 
+//        "NDK_APP_DST_DIR=$buildDir/intermediates/ndk/libs/\$(TARGET_ARCH_ABI)"
+//}
+
+task ndkBuild(type: Exec) {//设置新的so的生成目录
+//    def ndkBuildingDir = project.plugins.findPlugin('com.android.application').sdkHandler.getNdkFolder().absolutePath ;
+    def ndk_dir = project.android.ndkDirectory;
+        commandLine "$ndk_dir/ndk-build",
+                '-C', file('src/main/jni').absolutePath, // Change src/main/jni the relative path to your jni source
+                '-j', Runtime.runtime.availableProcessors(),
+                'all',
+                "NDK_OUT=$buildDir/intermediates/ndk/obj", 
+                "NDK_APP_DST_DIR=$buildDir/intermediates/ndk/libs/\$(TARGET_ARCH_ABI)",
+                'NDK_DEBUG=1'
+}
+
+//task copyJniLibs(type: Copy) {//将新生成的so拷贝到jniLibs目录
+//
+//    def lib_path =buildDir.absolutePath + '/intermediates/ndk/libs';
+//    println "jh copyJniLibs "+lib_path
+//    from fileTree(dir: file(lib_path), include: '**/*.so')
+//    into file('src/main/jniLibs')
+//}
+task copyJniLibs(type:Copy) {//将新生成的so拷贝到jniLibs目录
+
+    //include "**/*.so"
+    def lib_path =buildDir.absolutePath + '/intermediates/ndk/libs';
+    println "jh copyJniLibs "+lib_path
+    from '/home/jh/jh_work/jz2440/gradle/example17/build/intermediates/ndk/libs/'
+    into 'src/main/jni_libs/'
+}
+
+//task copyThirdso(type: Copy) {//将第三方的so拷贝到jniLibs目录
+//    from file('src/main/jni/vvw/libs')
+//    into file('src/main/jniLibs')
+//}
+
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:23.1.1'
+    compile 'com.android.support:design:23.1.1'
 }
+
