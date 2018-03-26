@@ -92,7 +92,7 @@ task ndkBuild(type: Exec) {//设置新的so的生成目录
 //    into file('src/main/jniLibs')
 //}
 task copyJniLibs(type:Copy) {//将新生成的so拷贝到jniLibs目录
-
+    dependsOn ndkBuild      ////这个任务必须在ndkBuild之后执行，不然什么都copy不了，因为还没生成呢
     def lib_path =buildDir.absolutePath + '/intermediates/ndk/libs';
     println "jh copyJniLibs "+lib_path
     from '/home/jh/jh_work/jz2440/gradle/example17/build/intermediates/ndk/libs/'
