@@ -21,7 +21,7 @@ android {
     sourceSets{
         main{
             jni.srcDirs = [] //disable automatic ndk-build call
-    //        jniLibs.srcDirs = ['src/main/jniLibs']  // 设置目标so的存放路径
+            jniLibs.srcDirs = ['src/main/jni_libs']  // 设置目标so的存放路径
         }
     }
     defaultConfig {
