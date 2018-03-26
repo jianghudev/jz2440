@@ -93,11 +93,11 @@ task ndkBuild(type: Exec) {//设置新的so的生成目录
 //}
 task copyJniLibs(type:Copy) {//将新生成的so拷贝到jniLibs目录
 
-    //include "**/*.so"
     def lib_path =buildDir.absolutePath + '/intermediates/ndk/libs';
     println "jh copyJniLibs "+lib_path
     from '/home/jh/jh_work/jz2440/gradle/example17/build/intermediates/ndk/libs/'
     into 'src/main/jni_libs/'
+    include "**/*.so"
 }
 
 //task copyThirdso(type: Copy) {//将第三方的so拷贝到jniLibs目录
