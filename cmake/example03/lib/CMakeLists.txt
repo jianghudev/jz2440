@@ -15,7 +15,7 @@ set_target_properties(hello_static PROPERTIES LCEAN_DIRECT_OUTPUT 1)
 
 set_target_properties(hello PROPERTIES VERSION 1.2 SOVERSION 1)
 
-install(FILES hello.h DESTINATION include)
+install(FILES hello.h DESTINATION include/hello)
 
 install(TARGETS hello hello_static LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
 
