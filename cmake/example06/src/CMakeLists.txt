@@ -3,7 +3,7 @@ message(status, "cmake_module_path =" ${CMAKE_MODULE_PATH} )
 
 
 
-find_package(HELLO)
+find_package(HELLO REQUIRED)
 
 if(hello_found)
     add_executable(hello main.c)
