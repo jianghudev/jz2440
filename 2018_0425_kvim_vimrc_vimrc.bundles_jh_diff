@@ -1,0 +1,533 @@
+diff --git a/vimrc b/vimrc
+index 3fc1bdc..2ba62cc 100644
+--- a/vimrc
++++ b/vimrc
+@@ -49,7 +49,7 @@ filetype plugin indent on
+ 
+ 
+ " history存储容量
+-set history=2000
++set history=4000
+ 
+ " 检测文件类型
+ filetype on
+@@ -99,7 +99,7 @@ set cursorline
+ 
+ " 设置 退出vim后，内容显示在终端屏幕, 可以用于查看和复制, 不需要可以去掉
+ " 好处：误删什么的，如果以前屏幕打开，可以找回
+-set t_ti= t_te=
++" set t_ti= t_te=   ####modify by jh
+ 
+ 
+ " 鼠标暂不启用, 键盘党....
+@@ -215,7 +215,7 @@ set softtabstop=4
+ " insert tabs on the start of a line according to shiftwidth, not tabstop 按退格键时可以一次删掉 4 个空格
+ set smarttab
+ " 将Tab自动转化成空格[需要输入真正的Tab键时，使用 Ctrl+V + Tab]
+-set expandtab
++"set expandtab    #### modify by jh
+ " 缩进时，取整 use multiple of shiftwidth when indenting with '<' and '>'
+ set shiftround
+ 
+@@ -326,10 +326,10 @@ endif
+ " 主要按键重定义
+ 
+ " 关闭方向键, 强迫自己用 hjkl
+-map <Left> <Nop>
+-map <Right> <Nop>
+-map <Up> <Nop>
+-map <Down> <Nop>
++"map <Left> <Nop>    ####### modify by jh
++"map <Right> <Nop>
++"map <Up> <Nop>
++"map <Down> <Nop>
+ 
+ "Treat long lines as break lines (useful when moving around in them)
+ "se swap之后，同物理行上线直接跳
+@@ -342,7 +342,15 @@ nnoremap gj j
+ 
+ " F1 废弃这个键,防止调出系统帮助
+ " I can type :help on my own, thanks.  Protect your fat fingers from the evils of <F1>
+-noremap <F1> <Esc>"
++"noremap <F1> <Esc>"
++"nnoremap <F1> <Esc><Esc>
++"map  <F1> <Nop><CR>
++nnoremap <F1> :set list! list?<CR>
++
++" inoremap <F1> <F2>
++" nnoremap <F1> <F2>
++" vnoremap <F1> <F2>
++
+ 
+ " F2 行号开关，用于鼠标复制代码用
+ " 为方便复制，用<F2>开启/关闭行号显示:
+@@ -415,6 +423,38 @@ noremap L $
+ 
+ " Map ; to : and save a million keystrokes 用于快速进入命令行
+ nnoremap ; :
++""" 添加by jh,使用寄存器直接使用'而不是"
++"" nnoremap " '
++"noremap <C-c> :yank *|:yank +
++""" noremap <C-c> "*+y 
++"noremap <C-c> "+y && gv"*y
++noremap <C-c> "+y
++noremap <C-x> "+d
++noremap <C-v> "+P
++" change <space> to <c-p>
++""""inoremap <expr> <space>       pumvisible() ? "\<C-p>" : "\<space>"
++inoremap <expr><TAB>       pumvisible() ? "\<C-p>" : "\<TAB>"
++
++""""没有效果，alt在这里怎么输入？？？
++""nnoremap <tab-v> <C-v> 
++nnoremap <C-b> <C-v> 
++
++"""noremap <M-x> :echo "alt+x pressed"<cr>
++noremap <M-c> "+y
++exec "set <M-c>=\ec"
++set ttimeout ttimeoutlen=100
++
++""" add by jh 解决gundo不能正常使用，报下面的错误
++""" Gundo requires Vim to be compiled with Python 2.4+
++if has('python3')
++    let g:gundo_prefer_python3 = 1
++endif
++
++
++
++""""在VIM配置文件里添加下面一行配置，来让VIM在退出的时候，保留粘贴板中的内容
++autocmd VimLeave * call system("xsel -ib", getreg('+'))
++
+ 
+ 
+ " 命令行模式增强，ctrl - a到行首， -e 到行尾
+@@ -455,8 +495,12 @@ autocmd BufNewFile,BufRead *.py inoremap # X<c-h>#
+ nnoremap [b :bprevious<cr>
+ nnoremap ]b :bnext<cr>
+ " 使用方向键切换buffer
+-noremap <left> :bp<CR>
+-noremap <right> :bn<CR>
++"noremap <left> :bp<CR>
++"noremap <right> :bn<CR>
++""" ##### modify by jh
++noremap <PageUp> :bp<CR>
++noremap <PageDown> :bn<CR>
++
+ 
+ 
+ " tab 操作
+@@ -545,7 +589,9 @@ nnoremap <C-y> 2<C-y>
+ "nmap T O<ESC>j
+ 
+ " Quickly close the current window
+-nnoremap <leader>q :q<CR>
++""" add by jh 
++nnoremap <leader>q :q!<CR>
++nnoremap <leader>qq :qa!<CR>
+ 
+ " Quickly save the current file
+ nnoremap <leader>w :w<CR>
+@@ -654,11 +700,23 @@ endif
+ 
+ 
+ " theme主题
+-set background=dark
++" 如果使用dark的颜色，需要关闭termcolors=256才好看
++" set background=dark
++" 如果使用light的颜色，需要打开termcolors=256才好看
++set background=light
++let g:solarized_termcolors=256
++
+ set t_Co=256
++"""set background=light
++"""set background=dark
++"""set t_Co=256
+ 
+ colorscheme solarized
++" colorscheme industry
++" colorscheme violet
++" colorscheme solarized
+ " colorscheme molokai
++" colorscheme default
+ 
+ 
+ " 设置标记一列的背景颜色和数字一行颜色一致
+@@ -675,3 +733,85 @@ highlight clear SpellRare
+ highlight SpellRare term=underline cterm=underline
+ highlight clear SpellLocal
+ highlight SpellLocal term=underline cterm=underline
++
++
++
++""" #### add by jh
++"""  ctags -R --languages=c++ --langmap=c++:+.inl -h +.inl --c++-kinds=+px --fields=+aiKSz --extra=+q --exclude=lex.yy.cc --exclude=copy_lex.yy.cc
++map <C-F12> :!ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .<CR>
++
++let Tlist_Ctags_Cmd='/usr/bin/ctags'   "设定Linux系统中ctags程序的位置
++let Tlist_Show_One_File=1    "不同时显示多个文件的tag，只显示当前文件的
++let Tlist_Exit_OnlyWindow=1  "如果taglist窗口是最后一个窗口，则退出vim
++let Tlist_Use_Right_Window = 0         "在右侧窗口中显示taglist窗口
++"let Tlist_Use_SingleClick= 1    " 缺省情况下，在双击一个tag时，才会跳到该tag定义的位置
++let Tlist_Auto_Open=1    "在启动VIM后，自动打开taglist窗口
++"let Tlist_Process_File_Always=1  "taglist始终解析文件中的tag，不管taglist窗口有没有打开
++"let Tlist_File_Fold_Auto_Close=1 "同时显示多个文件中的tag时，可使taglist只显示当前文件tag，其它文件的tag都被折叠起来
++set tags=tags;
++set autochdir
++
++if filereadable("cscope.out") 
++""       cscope add /home/driver_d/ViveM_Device_Service/cscope.out  /home/driver_d/ViveM_Device_Service/ -C 
++""       cscope add /home/driver_d/cb2_htc_gerrit/cscope.out  /home/driver_d/cb2_htc_gerrit/ -C 
++""      cscope add /home/driver_d/i3_contiki_26_simulator/cscope.out /home/driver_d/i3_contiki_26_simulator/ -C
++      cscope add /home/jh/htc_work/matrixvr_gerrit/MatrixVR/cscope.out /home/jh/htc_work/matrixvr_gerrit/MatrixVR/ -C
++endif 
++
++set cscopequickfix=s-,c-,d-,i-,t-,e- "" cscope结果输出到quickfix窗口  cnext cprev前后跳转
++"""nmap <C-n> :cnext<CR>
++"""nmap <C-p> :cprev<CR>
++
++if has("cscope")
++            set cscopetag   " 使支持用 Ctrl+]  和 Ctrl+t 快捷键在代码间跳来跳去
++            " check cscope for definition of a symbol before checking ctags:
++            " set to 1 if you want the reverse search order.
++             set csto=1
++
++             " add any cscope database in current directory
++             if filereadable("cscope.out")
++                 cs add cscope.out
++             " else add the database pointed to by environment variable
++             elseif $CSCOPE_DB !=""
++                 cs add $CSCOPE_DB
++             endif
++
++             " show msg when any other cscope db added
++             set cscopeverbose
++
++             nmap <C-/>s :cs find s <C-R>=expand("<cword>")<CR><CR>
++             nmap <C-/>g :cs find g <C-R>=expand("<cword>")<CR><CR>
++             nmap <C-/>c :cs find c <C-R>=expand("<cword>")<CR><CR>
++             nmap <C-/>t :cs find t <C-R>=expand("<cword>")<CR><CR>
++             nmap <C-/>e :cs find e <C-R>=expand("<cword>")<CR><CR>
++             nmap <C-/>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
++             nmap <C-/>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
++             nmap <C-/>d :cs find d <C-R>=expand("<cword>")<CR><CR>
++         endif
++
++" 附常用的命令：
++"      ：cs find s ---- 查找C语言符号，即查找函数名、宏、枚举值等出现的地方
++"　　：cs find g ---- 查找函数、宏、枚举等定义的位置，类似ctags所提供的功能
++"　　：cs find d ---- 查找本函数调用的函数：cs find c ---- 查找调用本函数的函数
++"　　：cs find t: ---- 查找指定的字符串
++"　　：cs find e ---- 查找egrep模式，相当于egrep功能，但查找速度快多了
++"　　：cs find f ---- 查找并打开文件，类似vim的find功能
++"　　：cs find i ---- 查找包含本文件的文
++"  Ctrl+]将跳到光标所在变量或函数的定义处 Ctrl+T返回
++"  更多帮助在vim末行命令模式下输入cs 或 cscope获得帮助信息。
++"  
++"
++"    添加cscope的方法：
++"    1. 在项目的根目录中执行     
++"    "    $ find ./ -name "*.h" -o -name "*.c" -o -name "*.cpp" -o -name "*.mk" -o -name "*.java" > cscope.files  
++"    "    $ cscope -bkq -i cscope.files
++"    2. 在 ~/.vimrc中添加
++"    "" if filereadable("cscope.out") 
++"    "        cscope add /home/driver_d/cb2_htc_gerrit/cscope.out  /home/driver_d/cb2_htc_gerrit/ -C 
++"     "" endif
++"    3.那么在vim中，就可以使用  :cs find c appinit 这样来搜索代码中的函数了
++"    ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .
++
++
++
++
+diff --git a/vimrc.bundles b/vimrc.bundles
+index 18ed2dc..bf164b3 100644
+--- a/vimrc.bundles
++++ b/vimrc.bundles
+@@ -134,9 +134,27 @@ Plug 'vim-airline/vim-airline-themes'
+ " rainbow_parentheses
+ " 括号显示增强
+ Plug 'kien/rainbow_parentheses.vim'
++
++""" add by jh
++""" 增加1个新的配色方案
++Plug 'ashfinal/vim-colors-violet'
++Plug 'git@github.com:luochen1990/rainbow.git'
++""" vim中文文档
++Plug 'git://github.com/yianwillis/vimcdoc.git'
++""" winManager配置
++""" Plug 'git@github.com:vim-scripts/winmanager.git'
++""" minibuf explorer在vim编辑器的上方显示文件的标签
++Plug 'git@github.com:fholgado/minibufexpl.vim.git'
++""" visualmark
++""" Plug 'git@github.com:iago-lito/vim-visualMarks.git'
++""" Plug 'git@github.com:easlee/vim-visualmark.git'
++
+ " 主题 solarized
+ " solarized
+-Plug 'altercation/vim-colors-solarized'
++" add by jh ###默认使用solarized,不使用vim-colors-solarized ###
++Plug 'git@github.com:altercation/vim-colors-solarized.git'
++" Plug 'git@github.com:altercation/solarized.git'
++" Plug 'altercation/vim-colors-solarized'
+ " molokai
+ " 主题 molokai
+ Plug 'tomasr/molokai'
+@@ -585,18 +603,43 @@ endif
+ 
+ " ctrlp ctrlpfunky{{{
+     let g:ctrlp_map = '<leader>p'
+-    let g:ctrlp_cmd = 'CtrlP'
++    let g:ctrlp_cmd = 'CtrlP /home/jh/htc_work/matrixvr_gerrit/MatrixVR/'
+     map <leader>f :CtrlPMRU<CR>
++	"<Leader>b显示缓冲区文件，并可通过序号进行跳转
++	"nmap <Leader>b :CtrlPBuffer<CR>
++	"设置搜索时忽略的文件
+     let g:ctrlp_custom_ignore = {
+         \ 'dir':  '\v[\/]\.(git|hg|svn|rvm)$',
+         \ 'file': '\v\.(exe|so|dll|zip|tar|tar.gz|pyc)$',
+         \ }
+     let g:ctrlp_working_path_mode=0
+-    let g:ctrlp_match_window_bottom=1
+-    let g:ctrlp_max_height=15
+-    let g:ctrlp_match_window_reversed=0
++	let g:ctrlp_match_window_bottom=1
++	let g:ctrlp_match_window_reversed=0
++	"修改QuickFix窗口显示的最大条目数
++"    let g:ctrlp_max_height=15
++	let g:ctrlp_max_height=25
++	" add by jh
++	" let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:15,results:100'
++	"设置MRU最大条目数为500
+     let g:ctrlp_mruf_max=500
+     let g:ctrlp_follow_symlinks=1
++
++	" add by jh 使用外部的搜索命令来查找ctrlp中的文件
++	" let g:ctrlPDir='/home/jh/htc_work/matrixvr_gerrit/MatrixVR/'  ###没有效果###
++	" add by jh 使用外部的搜索命令来查找ctrlp中的文件
++	" 用法g:ctrlp_user_command
++	" 指定用来代替Vim的 |globpath()| 的外部工具来列出文件，使用 %s 代表目标目录
++	" let g:ctrlp_user_command = ''
++	" 例子 let g:ctrlp_user_command = 'find %s -type f'       " MacOSX/Linux
++	" 你也可以使用 'grep', 'findstr' 或者其它东西来过滤结果集。
++	" 例子 let g:ctrlp_user_command = 'find %s -type f | grep -v -P "\.jpg$|/tmp/"'          " MacOSX/Linux
++    " let g:ctrlp_user_command = 'find %s -type f'
++	" 第1种方法使用使用find命令来查找当前目录中的文件，它可以包含aidl文件。### add by jh ###
++	let g:ctrlp_user_command =
++				\'find %s -type f -regextype "posix-egrep" -regex ".*(\.h|\.c|\.cs|\.cc|\.cpp|\.java|\.mk|\.aidl|\.proto)$" '
++	" 第2种方法使用ag来查找文件，它速度很快，但有个缺点就是不能找aidl文件。   add by jh ###
++	" let g:ctrlp_user_command = 'ag -t -l --cc --csharp --cpp --java --make --proto'
++
+     " 如果安装了ag, 使用ag
+     " if executable('ag')
+     " " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
+@@ -605,6 +648,16 @@ endif
+     " let g:ctrlp_use_caching = 0
+     " endif
+ 
++	"默认使用全路径搜索，置1后按文件名搜索，准确率会有所提高，可以用<C-d>进行切换
++	let g:ctrlp_by_filename = 1
++	"默认不使用正则表达式，置1改为默认使用正则表达式，可以用<C-r>进行切换
++	let g:ctrlp_regexp = 0
++	"自定义搜索列表的提示符
++	let g:ctrlp_line_prefix = '♪ '
++
++
++
++
+     " ctrlpfunky
+     " ctrlp插件1 - 不用ctag进行函数快速跳转
+     nnoremap <Leader>fu :CtrlPFunky<Cr>
+@@ -617,6 +670,21 @@ endif
+ 
+ 
+ " ctrlsf {{{
++	" add by jh ###使用ag命令来查找字符串，它的速度非常快###
++	nnoremap <leader>s :CtrlSF /home/jh/htc_work/matrixvr_gerrit/MatrixVR/
++    let g:ctrlsf_ackprg = '/usr/local/bin/ag'
++	let g:ctrlsf_extra_backend_args = {
++		\ 'pt': '--home-ptignore',
++		\ 'ag': '-t -A1 -B1 -i --java --cpp --cc --csharp  --make --proto',
++		\ }
++    "let g:ctrlsf_position = 'bottom'
++    let g:ctrlsf_position = 'top'
++	let g:ctrlsf_selected_line_hl = 'op'
++	let g:ctrlsf_ignore_dir = ['androidrt', 'node_modules']
++	"let g:ctrlsf_absolute_file_path = 0
++	"let g:ctrlsf_default_view_mode='compact'
++	let g:ctrlsf_populate_qflist=1
++	let g:ctrlsf_context='-B 1 -A 1'
+     nmap \ <Plug>CtrlSFCwordPath<CR>
+     " let g:ctrlsf_position = 'below'
+     " let g:ctrlsf_winsize = '30%'
+@@ -624,15 +692,17 @@ endif
+     let g:ctrlsf_confirm_save = 0
+     " Note: cannot use <CR> or <C-m> for open
+     " Use : <sapce> or <tab>
++	""" \ "open"  : "<Space>",
++	" add by jh,在ctrlsf窗口中使用o来打开当前文件,因为<space>这个键默认是搜索键
+     let g:ctrlsf_mapping = {
+-        \ "open"  : "<Space>",
++        \ "open"  : "o",
+         \ "openb" : "O",
+         \ "tab"   : "t",
+         \ "tabb"  : "T",
+         \ "prevw" : "p",
+         \ "quit"  : "q",
+-        \ "next"  : "<C-J>",
+-        \ "prev"  : "<C-K>",
++        \ "next"  : ["<C-J>" , "n"],
++        \ "prev"  : ["<C-K>" , "N"],
+         \ "pquit" : "q",
+         \ }
+ " }}}
+@@ -678,39 +748,108 @@ endif
+     let g:airline_symbols.branch = '⎇'
+     " 是否打开tabline
+     " let g:airline#extensions#tabline#enabled = 1
++	" add by jh
++	let g:airline_theme="simple"
+ " }}}
+ 
+ 
+-
+-" rainbow_parentheses {{{
+-    " 不加入这行, 防止黑色括号出现, 很难识别
+-    " \ ['black',       'SeaGreen3'],
+-    let g:rbpt_colorpairs = [
+-        \ ['brown',       'RoyalBlue3'],
+-        \ ['Darkblue',    'SeaGreen3'],
+-        \ ['darkgray',    'DarkOrchid3'],
+-        \ ['darkgreen',   'firebrick3'],
+-        \ ['darkcyan',    'RoyalBlue3'],
+-        \ ['darkred',     'SeaGreen3'],
+-        \ ['darkmagenta', 'DarkOrchid3'],
+-        \ ['brown',       'firebrick3'],
+-        \ ['gray',        'RoyalBlue3'],
+-        \ ['darkmagenta', 'DarkOrchid3'],
+-        \ ['Darkblue',    'firebrick3'],
+-        \ ['darkgreen',   'RoyalBlue3'],
+-        \ ['darkcyan',    'SeaGreen3'],
+-        \ ['darkred',     'DarkOrchid3'],
+-        \ ['red',         'firebrick3'],
+-        \ ]
+-
+-    let g:rbpt_max = 16
+-    let g:rbpt_loadcmd_toggle = 0
+-    au VimEnter * RainbowParenthesesToggle
+-    au Syntax * RainbowParenthesesLoadRound
+-    au Syntax * RainbowParenthesesLoadSquare
+-    au Syntax * RainbowParenthesesLoadBraces
++" " minibuf explorer {{{ ### add by jh!
++	let g:miniBufExplMapWindowNavVim = 1
++	let g:miniBufExplMapWindowNavArrows = 1
++	let g:miniBufExplModSelTarget = 1
++	let g:miniBufExplMoreThanOne=0
++	let g:miniBufExplMapCTabSwitchWindows = 1
++	"let g:miniBufExplMapCTabSwitchBufs = 1
++	"解决FileExplorer窗口变小问题
++	let g:miniBufExplForceSyntaxEnable = 1
++	let g:miniBufExplorerMoreThanOne=2
++" " }}}
++
++" " winmanager {{{ ### add by jh!
++" " 下面的代码放到自己的vimrc配置中即可"
++	" let g:winManagerWindowLayout='NERDTree|Tagbar'
++	" let g:winManagerWidth=30
++	" let g:AutoOpenWinManager = 1 "这里要配合修改winmanager.vim文件，见下方说明"
++	" let g:NERDTree_title = "[NERDTree]"
++	" function! NERDTree_Start()
++		" exe 'q' "执行一个退出命令，关闭自动出现的窗口"
++		" exe 'NERDTree'
++	" endfunction
++	" function! NERDTree_IsValid()
++	" return 1
++	" endfunction
++
++	" noremap  :NERDTreeFind
++
++	" let g:Tagbar_title = "[Tagbar]"
++	" function! Tagbar_Start()
++		" exe 'q' "执行一个退出命令，关闭自动出现的窗口"
++		" exe 'TagbarOpen'
++	" endfunction
++
++	" function! Tagbar_IsValid()
++		" return 1
++	" endfunction
++	" let g:tagbar_vertical = 30
++" " }}}
++
++
++" rainbow_jh {{{
++	"0 if you want to enable it later via :RainbowToggle
++	let g:rainbow_active = 1
++	let g:rainbow_conf = {
++	\	'guifgs': ['royalblue3', 'darkorange3', 'seagreen3', 'firebrick'],
++	\	'ctermfgs': ['lightyellow', 'green', 'red', 'lightblue',  'lightcyan', 'lightmagenta'],
++	\	'operators': '_,_',
++	\	'parentheses': ['start=/(/ end=/)/ fold', 'start=/\[/ end=/\]/ fold', 'start=/{/ end=/}/ fold'],
++	\	'separately': {
++	\		'*': {},
++	\		'tex': {
++	\			'parentheses': ['start=/(/ end=/)/', 'start=/\[/ end=/\]/'],
++	\		},
++	\		'lisp': {
++	\			'guifgs': ['royalblue3', 'darkorange3', 'seagreen3', 'firebrick', 'darkorchid3'],
++	\		},
++	\		'vim': {
++	\			'parentheses': ['start=/(/ end=/)/', 'start=/\[/ end=/\]/', 'start=/{/ end=/}/ fold', 'start=/(/ end=/)/ containedin=vimFuncBody', 'start=/\[/ end=/\]/ containedin=vimFuncBody', 'start=/{/ end=/}/ fold containedin=vimFuncBody'],
++	\		},
++	\		'html': {
++	\			'parentheses': ['start=/\v\<((area|base|br|col|embed|hr|img|input|keygen|link|menuitem|meta|param|source|track|wbr)[ >])@!\z([-_:a-zA-Z0-9]+)(\s+[-_:a-zA-Z0-9]+(\=("[^"]*"|'."'".'[^'."'".']*'."'".'|[^ '."'".'"><=`]*))?)*\>/ end=#</\z1># fold'],
++	\		},
++	\		'css': 0,
++	\	}
++	\}
+ " }}}
+ 
++"" rainbow_parentheses {{{
++"    " 不加入这行, 防止黑色括号出现, 很难识别
++"    " \ ['black',       'SeaGreen3'],
++""    let g:rbpt_colorpairs = [
++""        \ ['brown',       'RoyalBlue3'],
++""        \ ['Darkblue',    'SeaGreen3'],
++""        \ ['darkgray',    'DarkOrchid3'],
++""        \ ['darkgreen',   'firebrick3'],
++""        \ ['darkcyan',    'RoyalBlue3'],
++""        \ ['darkred',     'SeaGreen3'],
++""        \ ['darkmagenta', 'DarkOrchid3'],
++""        \ ['brown',       'firebrick3'],
++""        \ ['gray',        'RoyalBlue3'],
++""        \ ['darkmagenta', 'DarkOrchid3'],
++""        \ ['Darkblue',    'firebrick3'],
++""        \ ['darkgreen',   'RoyalBlue3'],
++""        \ ['darkcyan',    'SeaGreen3'],
++""        \ ['darkred',     'DarkOrchid3'],
++""        \ ['red',         'firebrick3'],
++""        \ ]
++"
++""    let g:rbpt_max = 16
++""    let g:rbpt_loadcmd_toggle = 0
++""    au VimEnter * RainbowParenthesesToggle
++""    au Syntax * RainbowParenthesesLoadRound
++""    au Syntax * RainbowParenthesesLoadSquare
++""    au Syntax * RainbowParenthesesLoadBraces
++"" }}}
++
+ 
+ " ################### 显示增强-主题 ###################"
+ 
+@@ -742,6 +881,7 @@ endif
+ 
+     " nerdtreetabs
+     map <Leader>n <plug>NERDTreeTabsToggle<CR>
++    map <F8> <plug>NERDTreeTabsToggle<CR>
+     " 关闭同步
+     " let g:nerdtree_tabs_synchronize_view=0
+     " let g:nerdtree_tabs_synchronize_focus=0
+@@ -754,6 +894,7 @@ endif
+ 
+ " Vim Workspace Controller
+ " ctrlspace {{{
++	let g:ctrlspace_default_mapping_key="<C-m>"
+     let g:airline_exclude_preview = 1
+     hi CtrlSpaceSelected guifg=#586e75 guibg=#eee8d5 guisp=#839496 gui=reverse,bold ctermfg=10 ctermbg=7 cterm=reverse,bold
+     hi CtrlSpaceNormal   guifg=#839496 guibg=#021B25 guisp=#839496 gui=NONE ctermfg=12 ctermbg=0 cterm=NONE
