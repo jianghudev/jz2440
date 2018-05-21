@@ -4,3 +4,4 @@
 /gradle/example16/build/*
 /grpc/*
 gradle/build/*
+/UsbTool3.1/lib/*
