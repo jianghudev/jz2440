@@ -109,7 +109,7 @@ class UsbCdcTunnel {
         if (recv_data_count < 0) {
             Log.w(TAG, "RawRecvCdcData: bulkTransfer return failure: " + recv_data_count);
         }
-        //Log.d(TAG, "RawRecvCdcData: get byte array [" + recv_data_count + "]: " + Arrays.toString(recv_data));
+        //Log.d(TAG, "recv count=[" + recv_data_count + "]" );
         return recv_data_count;
     }
 

@@ -321,7 +321,7 @@ public class Usb {
         if (mUsbCdcTunnel.RequestSingleCdcData(Data) == true) {
             try {
                 RetString = new String(Data.recv_array, 0, Data.recv_array_count, "UTF-8");
-                Log.d(TAG, "1 recv str="+RetString);
+                //Log.d(TAG, "recv __jh__1 str="+RetString);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -331,7 +331,7 @@ public class Usb {
             }
             RetString = RetString.replaceAll("[^[:print:]]", "");
         }
-        Log.d(TAG, "2 recv str="+RetString);
+        Log.d(TAG, "recv __jh__2 str="+RetString);
         return RetString;
     }
 

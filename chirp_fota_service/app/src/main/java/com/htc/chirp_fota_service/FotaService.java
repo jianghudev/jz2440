@@ -72,7 +72,7 @@ public class FotaService extends Service implements Usb.OnUsbChangeListener{
             if(isConnected){
                 new Thread(new Runnable() {
                     public void run() {
-                        Log.i(TAG, "start updateFW");
+                        Log.d(TAG, "start updateFW");
                         //fs.updateImage(fs.curret_device);
                         for (int i = 0; i < 10; i++) {
                             mUsb.GetSysProperty(i);
