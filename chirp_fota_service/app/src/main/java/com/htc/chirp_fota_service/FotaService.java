@@ -32,10 +32,10 @@ public class FotaService extends Service implements Usb.OnUsbChangeListener{
     @Override
     public void onCreate() {
         fs = new FotaServiceImpl(this);
-        Log.d(TAG, "__jh__ enter");
 
-        mUsbCdcTunnel = new UsbCdcTunnel();
         mUsb = new Usb(this,fs);
+        mUsbCdcTunnel = new UsbCdcTunnel();
+
         registerReceiver(mUsb.getmUsbReceiver(), new IntentFilter(Usb.HTC_ACTION_USB_PERMISSION));
         registerReceiver(mUsb.getmUsbReceiver(), new IntentFilter(UsbManager.ACTION_USB_DEVICE_ATTACHED));
         registerReceiver(mUsb.getmUsbReceiver(), new IntentFilter(UsbManager.ACTION_USB_DEVICE_DETACHED));

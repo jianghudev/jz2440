@@ -87,8 +87,8 @@ public class Usb {
             } else if (UsbManager.ACTION_USB_DEVICE_ATTACHED.equals(action)) {
                 synchronized (this) {
                     Log.i(TAG,"receive ACTION_USB_DEVICE_ATTACHED");
-                    //requestPermission(mContext, USB_VENDOR_ID, USB_PRODUCT_ID);
-                    requestPermission(mContext, USB_CDC_VENDOR_ID, USB_CDC_PRODUCT_ID);
+                    //request_Permission(mContext, USB_VENDOR_ID, USB_PRODUCT_ID);
+                    request_Permission(mContext, USB_CDC_VENDOR_ID, USB_CDC_PRODUCT_ID);
                 }
             }
             else if (UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action)) {
@@ -127,12 +127,12 @@ public class Usb {
 
         // Handle case where USB device is connected before app launches;
         // hence ACTION_USB_DEVICE_ATTACHED will not occur so we explicitly call for permission
-        requestPermission(mContext, Usb.USB_CDC_VENDOR_ID, Usb.USB_CDC_PRODUCT_ID);
+        request_Permission(mContext, Usb.USB_CDC_VENDOR_ID, Usb.USB_CDC_PRODUCT_ID);
     }
 
 
 
-    public void requestPermission(Context context, int vendorId, int productId) {
+    public void request_Permission(Context context, int vendorId, int productId) {
         // Setup Pending Intent
         PendingIntent permissionIntent = PendingIntent.getBroadcast(context, 0, new Intent(Usb.HTC_ACTION_USB_PERMISSION), 0);
         UsbDevice device = getUsbDevice(vendorId, productId);
