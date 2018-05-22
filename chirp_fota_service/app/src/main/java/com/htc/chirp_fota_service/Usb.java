@@ -17,7 +17,7 @@ import java.util.Iterator;
 
 public class Usb {
 
-    final static String TAG = "3DoF_HMD.FOTA.Usb";
+    final static String TAG = "ChirpFota";
     public static int USB_STATE       = 0;//cdc:USB_STATE=1;dfu:USB_STATE=2;
     private Context mContext;
 
@@ -29,9 +29,7 @@ public class Usb {
     public UsbEndpoint mEpIn;
     public UsbEndpoint mEpOut;
 
-    /* USB DFU ID's (may differ by device) */
-    public final static int USB_VENDOR_ID = 1155;   // VID while in DFU mode 0x0483
-    public final static int USB_PRODUCT_ID = 57105; // PID while in DFU mode 0xDF11
+
     public final static int USB_CDC_VENDOR_ID = 0x0483;   // VID while in CDC mode 0x0BB4
     public final static int USB_CDC_PRODUCT_ID = 0x5740; // PID while in CDC mode 0x09FF
     /* USB DFU ID's (may differ by device) */
@@ -78,7 +76,7 @@ public class Usb {
                     if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
                         if (mfotaDevice != null) {
                             setUsbDevice(mfotaDevice);
-                            if((mfotaDevice.getProductId() == USB_PRODUCT_ID && mfotaDevice.getVendorId() == USB_VENDOR_ID)){
+                            if((mfotaDevice.getProductId() == USB_CDC_PRODUCT_ID && mfotaDevice.getVendorId() == USB_CDC_VENDOR_ID)){
                                 tryClaimDevice(mfotaDevice);
                             }
                         }
@@ -153,7 +151,7 @@ public class Usb {
                 Log.i(TAG, "requestPermission has get");
                 if(mfotaConnection == null) {
                     setUsbDevice(mfotaDevice);
-                    if ((mfotaDevice.getProductId() == USB_PRODUCT_ID && mfotaDevice.getVendorId() == USB_VENDOR_ID)) {
+                    if ((mfotaDevice.getProductId() == USB_CDC_PRODUCT_ID && mfotaDevice.getVendorId() == USB_CDC_VENDOR_ID)) {
                         tryClaimDevice(mfotaDevice);
                     }
                 }else{

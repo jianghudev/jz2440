@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FotaServiceImpl extends IFotaService.Stub {
-    static final String TAG = "Impl";
+    static final String TAG = "ChirpFota";
 
     public final static int DEVICE_HMD  = 0;
     public final static int DEVICE_CONTROLLER  = 1;

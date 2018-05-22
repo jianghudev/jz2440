@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             Class c = Class.forName("com.htc.chirp_fota_service.FotaService");
             Intent intent = new Intent(this, c);
-            Log.d(TAG, "startService: " + c.getName() );
+            Log.d(TAG, "__jh__ startService: " + c.getName() );
             startService(intent);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
