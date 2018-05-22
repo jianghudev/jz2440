@@ -17,7 +17,6 @@ public class FotaService extends Service implements Usb.OnUsbChangeListener{
     private final static String TAG = "ChirpFota";
 
     private FotaServiceImpl fs;
-    private UsbCdcTunnel mUsbCdcTunnel = null;
     public Usb mUsb;
 
 
@@ -34,13 +33,13 @@ public class FotaService extends Service implements Usb.OnUsbChangeListener{
         fs = new FotaServiceImpl(this);
 
         mUsb = new Usb(this,fs);
-        mUsbCdcTunnel = new UsbCdcTunnel();
+        mUsb.setOnUsbChangeListener(this);
+
 
         registerReceiver(mUsb.getmUsbReceiver(), new IntentFilter(Usb.HTC_ACTION_USB_PERMISSION));
         registerReceiver(mUsb.getmUsbReceiver(), new IntentFilter(UsbManager.ACTION_USB_DEVICE_ATTACHED));
         registerReceiver(mUsb.getmUsbReceiver(), new IntentFilter(UsbManager.ACTION_USB_DEVICE_DETACHED));
 
-        mUsb.setOnUsbChangeListener(this);
         Log.d(TAG, "__jh__ onCreate done.");
     }
 
@@ -70,38 +69,24 @@ public class FotaService extends Service implements Usb.OnUsbChangeListener{
             if(fs.mDeviceConnectedListener != null) {
                 fs.mDeviceConnectedListener.onConnectedStateStatusChanged(fs.curret_device, fs.DEVICE_STATE, Usb.USB_STATE);
             }
+            if(isConnected){
+                new Thread(new Runnable() {
+                    public void run() {
+                        Log.i(TAG, "start updateFW");
+                        //fs.updateImage(fs.curret_device);
+                        for (int i = 0; i < 10; i++) {
+                            mUsb.GetSysProperty(i);
+                        }
+                    }
+                }).start();
+            }
+
         }catch (Exception e) {
             e.printStackTrace();
         }
     }
 
 
-    private String GetSysProperty(int item)
-    {
-        String RetString = null;
-        UsbTunnelData Data = new UsbTunnelData();
-        Data.send_array[0] = 'p';
-        Data.send_array[1] = 0;
-        Data.send_array[2] = (byte)item;
-        Data.send_array_count = 3;
-        Data.recv_array_count = Data.recv_array.length;
-        Data.wait_resp_ms = 10;
-        // Log.d(TAG, " get: " + Arrays.toString(Data.send_array) + "(" + Data.send_array_count + "), recv count: " + Data.recv_array_count);
-
-        if (mUsbCdcTunnel.RequestSingleCdcData(Data) == true) {
-            try {
-                RetString = new String(Data.recv_array, 0, Data.recv_array_count, "UTF-8");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            if(RetString == null){
-                Log.w(TAG, "RetString format is error!");
-                return null;
-            }
-            RetString = RetString.replaceAll("[^[:print:]]", "");
-        }
-        return RetString;
-    }
 
 }
 

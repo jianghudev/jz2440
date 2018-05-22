@@ -42,12 +42,11 @@ public class Usb {
     public final static int USB_CDC_nInterfaceProtocol = 0x00; /* nInterfaceProtocol: CDC mode protocol */
 
 
-    private boolean USBPermissionDialogIsLaunch = false;
-
     public static final String HTC_ACTION_USB_PERMISSION = "com.htc.chirp.fota.USB_PERMISSION";
 
     //private FotaService fService=null;
     private FotaServiceImpl m_impl=null;
+    private UsbCdcTunnel mUsbCdcTunnel = null;
 
     /* Callback Interface */
     public interface OnUsbChangeListener {
@@ -75,7 +74,7 @@ public class Usb {
                     mfotaDevice = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
                     if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
                         if (mfotaDevice != null) {
-                            setUsbDevice(mfotaDevice);
+                            openDevice(mfotaDevice);
                             if((mfotaDevice.getProductId() == USB_CDC_PRODUCT_ID && mfotaDevice.getVendorId() == USB_CDC_VENDOR_ID)){
                                 tryClaimDevice(mfotaDevice);
                             }
@@ -85,27 +84,16 @@ public class Usb {
                     }
                 }
             } else if (UsbManager.ACTION_USB_DEVICE_ATTACHED.equals(action)) {
-                synchronized (this) {
-                    Log.i(TAG,"receive ACTION_USB_DEVICE_ATTACHED");
-                    //request_Permission(mContext, USB_VENDOR_ID, USB_PRODUCT_ID);
-                    request_Permission(mContext, USB_CDC_VENDOR_ID, USB_CDC_PRODUCT_ID);
-                }
+                request_Permission(mContext, USB_CDC_VENDOR_ID, USB_CDC_PRODUCT_ID);
             }
             else if (UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action)) {
                 synchronized (this) {
                     UsbDevice device = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
-//                    Log.i(TAG,"usb device detached PID = " + device.getProductId() + "VID = " + device.getVendorId());
                     if((device.getProductId() == USB_CDC_PRODUCT_ID && device.getVendorId() == USB_CDC_VENDOR_ID) ){
-                        //request permission to detach USB Device
-//                        mUsbPermission = true;
-                        Log.i(TAG,"detched cdc / dfu");
-                        USBPermissionDialogIsLaunch = false;
-                        boolean result = release();
+                        Log.i(TAG,"detached cdc ");
+                        release();
                         mfotaDevice = null;
                         mOnUsbChangeListener.on_Connected(m_impl.curret_device, false, Usb.USB_STATE);
-                        if (result){
-                            Log.i(TAG,"release success");
-                        }
                     }
                 }
             }
@@ -121,6 +109,7 @@ public class Usb {
         mContext = context;
         //fService = (FotaService)context;
         m_impl=fImpl;
+        mUsbCdcTunnel = new UsbCdcTunnel();
         mfotaUsbManager =(UsbManager) mContext.getSystemService(Context.USB_SERVICE);
 
 
@@ -136,21 +125,16 @@ public class Usb {
         // Setup Pending Intent
         PendingIntent permissionIntent = PendingIntent.getBroadcast(context, 0, new Intent(Usb.HTC_ACTION_USB_PERMISSION), 0);
         UsbDevice device = getUsbDevice(vendorId, productId);
-//        Log.i(TAG,"device  = " + device);
+        Log.i(TAG,"device  = " + device);
         if (device != null) {
             mfotaDevice = device;
-            if (!mfotaUsbManager.hasPermission(device)) {
+            if (!mfotaUsbManager.hasPermission(mfotaDevice)) {
                 Log.i(TAG, "requestPermission: vid = " + vendorId + ", pid = " + productId);
-                if (USBPermissionDialogIsLaunch == false) {
-                    mfotaUsbManager.requestPermission(device, permissionIntent);
-                    USBPermissionDialogIsLaunch = true;
-                } else {
-                    Log.i(TAG, "requestPermission: USB Permission dialog has been launch");
-                }
+                mfotaUsbManager.requestPermission(device, permissionIntent);
             }else{
                 Log.i(TAG, "requestPermission has get");
                 if(mfotaConnection == null) {
-                    setUsbDevice(mfotaDevice);
+                    openDevice(mfotaDevice);
                     if ((mfotaDevice.getProductId() == USB_CDC_PRODUCT_ID && mfotaDevice.getVendorId() == USB_CDC_VENDOR_ID)) {
                         tryClaimDevice(mfotaDevice);
                     }
@@ -168,7 +152,6 @@ public class Usb {
         UsbDevice device;
         while (deviceIterator.hasNext()) {
             device = deviceIterator.next();
-//            Log.i(TAG,"device vid = " + device.getVendorId() + "device pid = " + device.getProductId());
             if (device.getVendorId() == vendorId && device.getProductId() == productId) {
                 return device;
             }
@@ -177,30 +160,30 @@ public class Usb {
     }
 
     public boolean release() {
-        boolean conReleased = false;
+        boolean ret = false;
         USB_STATE = 0;
-//        Log.i(TAG, "release mfotaConnection is  null");
         if (mfotaConnection != null) {
             Log.i(TAG, "release: release mfotaConnection is not null");
             if(mfotaInterface != null) {
-                conReleased = mfotaConnection.releaseInterface(mfotaInterface);
+                ret = mfotaConnection.releaseInterface(mfotaInterface);
                 mfotaInterface = null;
             }
             mfotaConnection.close();
             mfotaConnection = null;
         }
 
-        return conReleased;
+        Log.i(TAG,"release success");
+        return ret;
     }
 
-    public void setUsbDevice(UsbDevice device) {
+    public void openDevice(UsbDevice device) {
         if (device != null) {
             UsbDeviceConnection connection = mfotaUsbManager.openDevice(device);
             if (connection != null ) {
-                Log.i(TAG, "setUsbDevice: open device SUCCESS");
+                Log.i(TAG, "openDevice: open device SUCCESS");
                 mfotaConnection = connection;
             } else {
-                Log.e(TAG, "setUsbDevice: open device FAIL");
+                Log.e(TAG, "openDevice: open device FAIL");
                 mfotaConnection = null;
             }
         }
@@ -291,15 +274,16 @@ public class Usb {
                 mInterface = device.getInterface(i);
                 if (mInterface.getInterfaceClass() == Usb.USB_CDC_bInterfaceClass && mInterface.getInterfaceSubclass() == Usb.USB_CDC_bInterfaceSubClass && mInterface.getInterfaceProtocol() == Usb.USB_CDC_nInterfaceProtocol) {
 //                    Log.i(TAG, "find cdc usb interface.");
-                    if (mfotaConnection != null && mfotaConnection.claimInterface(mInterface, true)) {
+                    if (mfotaConnection != null && mfotaConnection.claimInterface(mInterface, false)) {
                         mfotaInterface = mInterface;
                         mEpIn = Usb.getDirEndpoint(mInterface, 128);
                         mEpOut = Usb.getDirEndpoint(mInterface, 0);
                         mfotaConnection.releaseInterface(mfotaInterface);
+                        mUsbCdcTunnel.SetupUsbInterface(mfotaDevice,mfotaConnection);
                         if (mEpIn == null || mEpOut == null ) {
                             Log.i(TAG, "mEpIn/mEpOut  == null");
                         }
-                        Log.i(TAG, "cdc connect ok");
+                        Log.i(TAG, "cdc connect ok id=" +i);
 
                     }
                     Usb.USB_STATE = 1;//cdc mode
@@ -314,7 +298,7 @@ public class Usb {
             }
 
             mOnUsbChangeListener.on_Connected(m_impl.curret_device, m_impl.DEVICE_STATE, Usb.USB_STATE);
-            if (state == false) {
+            if (Usb.USB_STATE == 0) {
                 Log.i(TAG, "Can't find usb interface.");
             }
         }catch (Exception e) {
@@ -323,6 +307,32 @@ public class Usb {
     }
 
 
+    public String GetSysProperty(int item)
+    {
+        String RetString = null;
+        UsbTunnelData Data = new UsbTunnelData();
+        Data.send_array[0] = 'd';
+        Data.send_array[1] = 0;
+        Data.send_array[2] = (byte)item;
+        Data.send_array_count = 3;
+        Data.recv_array_count = Data.recv_array.length;
+        Data.wait_resp_ms = 2;
 
+        if (mUsbCdcTunnel.RequestSingleCdcData(Data) == true) {
+            try {
+                RetString = new String(Data.recv_array, 0, Data.recv_array_count, "UTF-8");
+                Log.d(TAG, "1 recv str="+RetString);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if(RetString == null){
+                Log.w(TAG, "RetString format is error!");
+                return null;
+            }
+            RetString = RetString.replaceAll("[^[:print:]]", "");
+        }
+        Log.d(TAG, "2 recv str="+RetString);
+        return RetString;
+    }
 
 }

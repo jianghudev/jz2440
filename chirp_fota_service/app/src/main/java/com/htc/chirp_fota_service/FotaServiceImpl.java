@@ -3,7 +3,6 @@ package com.htc.chirp_fota_service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.hardware.usb.UsbDevice;
@@ -101,7 +100,7 @@ public class FotaServiceImpl extends IFotaService.Stub {
             mUsbDevice = mUsb.getUsbDevice();
 
             if(mUsbDevice != null){
-                mUsb.setUsbDevice(mUsbDevice);
+                mUsb.openDevice(mUsbDevice);
                 mUsb.tryClaimDevice(mUsbDevice);
             }
             if(mUsb.USB_STATE == 1) {
@@ -271,7 +270,7 @@ public class FotaServiceImpl extends IFotaService.Stub {
         }else if (device == 1) {
             mUsbDevice = mUsb.getUsbDevice();
             if(mUsbDevice != null){
-                mUsb.setUsbDevice(mUsbDevice);
+                mUsb.openDevice(mUsbDevice);
                 mUsb.tryClaimDevice(mUsbDevice);
             }
             int ret = 0, count = 0;
@@ -386,7 +385,7 @@ public class FotaServiceImpl extends IFotaService.Stub {
         if (curret_device == 1) {
             mUsbDevice = mUsb.getUsbDevice();
             if(mUsbDevice != null){
-                mUsb.setUsbDevice(mUsbDevice);
+                mUsb.openDevice(mUsbDevice);
                 mUsb.tryClaimDevice(mUsbDevice);
             }
             if (true == mbDuringUpdating) {
@@ -469,6 +468,7 @@ public class FotaServiceImpl extends IFotaService.Stub {
 
     public Boolean updateImage(int device)
     {
+
         return true;
     }
     private List<File> unZip(InputStream inputStream) throws Exception {
