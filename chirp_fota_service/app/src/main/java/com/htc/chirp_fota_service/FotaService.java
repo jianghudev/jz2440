@@ -8,9 +8,16 @@ import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbInterface;
 import android.hardware.usb.UsbManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.IBinder;
 import android.util.Log;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 
 public class FotaService extends Service implements Usb.OnUsbChangeListener{
@@ -20,9 +27,11 @@ public class FotaService extends Service implements Usb.OnUsbChangeListener{
     public Usb mUsb;
 
 
-    private static final String PKG_NAME = "com.htc.vr.bledevice";
-    private static final String CLS_NAME = "com.htc.vr.bledevice.BleFotaService";
-    private static final ComponentName COMPONENT_NAME = new ComponentName(PKG_NAME, CLS_NAME);
+
+
+    private static final String CCG4_FM1_NAME = "htc_apn_4225_v14_1.cyacd";
+    private static final String CCG4_FM2_NAME = "htc_apn_4225_v14_2.cyacd";
+
 
 
     //public int curret_device  = -1;
@@ -73,10 +82,7 @@ public class FotaService extends Service implements Usb.OnUsbChangeListener{
                 new Thread(new Runnable() {
                     public void run() {
                         Log.d(TAG, "start updateFW");
-                        //fs.updateImage(fs.curret_device);
-                        for (int i = 0; i < 10; i++) {
-                            mUsb.GetSysProperty(i);
-                        }
+                        updateCCG4();
                     }
                 }).start();
             }
@@ -86,7 +92,51 @@ public class FotaService extends Service implements Usb.OnUsbChangeListener{
         }
     }
 
+    private int updateCCG4(){
+        try {
+            int line_num=0;
 
+            File dir = Environment.getDataDirectory();
+            File file = new File(dir, CCG4_FM1_NAME);
+
+            String path = file.getAbsolutePath();
+            String name = file.getName();
+            Log.d(TAG,"path="+path+" name="+name);
+            if(file.exists()){
+                InputStream is = new FileInputStream(file);
+                BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+                String line = null;
+                while ((line = reader.readLine()) != null) {
+                    byte[] srtbyte = line.getBytes("UTF-8"); //no including \n  ,we must add it
+                    ccg4_handle_line(srtbyte,srtbyte.length);
+                    for (int i = 0; i < srtbyte.length; i++) {
+                        String tmp=Integer.toHexString(srtbyte[i] & 0xFF);
+                        Log.d(TAG, tmp +" ");
+
+                    }
+                    if(++line_num >= 2 ){
+                        Log.d(TAG, " ccg4_handle_line end");
+                        break;
+                    }
+                }
+
+                is.close();
+            }else{
+                Log.e(TAG, "file not exist");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return 0;
+    }
+
+
+    private int ccg4_handle_line(byte[] data, int len) {
+
+        return 0;
+    }
 
 }
 
