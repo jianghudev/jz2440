@@ -16,8 +16,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 public class Usb {
+    private static final String TAG=Const.G_TAG;
 
-    final static String TAG = "ChirpFota";
     public static int USB_STATE       = 0;//cdc:USB_STATE=1;dfu:USB_STATE=2;
     private Context mContext;
 
@@ -44,9 +44,13 @@ public class Usb {
 
     public static final String HTC_ACTION_USB_PERMISSION = "com.htc.chirp.fota.USB_PERMISSION";
 
+    private ccg4 mCCG4;
     //private FotaService fService=null;
     private FotaServiceImpl m_impl=null;
     private UsbCdcTunnel mUsbCdcTunnel = null;
+
+
+
 
     /* Callback Interface */
     public interface OnUsbChangeListener {
@@ -112,7 +116,7 @@ public class Usb {
         mUsbCdcTunnel = new UsbCdcTunnel();
         mfotaUsbManager =(UsbManager) mContext.getSystemService(Context.USB_SERVICE);
 
-
+        mCCG4 =new ccg4(this);
 
         // Handle case where USB device is connected before app launches;
         // hence ACTION_USB_DEVICE_ATTACHED will not occur so we explicitly call for permission
@@ -304,6 +308,16 @@ public class Usb {
         }catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+
+    public int updateCCG4() {
+        mCCG4.updateFW();
+        return 0;
+    }
+
+    public boolean RequestCdcData(UsbTunnelData Data) {
+        return mUsbCdcTunnel.RequestSingleCdcData(Data);
     }
 
 

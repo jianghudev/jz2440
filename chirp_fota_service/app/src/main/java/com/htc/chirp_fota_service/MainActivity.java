@@ -10,7 +10,7 @@ import android.view.View;
 import android.util.Log;
 
 public class MainActivity extends AppCompatActivity {
-    private static final String TAG = "ChirpFota";
+    private static final String TAG=Const.G_TAG;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

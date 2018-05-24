@@ -14,7 +14,7 @@ import android.hardware.usb.UsbInterface;
 import android.util.Log;
 
 class UsbCdcTunnel {
-    final static String TAG = "ChirpFota";
+    private static final String TAG=Const.G_TAG;
     private final int USB_CDC_DATA_INTERFACE = 1;
     private final Object McuUsbCdcTunnelSyncObject = new Object();
     private UsbDeviceConnection CDCConnection = null;
