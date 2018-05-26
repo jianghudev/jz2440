@@ -13,6 +13,8 @@ import android.hardware.usb.UsbEndpoint;
 import android.hardware.usb.UsbInterface;
 import android.util.Log;
 
+import java.util.Arrays;
+
 class UsbCdcTunnel {
     private static final String TAG=Const.G_TAG;
     private final int USB_CDC_DATA_INTERFACE = 1;
@@ -131,6 +133,7 @@ class UsbCdcTunnel {
                 this.ReleaseUsbCdcInterface();
                 return false;
             }
+            Log.d(TAG, "send=" + Arrays.toString(Data.send_array) + "(" + Data.send_array_count + ")");
 
             if (Data.wait_resp_ms > 0) {
                 try {
@@ -143,7 +146,7 @@ class UsbCdcTunnel {
                     this.ReleaseUsbCdcInterface();
                     return false;
                 }
-                // Log.d(TAG, "SendCommonCdcData get: " + Arrays.toString(Data.recv_array) + "(" + Data.recv_array_count + ")");
+                Log.d(TAG, "recv=" + Arrays.toString(Data.recv_array) + "(" + Data.recv_array_count + ")");
             }
 
             this.ReleaseUsbCdcInterface();

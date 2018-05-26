@@ -8,7 +8,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by hubin_jiang on 2018/5/23.
@@ -81,12 +83,10 @@ public class ccg4 {
             UsbTunnelData Data = new UsbTunnelData();
             Data.send_array[0] = Const.CMD_FOTA_TRANSFER;  //cmd
             if ((pkg_count-1) == i) {
-                byte tmp_len=(byte)(len%PKG_DATA_LEN);
+                int tmp_len=(byte)(len%PKG_DATA_LEN);
                 Data.send_array[1] = (byte)(tmp_len +4);
                 Arrays.fill(checksum_data, (byte) 0);
-                System.arraycopy(data, i*PKG_DATA_LEN, checksum_data, 0, tmp_len-2);
-                checksum_data[tmp_len-2]=0x0D;
-                checksum_data[tmp_len-1]=0x0A;
+                System.arraycopy(data, i*PKG_DATA_LEN, checksum_data, 0, tmp_len);
                 checksum_len=tmp_len;
             }else{
                 Data.send_array[1] = PKG_DATA_LEN+4;
@@ -203,18 +203,14 @@ public class ccg4 {
                 String line = null;
                 while ((line = reader.readLine()) != null) {
                     byte[] srtbyte = line.getBytes("UTF-8"); //no including \r\n  ,we must add it
-                    if( !ccg4_handle_line(srtbyte,srtbyte.length+2) ){
+                    byte[] tmp_crlf= {0X0D, 0X0A};
+                    byte[] tmp_byte= new byte[UsbTunnelData.USB_CDC_SEND_PACKET_MAX_SIZE];
+
+                    System.arraycopy(srtbyte, 0, tmp_byte, 0, srtbyte.length);
+                    System.arraycopy(tmp_crlf, 0, tmp_byte, srtbyte.length, 2);
+                    if( !ccg4_handle_line(tmp_byte,srtbyte.length+2) ){
                         Log.d(TAG, "line err, please check");
                         return -1;
-                    }
-                    for (int i = 0; i < srtbyte.length; i++) {
-                        String tmp=Integer.toHexString(srtbyte[i] & 0xFF);
-                        Log.d(TAG, tmp +" ");
-
-                    }
-                    if(++line_num >= 2 ){
-                        Log.d(TAG, " ccg4_handle_line end");
-                        break;
                     }
                 }
                 is.close();
