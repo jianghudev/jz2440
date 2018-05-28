@@ -82,7 +82,8 @@ public class ccg4 {
         int retryCount = 0;
         int pkg_count=1;
         if(len > PKG_DATA_LEN ){
-            pkg_count= len / PKG_DATA_LEN ;
+            pkg_count= (len / PKG_DATA_LEN )+1;
+            Log.e(TAG, "pkg_count="+pkg_count );
         }
         OUTER_FOR:for (int i = 0; i < pkg_count; i++) {
             UsbTunnelData Data = new UsbTunnelData();
@@ -93,6 +94,7 @@ public class ccg4 {
                 Arrays.fill(checksum_data, (byte) 0);
                 System.arraycopy(data, i*PKG_DATA_LEN, checksum_data, 0, tmp_len);
                 checksum_len=tmp_len;
+                Log.e(TAG, "tmp_len="+tmp_len+" i="+i );
             }else{
                 Data.send_array[1] = PKG_DATA_LEN+4;
                 Arrays.fill(checksum_data, (byte) 0);
@@ -115,21 +117,14 @@ public class ccg4 {
             boolean ackOK =false;
             retryCount = 5;
             while(retryCount >0 ){
-                ackOK =false;
                 if (mUsb.RequestCdcData(Data) == true) {
-                    if (Data.recv_array_count != 3) {
-                        Log.e(TAG, "recv len="+Data.recv_array_count+" err, retryCount="+retryCount );
-                        retryCount--;
-                        continue;
-                    }
-                    if(Const.CMD_FOTA_TRANSFER==Data.recv_array[0] && 0== Data.recv_array[2] ){
+                    if(3==Data.recv_array_count && Const.CMD_FOTA_TRANSFER==Data.recv_array[0]  && 0==Data.recv_array[2]){
                         data_index++;
                         ackOK=true;
                         break;
                     }
-                    retryCount--;
-                    Log.e(TAG, "recv ack err="+Data.recv_array[2]);
                 }
+                retryCount--;
                 Log.e(TAG, "request fail, retryCount="+retryCount );
             }
             if (!ackOK) {

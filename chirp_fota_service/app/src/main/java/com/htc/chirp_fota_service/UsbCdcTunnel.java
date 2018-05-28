@@ -133,7 +133,10 @@ class UsbCdcTunnel {
                 this.ReleaseUsbCdcInterface();
                 return false;
             }
-            Log.d(TAG, "send=" + Arrays.toString(Data.send_array) + "(" + Data.send_array_count + ")");
+            //byte[] tmp_s_data = new byte[Data.send_array_count];
+            //System.arraycopy(Data.send_array, 0, tmp_s_data, 0, Data.send_array_count);
+            //Log.d(TAG, "send=" + Arrays.toString(tmp_s_data) + "(" + Data.send_array_count + ")");
+            Log.d(TAG,"len={"+Data.send_array_count+"}send="+String.valueOf(Data.send_array));
 
             if (Data.wait_resp_ms > 0) {
                 try {
@@ -147,7 +150,10 @@ class UsbCdcTunnel {
                     this.ReleaseUsbCdcInterface();
                     return false;
                 }
-                Log.d(TAG, "recv=" + Arrays.toString(Data.recv_array) + "(" + Data.recv_array_count + ")");
+
+                byte[] tmp_rv_data = new byte[Data.recv_array_count];
+                System.arraycopy(Data.recv_array, 0, tmp_rv_data, 0, Data.recv_array_count);
+                Log.d(TAG, "recv=" + Arrays.toString(tmp_rv_data) + "(" + Data.recv_array_count + ")");
             }
 
             this.ReleaseUsbCdcInterface();
