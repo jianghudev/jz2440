@@ -9,6 +9,8 @@ import java.util.Arrays;
  */
 
 class UsbTunnelData {
+
+
     public static final int USB_CDC_SEND_PACKET_MAX_SIZE = 64;
     public static final int USB_CDC_RECV_PACKET_MAX_SIZE = 64 * 16;
     byte[] send_array = new byte[USB_CDC_SEND_PACKET_MAX_SIZE];

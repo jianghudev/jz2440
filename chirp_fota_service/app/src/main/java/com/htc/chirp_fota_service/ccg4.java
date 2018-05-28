@@ -27,6 +27,8 @@ public class ccg4 {
     ////  last line have \r\n[2]
     private static final int PKG_DATA_LEN = UsbTunnelData.USB_CDC_SEND_PACKET_MAX_SIZE -6;
 
+    public static final int CCG4_LINE_LENGTH = 528+8;
+
     private short data_index=0;
 
     public ccg4(Usb usb) {
@@ -36,9 +38,12 @@ public class ccg4 {
 
     public short ccg4_checksum(byte[] data, int len) {
         short sum = 0;
+        short tmp=0;
         for (int i = 0; i < len; i++) {
-            sum +=data[i];
+            tmp=data[i];
+            sum +=tmp;
         }
+        Log.d(TAG, "checksum="+sum);
         return sum;
     }
 
@@ -74,7 +79,7 @@ public class ccg4 {
         byte[] checksum_data = new byte[PKG_DATA_LEN];
         int checksum_len = 0;
 
-        int retryCount = 5;
+        int retryCount = 0;
         int pkg_count=1;
         if(len > PKG_DATA_LEN ){
             pkg_count= len / PKG_DATA_LEN ;
@@ -100,30 +105,32 @@ public class ccg4 {
             ////checksum
             short tmp_cs=ccg4_checksum(checksum_data,checksum_len);
             Data.send_array[4] =   (byte)(tmp_cs & 0xff);
-            Data.send_array[5] =  (byte)(tmp_cs & 0xff);
+            Data.send_array[5] =  (byte)(tmp_cs>>8 & 0xff);
             System.arraycopy(checksum_data, 0, Data.send_array, 6, checksum_len);
 
-            Data.send_array_count = checksum_len;
+            Data.send_array_count = checksum_len+6;
             Data.recv_array_count = Data.recv_array.length;
             Data.wait_resp_ms = 2;
 
             boolean ackOK =false;
-            while(retryCount-- >0 ){
+            retryCount = 5;
+            while(retryCount >0 ){
                 ackOK =false;
                 if (mUsb.RequestCdcData(Data) == true) {
                     if (Data.recv_array_count != 3) {
+                        Log.e(TAG, "recv len="+Data.recv_array_count+" err, retryCount="+retryCount );
+                        retryCount--;
                         continue;
                     }
-                    if(Const.CMD_FOTA_TRANSFER==Data.recv_array[0]){
-                        if (0== Data.recv_array[2]) {
-                            data_index++;
-                            ackOK=true;
-                            break;
-                        }else{
-                            Log.e(TAG, "recv ack err="+Data.recv_array[2]);
-                        }
+                    if(Const.CMD_FOTA_TRANSFER==Data.recv_array[0] && 0== Data.recv_array[2] ){
+                        data_index++;
+                        ackOK=true;
+                        break;
                     }
+                    retryCount--;
+                    Log.e(TAG, "recv ack err="+Data.recv_array[2]);
                 }
+                Log.e(TAG, "request fail, retryCount="+retryCount );
             }
             if (!ackOK) {
                 Log.e(TAG, "data ack err="+Data.recv_array[2]);
@@ -199,18 +206,23 @@ public class ccg4 {
                 if( !need_update_ccg4_fw(ccgfile.length()) ){
                     return -1;
                 }
+                data_index=1; //first pkg index is 1
+
                 InputStream is = new FileInputStream(ccgfile);
                 BufferedReader reader = new BufferedReader(new InputStreamReader(is));
                 String line = null;
+
+                byte[] tmp_byte= new byte[CCG4_LINE_LENGTH];
                 while ((line = reader.readLine()) != null) {
+                    line_num++;
+                    Log.d(TAG, "read line="+line_num);
                     byte[] srtbyte = line.getBytes("UTF-8"); //no including \r\n  ,we must add it
                     byte[] tmp_crlf= {0X0D, 0X0A};
-                    byte[] tmp_byte= new byte[UsbTunnelData.USB_CDC_SEND_PACKET_MAX_SIZE];
-
+                    Arrays.fill(tmp_byte, (byte) 0);
                     System.arraycopy(srtbyte, 0, tmp_byte, 0, srtbyte.length);
                     System.arraycopy(tmp_crlf, 0, tmp_byte, srtbyte.length, 2);
                     if( !ccg4_handle_line(tmp_byte,srtbyte.length+2) ){
-                        Log.d(TAG, "line err, please check");
+                        Log.d(TAG, "handle line err, please check");
                         return -1;
                     }
                 }
