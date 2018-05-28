@@ -96,7 +96,7 @@ public class ccg4 {
             }
             Data.send_array[2] = (byte)(data_index & 0xff);
             Data.send_array[3] = (byte)(data_index>>8 & 0xff);
-            data_index++;
+
             ////checksum
             short tmp_cs=ccg4_checksum(checksum_data,checksum_len);
             Data.send_array[4] =   (byte)(tmp_cs & 0xff);
@@ -116,11 +116,12 @@ public class ccg4 {
                     }
                     if(Const.CMD_FOTA_TRANSFER==Data.recv_array[0]){
                         if (0== Data.recv_array[2]) {
+                            data_index++;
                             ackOK=true;
+                            break;
                         }else{
                             Log.e(TAG, "recv ack err="+Data.recv_array[2]);
                         }
-                        break;
                     }
                 }
             }

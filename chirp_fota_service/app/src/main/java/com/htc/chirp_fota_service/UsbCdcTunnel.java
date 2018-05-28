@@ -106,13 +106,13 @@ class UsbCdcTunnel {
         return send_count;
     }
 
-    private int RawRecvCdcData(byte[] recv_data, int recv_data_count) {
-        recv_data_count = CDCConnection.bulkTransfer(cdcEndpointIn, recv_data, recv_data_count, 1000);
-        if (recv_data_count < 0) {
-            Log.w(TAG, "RawRecvCdcData: bulkTransfer return failure: " + recv_data_count);
+    private int RawRecvCdcData(byte[] recv_data, int recv_count) {
+        int r_count = CDCConnection.bulkTransfer(cdcEndpointIn, recv_data, recv_count, 1000);
+        if (r_count < 0) {
+            Log.w(TAG, "RawRecvCdcData: bulkTransfer return failure: " + r_count);
         }
-        //Log.d(TAG, "recv count=[" + recv_data_count + "]" );
-        return recv_data_count;
+        //Log.d(TAG, "recv count=[" + r_count + "]" );
+        return r_count;
     }
 
     public boolean RequestSingleCdcData(UsbTunnelData Data) {
@@ -142,7 +142,8 @@ class UsbCdcTunnel {
                     Thread.interrupted();
                 }
 
-                if (this.RawRecvCdcData(Data.recv_array, Data.recv_array_count) < 0) {
+                Data.recv_array_count=this.RawRecvCdcData(Data.recv_array, Data.recv_array_count);
+                if ( Data.recv_array_count< 0) {
                     this.ReleaseUsbCdcInterface();
                     return false;
                 }
