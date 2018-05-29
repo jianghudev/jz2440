@@ -186,54 +186,55 @@ public class ccg4 {
         return false;
     }
 
-    public int updateFW(){
+    public int updateFW(int file_type){
         try {
             int line_num=0;
+            File ccgfile=null;
 
             File dir = Environment.getDataDirectory();
-            File ccgfile = new File(dir, CCG4_FM1_NAME);
-            ccgfile.length();
-
+            if (file_type == 1) {
+                ccgfile = new File(dir, CCG4_FM1_NAME);
+            }else if(file_type == 2){
+                ccgfile = new File(dir, CCG4_FM2_NAME);
+            }else{
+                Log.e(TAG,"err="+file_type);
+                return -1;
+            }
             String path = ccgfile.getAbsolutePath();
             String name = ccgfile.getName();
             Log.d(TAG,"path="+path+" name="+name);
-            if(ccgfile.exists()){
-                if( !need_update_ccg4_fw(ccgfile.length()) ){
+            if(!ccgfile.exists()) {
+                Log.e(TAG, "file not exist");
+                return -1;
+            }
+            if( !need_update_ccg4_fw(ccgfile.length()) ){
+                return -1;
+            }
+            data_index=1; //first pkg index is 1
+
+            InputStream is = new FileInputStream(ccgfile);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+            String line = null;
+            byte[] line_data= new byte[CCG4_LINE_LENGTH];
+            while ((line = reader.readLine()) != null) {
+                line_num++;
+                Log.d(TAG, "read line="+line_num);
+                byte[] srtbyte = line.getBytes("UTF-8"); //no including \r\n  ,we must add it
+                byte[] tmp_crlf= {0X0D, 0X0A};
+                Arrays.fill(line_data, (byte) 0);
+                System.arraycopy(srtbyte, 0, line_data, 0, srtbyte.length);
+                System.arraycopy(tmp_crlf, 0, line_data, srtbyte.length, 2);
+                if( !ccg4_handle_line(line_data,srtbyte.length+2) ){
+                    Log.d(TAG, "handle line err, please check");
                     return -1;
                 }
-                data_index=1; //first pkg index is 1
-
-                InputStream is = new FileInputStream(ccgfile);
-                BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-                String line = null;
-
-                byte[] tmp_byte= new byte[CCG4_LINE_LENGTH];
-                while ((line = reader.readLine()) != null) {
-                    line_num++;
-                    Log.d(TAG, "read line="+line_num);
-                    byte[] srtbyte = line.getBytes("UTF-8"); //no including \r\n  ,we must add it
-                    byte[] tmp_crlf= {0X0D, 0X0A};
-                    Arrays.fill(tmp_byte, (byte) 0);
-                    System.arraycopy(srtbyte, 0, tmp_byte, 0, srtbyte.length);
-                    System.arraycopy(tmp_crlf, 0, tmp_byte, srtbyte.length, 2);
-                    if( !ccg4_handle_line(tmp_byte,srtbyte.length+2) ){
-                        Log.d(TAG, "handle line err, please check");
-                        return -1;
-                    }
-                }
-                is.close();
-
-                send_end_pkg();
-
-
-            }else{
-                Log.e(TAG, "file not exist");
             }
+            is.close();
+            send_end_pkg();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return 0;
     }
 }

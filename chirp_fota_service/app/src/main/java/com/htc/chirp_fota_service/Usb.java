@@ -312,7 +312,16 @@ public class Usb {
 
 
     public int updateCCG4() {
-        mCCG4.updateFW();
+        int ret = mCCG4.updateFW(1);
+        if (ret != 0) {
+            Log.e(TAG, "updateFW 1 fail");
+            return -1;
+        }
+        ret= mCCG4.updateFW(2);
+        if (ret != 0) {
+            Log.e(TAG, "updateFW 2 fail");
+            return -1;
+        }
         return 0;
     }
 
