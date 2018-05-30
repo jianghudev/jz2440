@@ -116,7 +116,7 @@ public class Usb {
         mUsbCdcTunnel = new UsbCdcTunnel();
         mfotaUsbManager =(UsbManager) mContext.getSystemService(Context.USB_SERVICE);
 
-        mCCG4 =new ccg4(this);
+        mCCG4 =new ccg4(this,context);
 
         // Handle case where USB device is connected before app launches;
         // hence ACTION_USB_DEVICE_ATTACHED will not occur so we explicitly call for permission

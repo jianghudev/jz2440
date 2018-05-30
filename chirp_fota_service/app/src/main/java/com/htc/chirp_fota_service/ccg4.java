@@ -1,5 +1,6 @@
 package com.htc.chirp_fota_service;
 
+import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
@@ -23,8 +24,8 @@ public class ccg4 {
     private static final String TAG=Const.G_TAG;
     private Usb mUsb;
 
-    private static final String CCG4_FM1_NAME = "htc_apn_4225_v14_1.cyacd";
-    private static final String CCG4_FM2_NAME = "htc_apn_4225_v14_2.cyacd";
+    private static  String CCG4_FM1_NAME = "htc_apn_4225_v14_1.cyacd";
+    private static  String CCG4_FM2_NAME = "htc_apn_4225_v14_2.cyacd";
     private boolean CCG4_FW1_UPDATE_OK=false;
     private boolean CCG4_FW2_UPDATE_OK=false;
     private byte[] ccg4_version = null;
@@ -37,10 +38,11 @@ public class ccg4 {
 
     private short data_index=0;
 
+    private Context mContext;
 
-
-    public ccg4(Usb usb) {
+    public ccg4(Usb usb, Context ctxt) {
         mUsb=usb;
+        mContext=ctxt;
     }
 
 
@@ -201,14 +203,40 @@ public class ccg4 {
         return true;
     }
 
+    private int get_ccg4_file_from_phone() {
+        //File dir = Environment.getDataDirectory();
+        File dir = mContext.getCacheDir();
+        File[] tmp_files = dir.listFiles();// must have permission
+        if (tmp_files != null) {// 先判断目录是否为空，否则会报空指针
+            for (File file : tmp_files) {
+                if (file.isFile()) {
+                    String fileName = file.getAbsolutePath();
+                    if (fileName.endsWith("1.cyacd")) {
+                        CCG4_FM1_NAME= fileName;
+                    }else if (fileName.endsWith("2.cyacd")) {
+                        CCG4_FM2_NAME= fileName;
+                    }
+                }
+            }
+        }else{
+            Log.d(TAG,"dir is null");
+            return -1;
+        }
+        return 0;
+    }
+
+
+
     public int need_update_ccg4_fw(){
         int retryCount = 5;
         init_ccg4();
         try {
-            File dir = Environment.getDataDirectory();
-            File ccgfile = new File(dir, CCG4_FM1_NAME);
+            if( 0 != get_ccg4_file_from_phone() ){
+                return -1;
+            }
+            File ccgfile = new File(CCG4_FM1_NAME);
             String path = ccgfile.getAbsolutePath();
-            Log.d(TAG,"path="+path);
+            Log.d(TAG,"file1="+path);
             if(!ccgfile.exists()) {
                 Log.e(TAG, "file not exist");
                 return -1;
@@ -263,18 +291,16 @@ public class ccg4 {
         try {
             int line_num=0;
             File ccgfile=null;
-
-            File dir = Environment.getDataDirectory();
             if( 11 ==  ack_start){
-                ccgfile = new File(dir, CCG4_FM1_NAME);
+                ccgfile = new File(CCG4_FM1_NAME);
             }else if( 12 == ack_start ){
-                ccgfile = new File(dir, CCG4_FM2_NAME);
+                ccgfile = new File(CCG4_FM2_NAME);
             }else{
                 Log.e(TAG,"err! ack_start="+ack_start);
                 return -1;
             }
             String path = ccgfile.getAbsolutePath();
-            Log.d(TAG,"path="+path);
+            Log.d(TAG,"file="+path);
             if(!ccgfile.exists()) {
                 Log.e(TAG, "file not exist");
                 return -1;
