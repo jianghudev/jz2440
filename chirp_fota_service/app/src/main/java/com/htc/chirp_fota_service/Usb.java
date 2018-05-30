@@ -312,15 +312,26 @@ public class Usb {
 
 
     public int updateCCG4() {
-        do{
+        boolean update_fw1_fw2=false;
+        int retryCount = 10;
+        while(retryCount-- >0 ){
             int ret= mCCG4.updateFW();
             if (ret == 0) {
-                Log.i(TAG, "update CCG4 fw1 fw2 all ok!");
+                update_fw1_fw2=true;
                 break;
             }
             //// todo  timeout
-        }while(true);
+        }
+        if (!update_fw1_fw2) {
+            Log.i(TAG, "update CCG4 fw1/fw2 fail!");
+            return -1;
+        }
+        if(! mCCG4.send_query_pkg() ){
+            Log.i(TAG, "query pkg fail!");
+            return -1;
+        }
 
+        Log.i(TAG, "update CCG4 all ok");
         return 0;
     }
 

@@ -3,9 +3,12 @@ package com.htc.chirp_fota_service;
 import android.os.Environment;
 import android.util.Log;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -24,6 +27,7 @@ public class ccg4 {
     private static final String CCG4_FM2_NAME = "htc_apn_4225_v14_2.cyacd";
     private boolean CCG4_FW1_UPDATE_OK=false;
     private boolean CCG4_FW2_UPDATE_OK=false;
+    private byte[] ccg4_version = null;
 
     ////  data format   cmd[1]  len[1] index[2] check[2]  data[56]
     ////  last line have \r\n[2]
@@ -47,9 +51,62 @@ public class ccg4 {
             tmp=data[i];
             sum +=tmp;
         }
-        Log.d(TAG, "checksum="+sum);
+        //Log.d(TAG, "checksum="+sum);
         return sum;
     }
+
+    private byte[] get_ccg4_ver(File cfile){
+        byte[] raw_version= new byte[24];
+        Arrays.fill(raw_version, (byte) 0);
+        try {
+            InputStream is = new FileInputStream(cfile);
+            BufferedInputStream bstream = new BufferedInputStream(is);
+            long skip_len= bstream.skip(0x1d9);
+            int len=bstream.read(raw_version,0,16);  //
+            Log.d(TAG,"len="+len+ " raw_version="+Arrays.toString(raw_version) );
+            is.close();
+
+            return raw_version;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return raw_version;
+    }
+
+    boolean send_query_pkg(){
+        UsbTunnelData Data = new UsbTunnelData();
+        Data.send_array[0] = Const.CMD_FOTA_QUERY;  //cmd
+        Data.send_array[1] = 17;   //len
+        Data.send_array[2] = Const.FOTA_TYPE_CCG4;
+        if(null !=ccg4_version){
+            System.arraycopy(ccg4_version, 0, Data.send_array, 3, 16);
+        }
+        Data.send_array_count = 19;
+        Data.recv_array_count = Data.recv_array.length;
+        Data.wait_resp_ms = 2;
+        int retryCount = 10;
+        while(retryCount-- >0 ){
+            if (mUsb.RequestCdcData(Data) == true) {
+                if (3 ==Data.recv_array_count &&  Const.CMD_FOTA_QUERY==Data.recv_array[0] && 0== Data.recv_array[2] ) {
+                    CCG4_FW2_UPDATE_OK=false;
+                    CCG4_FW2_UPDATE_OK=false;
+                    return true;
+                }
+            }
+            try {
+                if(9 ==retryCount ){
+                    Thread.sleep(100);
+                }else{
+                    Thread.sleep(100);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+
 
     public boolean send_end_pkg(){
         UsbTunnelData Data = new UsbTunnelData();
@@ -87,7 +144,7 @@ public class ccg4 {
         int pkg_count=1;
         if(len > PKG_DATA_LEN ){
             pkg_count= (len / PKG_DATA_LEN )+1;
-            Log.e(TAG, "pkg_count="+pkg_count );
+            //Log.e(TAG, "pkg_count="+pkg_count );
         }
         OUTER_FOR:for (int i = 0; i < pkg_count; i++) {
             UsbTunnelData Data = new UsbTunnelData();
@@ -98,7 +155,7 @@ public class ccg4 {
                 Arrays.fill(checksum_data, (byte) 0);
                 System.arraycopy(data, i*PKG_DATA_LEN, checksum_data, 0, tmp_len);
                 checksum_len=tmp_len;
-                Log.e(TAG, "tmp_len="+tmp_len+" i="+i );
+                //Log.e(TAG, "tmp_len="+tmp_len+" i="+i );
             }else{
                 Data.send_array[1] = PKG_DATA_LEN+4;
                 Arrays.fill(checksum_data, (byte) 0);
@@ -157,6 +214,7 @@ public class ccg4 {
                 return -1;
             }
             long file_size=ccgfile.length();
+            ccg4_version =get_ccg4_ver(ccgfile);
 
             UsbTunnelData Data = new UsbTunnelData();
             Data.send_array[0] = Const.CMD_FOTA_START;  //cmd
@@ -254,7 +312,7 @@ public class ccg4 {
             CCG4_FW2_UPDATE_OK=true;
             Log.i(TAG, "ccg4 file2 xfer ok  fw1="+CCG4_FW1_UPDATE_OK);
         }
-        if( CCG4_FW1_UPDATE_OK && CCG4_FW1_UPDATE_OK ){
+        if( CCG4_FW1_UPDATE_OK && CCG4_FW2_UPDATE_OK ){
             return 0;
         }else if(CCG4_FW1_UPDATE_OK){
             return 11;
