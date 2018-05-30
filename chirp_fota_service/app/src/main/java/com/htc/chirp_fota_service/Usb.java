@@ -312,16 +312,15 @@ public class Usb {
 
 
     public int updateCCG4() {
-        int ret = mCCG4.updateFW(1);
-        if (ret != 0) {
-            Log.e(TAG, "updateFW 1 fail");
-            return -1;
-        }
-        ret= mCCG4.updateFW(2);
-        if (ret != 0) {
-            Log.e(TAG, "updateFW 2 fail");
-            return -1;
-        }
+        do{
+            int ret= mCCG4.updateFW();
+            if (ret == 0) {
+                Log.i(TAG, "update CCG4 fw1 fw2 all ok!");
+                break;
+            }
+            //// todo  timeout
+        }while(true);
+
         return 0;
     }
 
