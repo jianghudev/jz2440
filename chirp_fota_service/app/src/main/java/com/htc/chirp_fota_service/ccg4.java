@@ -1,20 +1,17 @@
 package com.htc.chirp_fota_service;
 
 import android.content.Context;
-import android.os.Environment;
+import android.content.Intent;
 import android.util.Log;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by hubin_jiang on 2018/5/23.
@@ -43,6 +40,8 @@ public class ccg4 {
     public ccg4(Usb usb, Context ctxt) {
         mUsb=usb;
         mContext=ctxt;
+
+
     }
 
 
@@ -226,6 +225,12 @@ public class ccg4 {
     }
 
 
+    private void show_status_dlg(){
+        Intent d_intent = new Intent(mContext,ActivityDialog.class);
+        d_intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        d_intent.putExtra("status", "update ok!");
+        mContext.startActivity(d_intent);
+    }
 
     public int need_update_ccg4_fw(){
         int retryCount = 5;
@@ -234,6 +239,13 @@ public class ccg4 {
             if( 0 != get_ccg4_file_from_phone() ){
                 return -1;
             }
+
+            show_status_dlg();
+
+            if (retryCount == 5) {
+                return -1;
+            }
+
             File ccgfile = new File(CCG4_FM1_NAME);
             String path = ccgfile.getAbsolutePath();
             Log.d(TAG,"file1="+path);

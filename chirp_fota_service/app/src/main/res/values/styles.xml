@@ -17,4 +17,22 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+
+    <style name="myDialogTheme" parent="Theme.AppCompat.Dialog">
+        <!-- 窗口的框架 -->
+        <item name="android:windowFrame">@null</item>
+        <!-- 窗口是否是浮动的 -->
+        <item name="android:windowIsFloating">true</item>
+        <!-- 窗口是否是半透明的 -->
+        <item name="android:windowIsTranslucent">false</item>
+        <!-- 窗口是否有标题栏 -->
+        <item name="android:windowNoTitle">true</item>
+        <!-- 窗口内容覆盖 -->
+        <item name="android:windowContentOverlay">@null</item>
+        <!-- 是否启用背景模糊 -->
+        <item name="android:backgroundDimEnabled">false</item>
+        <!-- 窗口背景色和边框，设为null会没有边框和背景 -->
+        <item name="android:windowBackground">@null</item>
+    </style>
+
 </resources>
