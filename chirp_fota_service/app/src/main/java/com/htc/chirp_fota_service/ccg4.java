@@ -8,9 +8,11 @@ import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
 /**
@@ -225,10 +227,14 @@ public class ccg4 {
     }
 
 
-    private void show_status_dlg(){
+    void show_status_dlg(int status){
         Intent d_intent = new Intent(mContext,ActivityDialog.class);
         d_intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        d_intent.putExtra("status", "update ok!");
+        if (status == 0) {
+            d_intent.putExtra("status", "update ok!");
+        }else{
+            d_intent.putExtra("status", "update fail!");
+        }
         mContext.startActivity(d_intent);
     }
 
@@ -237,12 +243,6 @@ public class ccg4 {
         init_ccg4();
         try {
             if( 0 != get_ccg4_file_from_phone() ){
-                return -1;
-            }
-
-            show_status_dlg();
-
-            if (retryCount == 5) {
                 return -1;
             }
 
@@ -298,7 +298,7 @@ public class ccg4 {
         return -1;
     }
 
-    public int updateFW(){
+    public int updateFW() throws InterruptedException{
         int ack_start= need_update_ccg4_fw();
         try {
             int line_num=0;
@@ -309,7 +309,10 @@ public class ccg4 {
                 ccgfile = new File(CCG4_FM2_NAME);
             }else{
                 Log.e(TAG,"err! ack_start="+ack_start);
-                return -1;
+                throw new InterruptedException();
+                //Thread.currentThread().stop();
+                //return 13;   //// MCU will reboot, usb reconnect
+                //Thread.currentThread().interrupt();
             }
             String path = ccgfile.getAbsolutePath();
             Log.d(TAG,"file="+path);
@@ -339,7 +342,9 @@ public class ccg4 {
             is.close();
             send_end_pkg();
 
-        } catch (Exception e) {
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
 

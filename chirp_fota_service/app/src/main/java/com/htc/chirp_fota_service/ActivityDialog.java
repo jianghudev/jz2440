@@ -27,7 +27,6 @@ public class ActivityDialog extends AppCompatActivity {
                 Log.d(TAG,"onClick");
                 //ActivityDialog.this.finish();
                 //android.os.Process.killProcess(android.os.Process.myPid());
-
                 moveTaskToBack(true);
                 ActivityDialog.this.finish();
 

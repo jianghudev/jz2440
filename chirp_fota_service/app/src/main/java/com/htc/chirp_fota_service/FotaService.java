@@ -20,7 +20,7 @@ public class FotaService extends Service implements Usb.OnUsbChangeListener{
     private FotaServiceImpl fs;
     private Usb mUsb;
     private static final String TAG=Const.G_TAG;
-
+    private Thread ccg4_thread=null;
 
     //public int curret_device  = -1;
     //public boolean DEVICE_STATE = false;
@@ -67,12 +67,21 @@ public class FotaService extends Service implements Usb.OnUsbChangeListener{
                 fs.mDeviceConnectedListener.onConnectedStateStatusChanged(fs.curret_device, fs.DEVICE_STATE, Usb.USB_STATE);
             }
             if(isConnected){
-                new Thread(new Runnable() {
+                ccg4_thread = new Thread(new Runnable() {
                     public void run() {
-                        Log.d(TAG, "start updateFW");
-                        mUsb.updateCCG4();
+                        try {
+                            Log.d(TAG, "start updateFW");
+                            mUsb.update_CCG4_and_show_dlg();
+                        } catch (Exception e) {
+                            Log.d(TAG, "__jh__ thread stop");
+                            e.printStackTrace();
+                        }
                     }
-                }).start();
+                });
+                ccg4_thread.start();
+            }else{
+               boolean alive = ccg4_thread.isAlive();
+                Log.i(TAG, "__jh__ alive="+alive);
             }
 
         }catch (Exception e) {

@@ -97,7 +97,7 @@ public class Usb {
                         Log.i(TAG,"detached cdc ");
                         release();
                         mfotaDevice = null;
-                        mOnUsbChangeListener.on_Connected(m_impl.curret_device, false, Usb.USB_STATE);
+                        mOnUsbChangeListener.on_Connected(m_impl.curret_device, false, 1);
                     }
                 }
             }
@@ -310,8 +310,17 @@ public class Usb {
         }
     }
 
+    public int update_CCG4_and_show_dlg() throws InterruptedException{
+        int ret =updateCCG4();
+        if(13 == ret){
+            return 13; ////mcu reboot , don't show dialog
+        }
+        mCCG4.show_status_dlg(ret);
+        return ret;
+    }
 
-    public int updateCCG4() {
+
+    public int updateCCG4() throws InterruptedException{
         boolean update_fw1_fw2=false;
         int retryCount = 10;
         while(retryCount-- >0 ){
@@ -319,6 +328,10 @@ public class Usb {
             if (ret == 0) {
                 update_fw1_fw2=true;
                 break;
+            }else if(11==ret ||  12==ret ){
+                Log.i(TAG, "ret="+ret);
+            }else if (13 == ret){
+                return 13;
             }
             //// todo  timeout
         }
@@ -330,7 +343,6 @@ public class Usb {
             Log.i(TAG, "query pkg fail!");
             return -1;
         }
-
         Log.i(TAG, "update CCG4 all ok");
         return 0;
     }
