@@ -21,8 +21,8 @@ android {
     applicationVariants.all { var->
         var.outputs.all{op->
             if(op.outputFile!=null && op.outputFile.name.endsWith('.apk') && 'debug'.equals(var.buildType.name) ){
-                //def apkfile = rootProject.name+"_v"+var.versionName+'_'+buildTime()+'.apk'
-                def apkfile = "ccg4_FOTA_v"+var.versionName+'_'+buildTime()+'.apk'
+                def apkfile = rootProject.name+"_v"+var.versionName+'_'+buildTime()+'.apk'
+                //def apkfile = "ccg4_FOTA_v"+var.versionName+'_'+buildTime()+'.apk'
                 outputFileName = apkfile
             }
         }
