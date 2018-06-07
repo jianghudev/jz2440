@@ -298,6 +298,7 @@ public class ccg4 {
         return -1;
     }
 
+
     public int updateFW() throws InterruptedException{
         int ack_start= need_update_ccg4_fw();
         try {
