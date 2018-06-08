@@ -7,22 +7,36 @@ android {
         minSdkVersion 19
         targetSdkVersion 26
         versionCode 1
-        versionName "1.0"
+        versionName "1.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
     }
+
+    signingConfigs {
+        chirp_fota_cfg {
+            storeFile file("../chirp_fota.jks")
+            storePassword "android"
+            keyAlias "fota"
+            keyPassword "android"
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.chirp_fota_cfg
         }
     }
 
     applicationVariants.all { var->
         var.outputs.all{op->
-            if(op.outputFile!=null && op.outputFile.name.endsWith('.apk') && 'debug'.equals(var.buildType.name) ){
-                def apkfile = rootProject.name+"_v"+var.versionName+'_'+buildTime()+'.apk'
-                //def apkfile = "ccg4_FOTA_v"+var.versionName+'_'+buildTime()+'.apk'
+            def b_type =var.buildType.name;
+            if(op.outputFile!=null && op.outputFile.name.endsWith('.apk') &&
+                    ( 'debug'.equals(b_type) ||  'release'.equals(b_type)  )
+            ){
+                //def apkfile = rootProject.name+"_v"+var.versionName+'_'+buildTime()+'.apk'
+                def apkfile = "ccg4_FOTA_v"+var.versionName+'_'+b_type+"_"+buildTime()+'.apk'
                 outputFileName = apkfile
             }
         }
@@ -37,19 +51,15 @@ def buildTime(){
 }
 
 
-
 dependencies {
-
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
     implementation 'com.android.support:design:26.1.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-
     configurations.all {
         resolutionStrategy.force 'com.android.support:support-annotations:26.1.0'
     }
-
 }
