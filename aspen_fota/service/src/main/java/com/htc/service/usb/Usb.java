@@ -34,6 +34,9 @@ public class Usb {
     public UsbEndpoint mEpOut;
 
 
+    public final static int USB_VENDOR_ID = 1155;   // VID while in DFU mode 0x0483
+    public final static int USB_PRODUCT_ID = 57105; // PID while in DFU mode 0xDF11
+
     public final static int USB_CDC_VENDOR_ID = 0x0483;   // VID while in CDC mode 0x0BB4
     public final static int USB_CDC_PRODUCT_ID = 0x5740; // PID while in CDC mode 0x09FF
     /* USB DFU ID's (may differ by device) */
@@ -83,7 +86,8 @@ public class Usb {
                     if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
                         if (mfotaDevice != null) {
                             openDevice(mfotaDevice);
-                            if((mfotaDevice.getProductId() == USB_CDC_PRODUCT_ID && mfotaDevice.getVendorId() == USB_CDC_VENDOR_ID)){
+                            if((mfotaDevice.getProductId() == USB_CDC_PRODUCT_ID && mfotaDevice.getVendorId() == USB_CDC_VENDOR_ID)
+                                    || (mfotaDevice.getProductId() == USB_PRODUCT_ID && mfotaDevice.getVendorId() == USB_VENDOR_ID) ){
                                 tryClaimDevice(mfotaDevice);
                             }
                         }
@@ -93,11 +97,13 @@ public class Usb {
                 }
             } else if (UsbManager.ACTION_USB_DEVICE_ATTACHED.equals(action)) {
                 request_Permission(mContext, USB_CDC_VENDOR_ID, USB_CDC_PRODUCT_ID);
+                request_Permission(mContext, USB_VENDOR_ID, USB_PRODUCT_ID);
             }
             else if (UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action)) {
                 synchronized (this) {
                     UsbDevice device = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
-                    if((device.getProductId() == USB_CDC_PRODUCT_ID && device.getVendorId() == USB_CDC_VENDOR_ID) ){
+                    if((device.getProductId() == USB_CDC_PRODUCT_ID && device.getVendorId() == USB_CDC_VENDOR_ID)
+                            || (device.getProductId() == USB_PRODUCT_ID && device.getVendorId() == USB_VENDOR_ID) ){
                         Log.i(TAG,"detached cdc ");
                         release();
                         mfotaDevice = null;
@@ -143,7 +149,8 @@ public class Usb {
                 Log.i(TAG, "requestPermission has get");
                 if(mfotaConnection == null) {
                     openDevice(mfotaDevice);
-                    if ((mfotaDevice.getProductId() == USB_CDC_PRODUCT_ID && mfotaDevice.getVendorId() == USB_CDC_VENDOR_ID)) {
+                    if ((mfotaDevice.getProductId() == USB_CDC_PRODUCT_ID && mfotaDevice.getVendorId() == USB_CDC_VENDOR_ID)
+                            || (mfotaDevice.getProductId() == USB_PRODUCT_ID && mfotaDevice.getVendorId() == USB_VENDOR_ID)  ) {
                         tryClaimDevice(mfotaDevice);
                     }
                 }else{
@@ -298,7 +305,9 @@ public class Usb {
                     m_impl.DEVICE_STATE = true;
                     break;
                 } else if (mInterface.getInterfaceClass() == Usb.USB_DFU_bInterfaceClass && mInterface.getInterfaceSubclass() == Usb.USB_DFU_bInterfaceSubClass && mInterface.getInterfaceProtocol() == Usb.USB_DFU_nInterfaceProtocol) {
+                    m_impl.DEVICE_STATE = true;
                     Usb.USB_STATE = 2;//dfu mode
+                    Log.i(TAG, "dfu connect success.");
                     break;
                 } else {
                     Usb.USB_STATE = 3;//other mode

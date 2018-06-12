@@ -7,6 +7,7 @@ import android.hardware.usb.UsbManager;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.htc.service.dfu.Facep_mcu;
 import com.htc.service.usb.Usb;
 
 
@@ -16,6 +17,7 @@ public class FotaService extends Service implements Usb.OnUsbChangeListener{
     private Usb mUsb;
     private static final String TAG=Const.G_TAG;
     private Thread ccg4_thread=null;
+    private Thread facep_mcu_thread=null;
 
     //public int curret_device  = -1;
     //public boolean DEVICE_STATE = false;
@@ -31,6 +33,26 @@ public class FotaService extends Service implements Usb.OnUsbChangeListener{
         registerReceiver(mUsb.getmUsbReceiver(), new IntentFilter(Usb.HTC_ACTION_USB_PERMISSION));
         registerReceiver(mUsb.getmUsbReceiver(), new IntentFilter(UsbManager.ACTION_USB_DEVICE_ATTACHED));
         registerReceiver(mUsb.getmUsbReceiver(), new IntentFilter(UsbManager.ACTION_USB_DEVICE_DETACHED));
+
+        ccg4_thread = new Thread(new Runnable() {
+            public void run() {
+                try {
+                    Log.d(TAG, "start updateFW");
+                    mUsb.update_CCG4_and_show_dlg();
+                } catch (Exception e) {
+                    Log.d(TAG, "__jh__ thread stop");
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        facep_mcu_thread = new Thread(new Runnable() {
+            public void run() {
+                Log.d(TAG, "faceplate sys update start");
+                Facep_mcu  f_mcu = new Facep_mcu();
+                Facep_mcu.update_sys();
+            }
+        });
 
         Log.d(TAG, "__jh__ onCreate done.");
     }
@@ -62,18 +84,11 @@ public class FotaService extends Service implements Usb.OnUsbChangeListener{
                 fs.mDeviceConnectedListener.onConnectedStateStatusChanged(fs.curret_device, fs.DEVICE_STATE, Usb.USB_STATE);
             }
             if(isConnected){
-                ccg4_thread = new Thread(new Runnable() {
-                    public void run() {
-                        try {
-                            Log.d(TAG, "start updateFW");
-                            mUsb.update_CCG4_and_show_dlg();
-                        } catch (Exception e) {
-                            Log.d(TAG, "__jh__ thread stop");
-                            e.printStackTrace();
-                        }
-                    }
-                });
-                ccg4_thread.start();
+                if ( 1 == type ) { //cdc
+                    ccg4_thread.start();
+                }else if(2 == type ){ //dfu
+                    facep_mcu_thread.start();
+                }
             }else{
                boolean alive = ccg4_thread.isAlive();
                 Log.i(TAG, "__jh__ alive="+alive);
