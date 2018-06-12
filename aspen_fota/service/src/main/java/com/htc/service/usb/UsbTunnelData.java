@@ -1,6 +1,6 @@
 // ++ LICENSE-HIDDEN SOURCE ++
 
-package com.htc.service;
+package com.htc.service.usb;
 
 import java.util.Arrays;
 
@@ -8,16 +8,16 @@ import java.util.Arrays;
  * Created by cdplayer0212 on 2017/2/3.
  */
 
-class UsbTunnelData {
+public class UsbTunnelData {
 
 
     public static final int USB_CDC_SEND_PACKET_MAX_SIZE = 64;
     public static final int USB_CDC_RECV_PACKET_MAX_SIZE = 64 * 16;
-    byte[] send_array = new byte[USB_CDC_SEND_PACKET_MAX_SIZE];
-    int send_array_count;
-    byte[] recv_array = new byte[USB_CDC_RECV_PACKET_MAX_SIZE];
-    int recv_array_count;
-    int wait_resp_ms;
+    public byte[] send_array = new byte[USB_CDC_SEND_PACKET_MAX_SIZE];
+    public int send_array_count;
+    public byte[] recv_array = new byte[USB_CDC_RECV_PACKET_MAX_SIZE];
+    public int recv_array_count;
+    public int wait_resp_ms;
 
     public UsbTunnelData() {
         Arrays.fill(this.send_array, (byte) 0);

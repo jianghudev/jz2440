@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/DfuLibrary/DfuLibrary.iml" filepath="$PROJECT_DIR$/DfuLibrary/DfuLibrary.iml" />
       <module fileurl="file://F:\htc_work\aspen_fota\client\app.iml" filepath="F:\htc_work\aspen_fota\client\app.iml" />
       <module fileurl="file://$PROJECT_DIR$/aspen_fota.iml" filepath="$PROJECT_DIR$/aspen_fota.iml" />
       <module fileurl="file://$PROJECT_DIR$/client/client.iml" filepath="$PROJECT_DIR$/client/client.iml" />

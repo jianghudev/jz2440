@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.htc.service.usb.Usb;
+import com.htc.service.usb.UsbTunnelData;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -75,7 +78,7 @@ public class ccg4 {
         return raw_version;
     }
 
-    boolean send_query_pkg(){
+    public boolean send_query_pkg(){
         UsbTunnelData Data = new UsbTunnelData();
         Data.send_array[0] = Const.CMD_FOTA_QUERY;  //cmd
         Data.send_array[1] = 17;   //len
@@ -226,7 +229,7 @@ public class ccg4 {
     }
 
 
-    void show_status_dlg(int status){
+    public void show_status_dlg(int status){
         Intent d_intent = new Intent(mContext,ActivityDialog.class);
         d_intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         if (status == 0) {

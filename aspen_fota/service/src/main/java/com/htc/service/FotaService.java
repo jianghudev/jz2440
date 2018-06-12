@@ -7,7 +7,7 @@ import android.hardware.usb.UsbManager;
 import android.os.IBinder;
 import android.util.Log;
 
-
+import com.htc.service.usb.Usb;
 
 
 public class FotaService extends Service implements Usb.OnUsbChangeListener{

@@ -1,1 +1,1 @@
-include ':client', ':service'
+include ':client', ':service',':DfuLibrary'

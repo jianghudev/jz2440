@@ -1,4 +1,4 @@
-package com.htc.service;
+package com.htc.service.usb;
 
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -11,12 +11,16 @@ import android.hardware.usb.UsbInterface;
 import android.hardware.usb.UsbManager;
 import android.util.Log;
 
+import com.htc.service.Const;
+import com.htc.service.FotaServiceImpl;
+import com.htc.service.ccg4;
+
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Iterator;
 
 public class Usb {
-    private static final String TAG=Const.G_TAG;
+    private static final String TAG= Const.G_TAG;
 
     public static int USB_STATE       = 0;//cdc:USB_STATE=1;dfu:USB_STATE=2;
     private Context mContext;

@@ -1,6 +1,6 @@
 // ++ LICENSE-HIDDEN SOURCE ++
 
-package com.htc.service;
+package com.htc.service.usb;
 
 /**
  * Created by cdplayer0212 on 2016/11/9.
@@ -13,10 +13,12 @@ import android.hardware.usb.UsbEndpoint;
 import android.hardware.usb.UsbInterface;
 import android.util.Log;
 
+import com.htc.service.Const;
+
 import java.util.Arrays;
 
 class UsbCdcTunnel {
-    private static final String TAG=Const.G_TAG;
+    private static final String TAG= Const.G_TAG;
     private final int USB_CDC_DATA_INTERFACE = 1;
     private final Object McuUsbCdcTunnelSyncObject = new Object();
     private UsbDeviceConnection CDCConnection = null;
