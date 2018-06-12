@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://F:\htc_work\aspen_fota\client\app.iml" filepath="F:\htc_work\aspen_fota\client\app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/aspen_fota.iml" filepath="$PROJECT_DIR$/aspen_fota.iml" />
+      <module fileurl="file://$PROJECT_DIR$/client/client.iml" filepath="$PROJECT_DIR$/client/client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/service/service.iml" filepath="$PROJECT_DIR$/service/service.iml" />
+    </modules>
+  </component>
+</project>
