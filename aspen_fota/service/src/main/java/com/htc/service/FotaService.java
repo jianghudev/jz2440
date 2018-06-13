@@ -19,6 +19,8 @@ public class FotaService extends Service implements Usb.OnUsbChangeListener{
     private Thread ccg4_thread=null;
     private Thread facep_mcu_thread=null;
 
+    private Facep_mcu f_mcu =null;
+
     //public int curret_device  = -1;
     //public boolean DEVICE_STATE = false;
 
@@ -28,6 +30,8 @@ public class FotaService extends Service implements Usb.OnUsbChangeListener{
 
         mUsb = new Usb(this,fs);
         mUsb.setOnUsbChangeListener(this);
+
+        f_mcu = new Facep_mcu(mUsb,this);
 
 
         registerReceiver(mUsb.getmUsbReceiver(), new IntentFilter(Usb.HTC_ACTION_USB_PERMISSION));
@@ -49,8 +53,7 @@ public class FotaService extends Service implements Usb.OnUsbChangeListener{
         facep_mcu_thread = new Thread(new Runnable() {
             public void run() {
                 Log.d(TAG, "faceplate sys update start");
-                Facep_mcu  f_mcu = new Facep_mcu();
-                Facep_mcu.update_sys();
+                f_mcu.update_sys();
             }
         });
 
