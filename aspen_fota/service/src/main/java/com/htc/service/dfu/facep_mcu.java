@@ -36,7 +36,7 @@ public class Facep_mcu {
     public final static int STATE_COMPLETED = 3;
 
 
-    private int[] addr_sys_test = {0x8000000};
+    //private int[] addr_sys_test = {0x8000000};
 
     private int[] addr_sys = {
             0x8000000, 0x8000800, 0x8001000, 0x8001800, 0x8002000, 0x8002800, 0x8003000, 0x8003800,
@@ -75,14 +75,16 @@ public class Facep_mcu {
 
     public int erase_facep_sys() {
         boolean ret= false;
-        for (int i = 0; i < addr_sys_test.length; i++) {
-            ret = mDfu.EraseFotaSector(addr_sys_test[i]);
+        long startEraseTime = System.currentTimeMillis();
+        for (int i = 0; i < addr_sys.length; i++) {
+            ret = mDfu.EraseFotaSector(addr_sys[i]);
             if(!ret){
                 Log.i(TAG, "erease facep sys err!");
                 return -1;
             }
         }
-        Log.i(TAG, "Erase success.");
+        long total_time = System.currentTimeMillis() -startEraseTime;
+        Log.i(TAG,"Erase all sector success. time="+total_time+" ms");
         return 1;
     }
 

@@ -143,7 +143,7 @@ public class Usb {
         if (device != null) {
             mfotaDevice = device;
             if (!mfotaUsbManager.hasPermission(mfotaDevice)) {
-                Log.i(TAG, "requestPermission: vid = " + vendorId + ", pid = " + productId);
+                Log.i(TAG, "requestPermission:vid=0x"+Integer.toHexString(vendorId)+",pid=0x"+Integer.toHexString(productId) );
                 mfotaUsbManager.requestPermission(device, permissionIntent);
             }else{
                 Log.i(TAG, "requestPermission has get");

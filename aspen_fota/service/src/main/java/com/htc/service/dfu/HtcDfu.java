@@ -65,8 +65,7 @@ public class HtcDfu {
         DFU_Request dfu_request = new DFU_Request();
         try {
             int retry_count =6;
-            long startEraseTime = System.currentTimeMillis();
-            do {
+            while (retry_count -- > 0){
                 while (dfuStatus.bState != HTC_DFU_STATE_IDLE){
                     HTCDFU_ClearStatus();
                     HTCDFU_GetStatus(dfuStatus);
@@ -76,7 +75,6 @@ public class HtcDfu {
                     unProtectCommand();
                     continue;
                 }
-                int pollingTime = dfuStatus.bwPollTimeout;
                 dfu_request.data = new byte[5];
                 dfu_request.data[0] = 0x41;
                 dfu_request.data[1] = (byte) (address & 0xFF);
@@ -87,19 +85,29 @@ public class HtcDfu {
                 dfu_request.DfuOperation = DFU_DNLOAD;
                 dfu_request.block = 0;
                 DFU_LaunchOperation(dfu_request);
-                Thread.sleep(1000);
+
+                int download_retry=0;
                 HTCDFU_GetStatus(dfuStatus);
+                while (dfuStatus.bState != HTC_DFU_STATE_DOWNLOAD_IDLE ){
+                    if(download_retry++>=2000){   //// retry 10 secound
+                        break;
+                    }
+                    Thread.sleep(2);
+                    Log.i(TAG,"1 dfu status="+ dfuStatus.bState+" retry="+download_retry);
+                    HTCDFU_GetStatus(dfuStatus);
+                }
                 dfu_request.DfuOperation = DFU_ABORT;
                 DFU_LaunchOperation(dfu_request);
                 HTCDFU_GetStatus(dfuStatus);
+                Log.i(TAG,"2 dfu status="+ dfuStatus.bState);
                 if(dfuStatus.bState != HTC_DFU_STATE_IDLE){
                     Log.i(TAG,"err! dfu status="+ dfuStatus.bState+" continue retry!");
                     continue;
                 }
-                long total_time = System.currentTimeMillis() -startEraseTime;
-                Log.i(TAG,"Erase sector addr=0x"+ Integer.toHexString(address) +" time="+total_time+" ms");
+
+                Log.i(TAG,"Erase sector addr=0x"+ Integer.toHexString(address) +" done");
                 return true;
-            } while (retry_count -- > 0);
+            } ;
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -393,12 +401,12 @@ public class HtcDfu {
         if (dfuStatus.bState == HTC_DFU_STATE_ERROR) {
             ReadProtected = true;
         }
-        Log.i(TAG,"isAddressProtecteddfuStatus.bState=" + dfuStatus.bState);
+
         while (dfuStatus.bState != HTC_DFU_STATE_IDLE){
             HTCDFU_ClearStatus();
             HTCDFU_GetStatus(dfuStatus);
         }
-
+        Log.i(TAG,"isAddressProtecteddfuStatus.bState=" + dfuStatus.bState+" protected="+ReadProtected);
         return ReadProtected;
     }
 
