@@ -10,7 +10,7 @@ import android.os.RemoteException;
 import android.util.Log;
 
 import com.htc.chirp_fota.OnFirmwareUpdateListener;
-import com.htc.service.dfu.Facep_mcu;
+import com.htc.service.dfu.faceplace_mcu;
 import com.htc.service.usb.Usb;
 
 
@@ -22,7 +22,7 @@ public class FotaService extends Service implements Usb.OnUsbChangeListener{
     private Thread ccg4_thread=null;
     private Thread facep_mcu_thread=null;
 
-    private Facep_mcu f_mcu =null;
+    private faceplace_mcu f_mcu =null;
     public OnFirmwareUpdateListener mUpdateListener = null;
 
     //public int curret_device  = -1;
@@ -35,7 +35,7 @@ public class FotaService extends Service implements Usb.OnUsbChangeListener{
         mUsb = new Usb(this,fs);
         mUsb.setOnUsbChangeListener(this);
 
-        f_mcu = new Facep_mcu(mUsb,this);
+        f_mcu = new faceplace_mcu(mUsb,this);
 
 
         registerReceiver(mUsb.getmUsbReceiver(), new IntentFilter(Usb.HTC_ACTION_USB_PERMISSION));

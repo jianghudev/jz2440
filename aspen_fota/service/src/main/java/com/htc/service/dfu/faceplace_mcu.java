@@ -16,7 +16,7 @@ import java.io.File;
  * Created by hubin_jiang on 2018/6/12.
  */
 
-public class Facep_mcu {
+public class faceplace_mcu {
 
     private static  String faceplace_dfu_file_name = "aspen_faceplate_v0.6_E.dfu";
     private File mDfuFile =null;
@@ -50,7 +50,7 @@ public class Facep_mcu {
             0x801C000, 0x801C800, 0x801D000, 0x801D800, 0x801E000, 0x801E800, 0x801F000, 0x801F800,
     };
 
-    public Facep_mcu(Usb m_usb , FotaService svr) {
+    public faceplace_mcu(Usb m_usb , FotaService svr) {
         this.mUsb = m_usb;
         mService=svr;
 
@@ -74,17 +74,16 @@ public class Facep_mcu {
     }
 
     public int erase_facep_sys() {
-        boolean ret= false;
         long startEraseTime = System.currentTimeMillis();
         for (int i = 0; i < addr_sys.length; i++) {
-            ret = mDfu.EraseFotaSector(addr_sys[i]);
+            boolean ret = mDfu.EraseFotaSector(addr_sys[i]);
             if(!ret){
                 Log.i(TAG, "erease facep sys err!");
                 return -1;
             }
         }
         long total_time = System.currentTimeMillis() -startEraseTime;
-        Log.i(TAG,"Erase all sector success. time="+total_time+" ms");
+        Log.i(TAG,"=========> Erase all sector success.time="+total_time+"ms <=========");
         return 1;
     }
 
@@ -102,8 +101,8 @@ public class Facep_mcu {
         int process = 0;
         try {
             mService.mUpdateListener.onFirmwareUpdateStatusChanged(DEVICE_HMD, STATE_UPDATING, updateInfo);
-            int retryCnt = 3;
-            do {
+            int retryCnt = 4;
+            while(retryCnt-- >0){
                 Log.i(TAG, "start flash dfu file  " + mDfuFile.getName());
                 //Erase MCU sector
                 analyzedfu = mDfu.m_HtcDfuFile.AnalysisDfuFile(mDfuFile);
@@ -111,24 +110,20 @@ public class Facep_mcu {
                     Log.i(TAG, "analyze dfu fail");
                     break;
                 }
-
                 eraseResult = erase_facep_sys();
-                return  true;
-//                //start upgrade
-//                if ( 1 == eraseResult) {
-//                    Log.i(TAG, "Start UpgradeFotaImage.");
-//                    flushImage = mDfu.UpgradeFotaImage(mDfuFile);
-//                    Log.i(TAG, "Start verify.");
-//                    verifyImage = mDfu.LaunchVerify(mDfuFile);
-//                }
-//                if ( (1==eraseResult) && flushImage && verifyImage ) {
-//                    updateOK = true;
-//                    break;
-//                } else {
-//                    retryCnt--;
-//                }
-//                Log.i(TAG, "retryCnt = " + retryCnt);
-            }while(retryCnt>0);
+                //start upgrade
+                if ( 1 == eraseResult) {
+                    Log.i(TAG, "Start UpgradeFotaImage.");
+                    flushImage = mDfu.UpgradeFotaImage(mDfuFile);
+                    Log.i(TAG, "Start verify.");
+                    verifyImage = mDfu.LaunchVerify(mDfuFile);
+                    if ( flushImage && verifyImage ) {
+                        updateOK = true;
+                        break;
+                    }
+                }
+                Log.i(TAG, "retryCnt = " + retryCnt);
+            }
 
             if (updateOK) {
                 Log.i(TAG, "upgrade success.");

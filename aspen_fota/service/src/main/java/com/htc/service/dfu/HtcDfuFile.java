@@ -13,6 +13,8 @@ import java.io.FileInputStream;
 public class HtcDfuFile {
     private static final String TAG= Const.G_TAG;
 
+    private final static int SECTOR_MAX_BLOCK_SIZE = 2048;
+
 
     private final static int DfuFilePreFixOffset = 11;
     private final static int DfuFileTargetPrefixOffset = 274;
@@ -29,7 +31,7 @@ public class HtcDfuFile {
     byte[] m_DfuFilebuffer;
     DfuPrefix m_DfuPrefix = new DfuPrefix();
     DfuSurfix m_DfuSurfix = new DfuSurfix();
-    int maxBlockSize = 1024;
+    int maxBlockSize = SECTOR_MAX_BLOCK_SIZE;
     int FirmWareOffset = 293;
     int FirmWareStartAddress;
     int FirmWareLength;
@@ -136,15 +138,15 @@ public class HtcDfuFile {
         m_pid = (m_DfuFilebuffer[pidIndex] & 0xFF) | ((m_DfuFilebuffer[pidIndex+1] & 0xFF)<<8);
         m_Version = (m_DfuFilebuffer[versionIndex] & 0xFF) | ((m_DfuFilebuffer[versionIndex+1] & 0xFF)<<8);
 
-        Log.i(TAG,"Dfu file Path: " + m_DfuFilePath + "\n");
-        Log.i(TAG,"Dfu file Size: " + m_DfuFilebuffer.length + " Bytes \n");
+        Log.i(TAG,"Dfu file Path: " + m_DfuFilePath);
+        Log.i(TAG,"Dfu file Size: " + m_DfuFilebuffer.length + " Bytes");
         if( 134217728  != FirmWareStartAddress ){
             Log.i(TAG,"Start Address err!" + FirmWareStartAddress);
         }
         Log.i(TAG,"Start Address: 0x" + Integer.toHexString(FirmWareStartAddress));
         Log.i(TAG,"vid: 0x" + Integer.toHexString(m_vid));
         Log.i(TAG,"pid: 0x" + Integer.toHexString(m_pid));
-        Log.i(TAG,"Start writing dfu file blocks: " + maxBlockSize + " Bytes \n");
+        Log.i(TAG,"Start writing dfu file blocks: " + maxBlockSize + " Bytes");
         return result;
     }
 

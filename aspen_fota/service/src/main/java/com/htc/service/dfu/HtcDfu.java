@@ -85,21 +85,14 @@ public class HtcDfu {
                 dfu_request.DfuOperation = DFU_DNLOAD;
                 dfu_request.block = 0;
                 DFU_LaunchOperation(dfu_request);
-
-                int download_retry=0;
-                HTCDFU_GetStatus(dfuStatus);
-                while (dfuStatus.bState != HTC_DFU_STATE_DOWNLOAD_IDLE ){
-                    if(download_retry++>=2000){   //// retry 10 secound
-                        break;
-                    }
-                    Thread.sleep(2);
-                    Log.i(TAG,"1 dfu status="+ dfuStatus.bState+" retry="+download_retry);
-                    HTCDFU_GetStatus(dfuStatus);
+                if( 0!= wait_download_ok(false)){
+                    Log.i(TAG, "erase timeout!");
                 }
+
                 dfu_request.DfuOperation = DFU_ABORT;
                 DFU_LaunchOperation(dfu_request);
                 HTCDFU_GetStatus(dfuStatus);
-                Log.i(TAG,"2 dfu status="+ dfuStatus.bState);
+                //Log.i(TAG,"2 dfu status="+ dfuStatus.bState);
                 if(dfuStatus.bState != HTC_DFU_STATE_IDLE){
                     Log.i(TAG,"err! dfu status="+ dfuStatus.bState+" continue retry!");
                     continue;
@@ -116,11 +109,32 @@ public class HtcDfu {
         return false;
     }
 
+    private int wait_download_ok(boolean show_log){
+        try {
+            HtcDfuStatus dfuStatus = new HtcDfuStatus();
+            HTCDFU_GetStatus(dfuStatus);
+            int download_retry=0;
+            while (dfuStatus.bState != HTC_DFU_STATE_DOWNLOAD_IDLE ){
+                if(download_retry++>=2000){   //// retry 4 secound
+                    return -1;
+                }
+                Thread.sleep(2);
+                if (show_log) {
+                    Log.i(TAG,"download status="+ dfuStatus.bState+" retry="+download_retry);
+                }
+                HTCDFU_GetStatus(dfuStatus);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
     public boolean UpgradeFotaImage(File file) {
         int address = 0;
         int BufferOffset = 0;
-        int blockSize = 1024;
-        byte[] Block = new byte[blockSize];
+        int blockSize = 0;
+        byte[] Block = null;
         int NumOfBlocks = 0;
         int blockNum;
         boolean UpgradeFotaImageResult = false;
@@ -159,9 +173,9 @@ public class HtcDfu {
 
 
                 startWriteTime = System.currentTimeMillis();
-                Log.i(TAG,"Download fota image start time:" + startWriteTime + " ms\n");
+                Log.i(TAG,"start write sector time:" + startWriteTime + " ms\n");
                 for (blockNum = 0; blockNum < NumOfBlocks; blockNum++) {
-//                    Log.i(TAG,"blockNum:" + blockNum);
+                    Log.i(TAG,"blockNum:" + blockNum);
                     System.arraycopy(m_HtcDfuFile.m_DfuFilebuffer, (blockNum * blockSize) + BufferOffset, Block, 0, blockSize);
                     if (blockNum == 0) {
                         setAddressPointer(address);
@@ -173,9 +187,9 @@ public class HtcDfu {
                             break;
                         }
                     }
-//                    Log.i(TAG,"dfuStatus.bState" + dfuStatus.bState);
+                    Log.i(TAG,"dfuStatus.bState" + dfuStatus.bState);
                     while (dfuStatus.bState != HTC_DFU_STATE_IDLE) {
-//                        Log.i(TAG,"dfuStatus.bState" + dfuStatus.bState);
+                        Log.i(TAG,"dfuStatus.bState" + dfuStatus.bState);
                         HTCDFU_ClearStatus();
                         HTCDFU_GetStatus(dfuStatus);
                     }
@@ -192,9 +206,8 @@ public class HtcDfu {
                         UpgradeFotaImageResult = false;
                         break;
                     }
-                    while (dfuStatus.bState != HTC_DFU_STATE_IDLE) {
-                        HTCDFU_ClearStatus();
-                        HTCDFU_GetStatus(dfuStatus);
+                    if( 0!= wait_download_ok(true)){
+                        Log.i(TAG, "write timeout!");
                     }
                 }
                 int remainder = m_HtcDfuFile.FirmWareLength - (blockNum * blockSize);
@@ -219,14 +232,12 @@ public class HtcDfu {
                         Log.i(TAG, "write block data fail");
                         UpgradeFotaImageResult = false;
                     }
-                    while (dfuStatus.bState != HTC_DFU_STATE_IDLE) {
-                        HTCDFU_ClearStatus();
-                        HTCDFU_GetStatus(dfuStatus);
+                    if( 0!= wait_download_ok(true)){
+                        Log.i(TAG, "write timeout!");
                     }
-
                 }
             }
-            Log.i(TAG,"Download fota image completed time: " + (System.currentTimeMillis() - startWriteTime) + " ms\n");
+            Log.i(TAG,"write dfu scuessful,time:" + (System.currentTimeMillis() - startWriteTime) + " ms");
             UpgradeFotaImageResult = true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -268,8 +279,8 @@ public class HtcDfu {
         HtcDfuStatus dfuStatus = new HtcDfuStatus();
         DFU_Request dfu_request = new DFU_Request();
         int fwaddress = 0;
-        int blockSize = 1024;
-        byte[] Block = new byte[blockSize];
+        int blockSize = 0;
+        byte[] Block = null;
         int NumOfBlocks = 0;
         int fwlenth = 0;
         int blockNum;
