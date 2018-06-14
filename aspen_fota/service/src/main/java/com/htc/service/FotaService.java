@@ -50,7 +50,7 @@ public class FotaService extends Service implements Usb.OnUsbChangeListener{
                     Log.d(TAG, "start updateFW");
                     mUsb.update_CCG4_and_show_dlg();
                 } catch (Exception e) {
-                    Log.d(TAG, "__jh__ thread stop");
+                    Log.d(TAG, ccg4_thread.getName()+" stop");
                     e.printStackTrace();
                 }
             }
@@ -58,8 +58,13 @@ public class FotaService extends Service implements Usb.OnUsbChangeListener{
 
         facep_mcu_thread = new Thread(new Runnable() {
             public void run() {
-                Log.d(TAG, "faceplate sys update start");
-                f_mcu.update_sys();
+                try {
+                    Log.d(TAG, "faceplate sys update start");
+                    f_mcu.update_sys();
+                } catch (Exception e) {
+                    Log.d(TAG, facep_mcu_thread.getName()+" stop");
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -99,8 +104,15 @@ public class FotaService extends Service implements Usb.OnUsbChangeListener{
                     facep_mcu_thread.start();
                 }
             }else{
-               boolean alive = ccg4_thread.isAlive();
-                Log.i(TAG, "__jh__ alive="+alive);
+                boolean facep_alive =facep_mcu_thread.isAlive();
+                boolean ccg_alive = ccg4_thread.isAlive();
+                Log.i(TAG, "facep_alive="+facep_alive+" ccg_alive="+ccg_alive);
+                if (ccg_alive) {
+                    ccg4_thread.interrupt();
+                }
+                if (facep_alive) {
+                    facep_mcu_thread.interrupt();
+                }
             }
 
         }catch (Exception e) {

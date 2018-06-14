@@ -73,30 +73,25 @@ public class faceplace_mcu {
         return 0;
     }
 
-    public int erase_facep_sys() {
+    public boolean erase_facep_sys() {
         long startEraseTime = System.currentTimeMillis();
         for (int i = 0; i < addr_sys.length; i++) {
             boolean ret = mDfu.EraseFotaSector(addr_sys[i]);
             if(!ret){
                 Log.i(TAG, "erease facep sys err!");
-                return -1;
+                return false;
             }
         }
         long total_time = System.currentTimeMillis() -startEraseTime;
-        Log.i(TAG,"=========> Erase all sector success.time="+total_time+"ms <=========");
-        return 1;
+        Log.i(TAG,"====> Erase all sector success.time="+total_time+"ms <====");
+        return true;
     }
 
 
 
     public boolean update_sys(){
-
-        Bundle updateInfo = new Bundle();
         boolean updateOK = false;
-        boolean verifyImage=false;
-        int eraseResult=0;
-        boolean flushImage =false;
-        boolean analyzedfu;
+        Bundle updateInfo = new Bundle();
         long startTime = SystemClock.elapsedRealtime();
         int process = 0;
         try {
@@ -104,47 +99,44 @@ public class faceplace_mcu {
             int retryCnt = 4;
             while(retryCnt-- >0){
                 Log.i(TAG, "start flash dfu file  " + mDfuFile.getName());
-                //Erase MCU sector
-                analyzedfu = mDfu.m_HtcDfuFile.AnalysisDfuFile(mDfuFile);
+                boolean analyzedfu = mDfu.m_HtcDfuFile.AnalysisDfuFile(mDfuFile);
                 if (!analyzedfu) {
                     Log.i(TAG, "analyze dfu fail");
                     break;
                 }
-                eraseResult = erase_facep_sys();
-                //start upgrade
-                if ( 1 == eraseResult) {
-                    Log.i(TAG, "Start UpgradeFotaImage.");
-                    flushImage = mDfu.UpgradeFotaImage(mDfuFile);
-                    Log.i(TAG, "Start verify.");
-                    verifyImage = mDfu.LaunchVerify(mDfuFile);
-                    if ( flushImage && verifyImage ) {
-                        updateOK = true;
-                        break;
+                if (  erase_facep_sys() ) {
+                    Log.i(TAG, "Start write all sector");
+                    if (mDfu.UpgradeFotaImage(mDfuFile) ) {
+                        Log.i(TAG, "Start verify");
+                        if (mDfu.LaunchVerify(mDfuFile) ) {
+                            updateOK = true;
+                            break;
+                        }
                     }
                 }
                 Log.i(TAG, "retryCnt = " + retryCnt);
             }
-
             if (updateOK) {
                 Log.i(TAG, "upgrade success.");
                 updateInfo.putString("Pass", "upgrade success!");
                 mService.mUpdateListener.onFirmwareUpdateProgressChanged(DEVICE_HMD, 100);
                 mService.mUpdateListener.onFirmwareUpdateStatusChanged(DEVICE_HMD, STATE_COMPLETED, updateInfo);
                 //reboot device to normal
-                long endTime = SystemClock.elapsedRealtime();
-                Log.d(TAG,"upgrade time " + (endTime - startTime) + " ms");
+                Log.d(TAG,"====>upgrade time " + (SystemClock.elapsedRealtime() - startTime) + " ms<====");
                 Log.i(TAG,"leave dfu mode , restart to normal mode. ");
                 mDfu.leaveDfuMode(0x08000000);
+                return  true;
             }else{
-                Log.i(TAG, "Fota service had tried three times ,but upgrade fail.");
-                updateInfo.putString("Error", "Fota service had tried three times ,but upgrade fail.");
+                String fail_str="upgrade fail 3 times";
+                Log.i(TAG, fail_str);
+                updateInfo.putString("Error", fail_str);
                 mService.mUpdateListener.onFirmwareUpdateStatusChanged(DEVICE_HMD, STATE_ERROR, updateInfo);
+                return  false;
             }
         }catch (Exception e){
             e.printStackTrace();
         }
-        return updateOK;
-
+        return false;
     }
 
 

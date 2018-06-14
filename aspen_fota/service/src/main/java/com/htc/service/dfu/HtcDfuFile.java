@@ -140,13 +140,10 @@ public class HtcDfuFile {
 
         Log.i(TAG,"Dfu file Path: " + m_DfuFilePath);
         Log.i(TAG,"Dfu file Size: " + m_DfuFilebuffer.length + " Bytes");
-        if( 134217728  != FirmWareStartAddress ){
-            Log.i(TAG,"Start Address err!" + FirmWareStartAddress);
-        }
         Log.i(TAG,"Start Address: 0x" + Integer.toHexString(FirmWareStartAddress));
         Log.i(TAG,"vid: 0x" + Integer.toHexString(m_vid));
         Log.i(TAG,"pid: 0x" + Integer.toHexString(m_pid));
-        Log.i(TAG,"Start writing dfu file blocks: " + maxBlockSize + " Bytes");
+        Log.i(TAG,"block size=" + maxBlockSize + " Bytes");
         return result;
     }
 

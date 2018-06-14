@@ -130,120 +130,110 @@ public class HtcDfu {
         return 0;
     }
 
-    public boolean UpgradeFotaImage(File file) {
+    public boolean UpgradeFotaImage(File file) throws Exception{
         int address = 0;
         int BufferOffset = 0;
         int blockSize = 0;
         byte[] Block = null;
         int NumOfBlocks = 0;
-        int blockNum;
-        boolean UpgradeFotaImageResult = false;
-        boolean analysysdfufileresult = false;
+        int blockNum=0;
         long startWriteTime = 0;
         HtcDfuStatus dfuStatus = new HtcDfuStatus();
         DFU_Request dfu_request = new DFU_Request();
-
         if (m_Usb == null || !m_Usb.UsbIsConnected()) {
             Log.i(TAG,"No device connected");
-            UpgradeFotaImageResult = false;
+            return false;
         }
-        try {
+        boolean analysys_ret = m_HtcDfuFile.AnalysisDfuFile(file);
+        if(!analysys_ret) {
+            Log.i(TAG,"AnalysisDfuFile err!");
+            return false;
+        }
+        Log.i(TAG, "AnalysisDfuFile finish");
+        address = m_HtcDfuFile.FirmWareStartAddress;
+        BufferOffset = m_HtcDfuFile.FirmWareOffset;
+        blockSize = m_HtcDfuFile.maxBlockSize;
+        Block = new byte[blockSize];
+        NumOfBlocks = m_HtcDfuFile.FirmWareLength / blockSize;
+        if ((m_DevicePID != m_HtcDfuFile.getpid()) || (m_DeviceVID != m_HtcDfuFile.getvid())) {
+            Log.i(TAG, "PID/VID match error.");
+            return false;
+        }
+
+        int retry_count=4;
+        outer_while: while (retry_count-- >0 ) {
             if (isAddressProtected(m_HtcDfuFile.FirmWareStartAddress)) {
-                Log.i(TAG,"Device fota partition is read protected.");
+                Log.i(TAG, "Device fota partition is read protected.");
                 unProtectCommand();
-                return false;
+                continue;
             }
-            analysysdfufileresult = m_HtcDfuFile.AnalysisDfuFile(file);
-            if(analysysdfufileresult) {
-                Log.i(TAG,"AnalysisDfuFile finish");
-                address = m_HtcDfuFile.FirmWareStartAddress;
-                BufferOffset = m_HtcDfuFile.FirmWareOffset;
-                blockSize = m_HtcDfuFile.maxBlockSize;
-                Block = new byte[blockSize];
-                NumOfBlocks = m_HtcDfuFile.FirmWareLength / blockSize;
-                if(address != m_HtcDfuFile.FirmWareStartAddress){
-                    Log.i(TAG, "dfu file startaddress is error, it must be 0x08010000");
-                    return false;
-                }
-
-                if ((m_DevicePID != m_HtcDfuFile.getpid()) || (m_DeviceVID != m_HtcDfuFile.getvid())) {
-                    Log.i(TAG, "PID/VID match error.");
-                    return false;
-                }
-
-
-                startWriteTime = System.currentTimeMillis();
-                Log.i(TAG,"start write sector time:" + startWriteTime + " ms\n");
-                for (blockNum = 0; blockNum < NumOfBlocks; blockNum++) {
-                    Log.i(TAG,"blockNum:" + blockNum);
-                    System.arraycopy(m_HtcDfuFile.m_DfuFilebuffer, (blockNum * blockSize) + BufferOffset, Block, 0, blockSize);
-                    if (blockNum == 0) {
-                        setAddressPointer(address);
-                        HTCDFU_GetStatus(dfuStatus);
-                        HTCDFU_GetStatus(dfuStatus);
-                        if (dfuStatus.bState == HTC_DFU_STATE_ERROR) {
-                            Log.i(TAG, "set address fail");
-                            UpgradeFotaImageResult = false;
-                            break;
-                        }
-                    }
-                    Log.i(TAG,"dfuStatus.bState" + dfuStatus.bState);
-                    while (dfuStatus.bState != HTC_DFU_STATE_IDLE) {
-                        Log.i(TAG,"dfuStatus.bState" + dfuStatus.bState);
-                        HTCDFU_ClearStatus();
-                        HTCDFU_GetStatus(dfuStatus);
-                    }
-                    dfu_request.DfuOperation = DFU_DNLOAD;
-                    dfu_request.data = new byte[Block.length];
-                    dfu_request.data = Block;
-                    dfu_request.length = Block.length;
-                    dfu_request.block = blockNum + 2;
-                    DFU_LaunchOperation(dfu_request);
-                    HTCDFU_GetStatus(dfuStatus);
+            startWriteTime = System.currentTimeMillis();
+            Log.i(TAG, "start write sector");
+            for (blockNum = 0; blockNum < NumOfBlocks; blockNum++) {
+                //Log.i(TAG,"blockNum:" + blockNum);
+                System.arraycopy(m_HtcDfuFile.m_DfuFilebuffer, (blockNum * blockSize) + BufferOffset, Block, 0, blockSize);
+                if (blockNum == 0) {
+                    setAddressPointer(address);
                     HTCDFU_GetStatus(dfuStatus);
                     if (dfuStatus.bState == HTC_DFU_STATE_ERROR) {
-                        Log.i(TAG, "write block data fail");
-                        UpgradeFotaImageResult = false;
-                        break;
-                    }
-                    if( 0!= wait_download_ok(true)){
-                        Log.i(TAG, "write timeout!");
+                        Log.i(TAG, "set address fail");
+                        break outer_while;
                     }
                 }
-                int remainder = m_HtcDfuFile.FirmWareLength - (blockNum * blockSize);
-                if (remainder > 0) {
-                    System.arraycopy(m_HtcDfuFile.m_DfuFilebuffer, (blockNum * blockSize) + BufferOffset, Block, 0, remainder);
-                    while (remainder < Block.length) {
-                        Block[remainder++] = (byte) 0xFF;
-                    }
-                    while (dfuStatus.bState != HTC_DFU_STATE_IDLE) {
-                        HTCDFU_ClearStatus();
-                        HTCDFU_GetStatus(dfuStatus);
-                    }
-                    dfu_request.DfuOperation = DFU_DNLOAD;
-                    dfu_request.data = new byte[Block.length];
-                    dfu_request.data = Block;
-                    dfu_request.length = Block.length;
-                    dfu_request.block = blockNum + 2;
-                    DFU_LaunchOperation(dfu_request);
+                //Log.i(TAG,"dfuStatus.bState=" + dfuStatus.bState);
+                while (dfuStatus.bState != HTC_DFU_STATE_IDLE) {
+                    //Log.i(TAG,"dfuStatus.bState=" + dfuStatus.bState);
+                    HTCDFU_ClearStatus();
                     HTCDFU_GetStatus(dfuStatus);
-                    HTCDFU_GetStatus(dfuStatus);
-                    if (dfuStatus.bState == HTC_DFU_STATE_ERROR) {
-                        Log.i(TAG, "write block data fail");
-                        UpgradeFotaImageResult = false;
-                    }
-                    if( 0!= wait_download_ok(true)){
-                        Log.i(TAG, "write timeout!");
-                    }
+                }
+                dfu_request.DfuOperation = DFU_DNLOAD;
+                dfu_request.data = new byte[Block.length];
+                dfu_request.data = Block;
+                dfu_request.length = Block.length;
+                dfu_request.block = blockNum + 2;
+                DFU_LaunchOperation(dfu_request);
+                HTCDFU_GetStatus(dfuStatus);
+                HTCDFU_GetStatus(dfuStatus);
+                if (dfuStatus.bState == HTC_DFU_STATE_ERROR) {
+                    Log.i(TAG, "write block data fail");
+                    break outer_while;
+                }
+                if (0 != wait_download_ok(true)) {
+                    Log.i(TAG, "write timeout!");
+                    break outer_while;
                 }
             }
-            Log.i(TAG,"write dfu scuessful,time:" + (System.currentTimeMillis() - startWriteTime) + " ms");
-            UpgradeFotaImageResult = true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.e(TAG,e.toString());
+            int remainder = m_HtcDfuFile.FirmWareLength - (blockNum * blockSize);
+            if (remainder > 0) {
+                System.arraycopy(m_HtcDfuFile.m_DfuFilebuffer, (blockNum * blockSize) + BufferOffset, Block, 0, remainder);
+                while (remainder < Block.length) {
+                    Block[remainder++] = (byte) 0xFF;
+                }
+                while (dfuStatus.bState != HTC_DFU_STATE_IDLE) {
+                    HTCDFU_ClearStatus();
+                    HTCDFU_GetStatus(dfuStatus);
+                }
+                dfu_request.DfuOperation = DFU_DNLOAD;
+                dfu_request.data = new byte[Block.length];
+                dfu_request.data = Block;
+                dfu_request.length = Block.length;
+                dfu_request.block = blockNum + 2;
+                DFU_LaunchOperation(dfu_request);
+                HTCDFU_GetStatus(dfuStatus);
+                HTCDFU_GetStatus(dfuStatus);
+                if (dfuStatus.bState == HTC_DFU_STATE_ERROR) {
+                    Log.i(TAG, "write block data fail");
+                    break ;
+                }
+                if (0 != wait_download_ok(true)) {
+                    Log.i(TAG, "write timeout!");
+                    break ;
+                }
+            }
+            Log.i(TAG,"====>write dfu scuessful,time="+(System.currentTimeMillis() - startWriteTime)+"ms <====");
+            return true;
         }
-        return UpgradeFotaImageResult;
+        return false;
     }
 
     public boolean moveImage()
@@ -387,15 +377,20 @@ public class HtcDfu {
         dfu_request.length = 0;
         DFU_LaunchOperation(dfu_request);
         HTCDFU_GetStatus(dfuStatus);
-        HTCDFU_GetStatus(dfuStatus);
-        while (dfuStatus.bState != HTC_DFU_STATE_IDLE) {
-            HTCDFU_ClearStatus();
+        int download_retry=0;
+        while (dfuStatus.bState != HTC_APP_STATE_IDLE ){
+            if(download_retry++>=4){   //// retry 4 secound
+                return;
+            }
+            Thread.sleep(500);
+            Log.i(TAG,"leaveDfuMode status="+ dfuStatus.bState+" retry="+download_retry);
             HTCDFU_GetStatus(dfuStatus);
         }
+        HTCDFU_ClearStatus();
+
     }
 
     private boolean isAddressProtected(int address) throws Exception {
-        Log.i(TAG,"enter isAddressProtected");
         HtcDfuStatus dfuStatus = new HtcDfuStatus();
         boolean ReadProtected = false;
 
@@ -422,7 +417,6 @@ public class HtcDfu {
     }
 
     private void setAddressPointer(int Address) throws Exception {
-        Log.i(TAG,"enter setAddressPointer");
         DFU_Request dfu_request = new DFU_Request();
         dfu_request.DfuOperation = DFU_DNLOAD;
         dfu_request.data = new byte[5];
@@ -527,6 +521,8 @@ public class HtcDfu {
 
     }
 
+
+    private static int getstatus_retry_num=0;
     private void HTCDFU_GetStatus(HtcDfuStatus status) {
         //Log.i(TAG,"enter HTCDFU_GetStatus");
         UsbRequest usb_request = new UsbRequest();
@@ -542,7 +538,8 @@ public class HtcDfu {
         }else {
             int length = m_Usb.UsbControlTransfer(usb_request.RequestType, usb_request.Request, usb_request.Value, usb_request.Index, usb_request.buffer, usb_request.Length, usb_request.timeout);
             if (length < 0) {
-                Log.i(TAG,"HTCDFU_GetStatus fail.");
+                getstatus_retry_num++;
+                Log.i(TAG,"dfu driver is busy ,retry_cout="+ getstatus_retry_num);
             } else {
                 status.bStatus = usb_request.buffer[0];
                 status.bState = usb_request.buffer[4];
