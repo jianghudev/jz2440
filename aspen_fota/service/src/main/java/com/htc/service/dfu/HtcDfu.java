@@ -2,6 +2,7 @@ package com.htc.service.dfu;
 
 import android.util.Log;
 
+import com.htc.service.Const;
 import com.htc.service.usb.Usb;
 
 import java.io.File;
@@ -11,7 +12,7 @@ import java.nio.ByteBuffer;
  * Created by wanjin_shi on 16-10-20.
  */
 public class HtcDfu {
-    private final static String TAG = "3DoF_HMD.FOTA.HtcDfu";
+    private static final String TAG= Const.G_TAG;
 
     private final static int USB_DIR_OUT = 0;
     private final static int USB_DIR_IN = 128;
@@ -56,55 +57,55 @@ public class HtcDfu {
     }
 
     public boolean EraseFotaSector(int address) {
-        boolean result = false;
         if (m_Usb == null || !m_Usb.UsbIsConnected()) {
             Log.i(TAG,"usb is null.");
-            return result;
+            return false;
         }
         HtcDfuStatus dfuStatus = new HtcDfuStatus();
         DFU_Request dfu_request = new DFU_Request();
         try {
-            while (dfuStatus.bState != HTC_DFU_STATE_IDLE){
-                HTCDFU_ClearStatus();
-                HTCDFU_GetStatus(dfuStatus);
-            }
-
+            int retry_count =6;
             long startEraseTime = System.currentTimeMillis();
-            if (isAddressProtected(address)) {
-                Log.i(TAG,"Device fota partition is read protected.");
-                unProtectCommand();
-                return false;
-            }
-
-
-            int pollingTime = dfuStatus.bwPollTimeout;
-            dfu_request.data = new byte[5];
-            dfu_request.data[0] = 0x41;
-            dfu_request.data[1] = (byte) (address & 0xFF);
-            dfu_request.data[2] = (byte) ((address >> 8) & 0xFF);
-            dfu_request.data[3] = (byte) ((address >> 16) & 0xFF);
-            dfu_request.data[4] = (byte) ((address >> 24) & 0xFF);
-            dfu_request.length = 5;
-            dfu_request.DfuOperation = DFU_DNLOAD;
-            dfu_request.block = 0;
-            DFU_LaunchOperation(dfu_request);
-            Thread.sleep(1000);
-            HTCDFU_GetStatus(dfuStatus);
-            dfu_request.DfuOperation = DFU_ABORT;
-            DFU_LaunchOperation(dfu_request);
-            HTCDFU_GetStatus(dfuStatus);
-            if(dfuStatus.bState != HTC_DFU_STATE_IDLE){
-                return result;
-            }
-            //Erase fota sector total times
-            Log.i(TAG,"Erase fota sector time: " + (System.currentTimeMillis() - startEraseTime) + " ms");
-            result = true;
+            do {
+                while (dfuStatus.bState != HTC_DFU_STATE_IDLE){
+                    HTCDFU_ClearStatus();
+                    HTCDFU_GetStatus(dfuStatus);
+                }
+                if (isAddressProtected(address)) {
+                    Log.i(TAG,"Device fota partition is read protected.");
+                    unProtectCommand();
+                    continue;
+                }
+                int pollingTime = dfuStatus.bwPollTimeout;
+                dfu_request.data = new byte[5];
+                dfu_request.data[0] = 0x41;
+                dfu_request.data[1] = (byte) (address & 0xFF);
+                dfu_request.data[2] = (byte) ((address >> 8) & 0xFF);
+                dfu_request.data[3] = (byte) ((address >> 16) & 0xFF);
+                dfu_request.data[4] = (byte) ((address >> 24) & 0xFF);
+                dfu_request.length = 5;
+                dfu_request.DfuOperation = DFU_DNLOAD;
+                dfu_request.block = 0;
+                DFU_LaunchOperation(dfu_request);
+                Thread.sleep(1000);
+                HTCDFU_GetStatus(dfuStatus);
+                dfu_request.DfuOperation = DFU_ABORT;
+                DFU_LaunchOperation(dfu_request);
+                HTCDFU_GetStatus(dfuStatus);
+                if(dfuStatus.bState != HTC_DFU_STATE_IDLE){
+                    Log.i(TAG,"err! dfu status="+ dfuStatus.bState+" continue retry!");
+                    continue;
+                }
+                long total_time = System.currentTimeMillis() -startEraseTime;
+                Log.i(TAG,"Erase sector addr=0x"+ Integer.toHexString(address) +" time="+total_time+" ms");
+                return true;
+            } while (retry_count -- > 0);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return result;
+        return false;
     }
 
     public boolean UpgradeFotaImage(File file) {
@@ -267,8 +268,6 @@ public class HtcDfu {
         boolean LaunchVerifyResult = true;
         boolean analysysdfufileresult = false;
 
-
-
         if (m_Usb == null || !m_Usb.UsbIsConnected()) {
             Log.i(TAG,"No device connected");
             return false;
@@ -394,7 +393,7 @@ public class HtcDfu {
         if (dfuStatus.bState == HTC_DFU_STATE_ERROR) {
             ReadProtected = true;
         }
-        Log.i(TAG,"isAddressProtecteddfuStatus.bState" + dfuStatus.bState);
+        Log.i(TAG,"isAddressProtecteddfuStatus.bState=" + dfuStatus.bState);
         while (dfuStatus.bState != HTC_DFU_STATE_IDLE){
             HTCDFU_ClearStatus();
             HTCDFU_GetStatus(dfuStatus);

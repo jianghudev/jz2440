@@ -2,6 +2,8 @@ package com.htc.service.dfu;
 
 import android.util.Log;
 
+import com.htc.service.Const;
+
 import java.io.File;
 import java.io.FileInputStream;
 
@@ -9,8 +11,9 @@ import java.io.FileInputStream;
  * Created by wanjin_shi on 16-10-20.
  */
 public class HtcDfuFile {
+    private static final String TAG= Const.G_TAG;
 
-    private final static String TAG = "3DoF_HMD.FOTA.HtcDfuFile";
+
     private final static int DfuFilePreFixOffset = 11;
     private final static int DfuFileTargetPrefixOffset = 274;
     private final static int DfuFilePelementOffset = 9;
@@ -106,7 +109,7 @@ public class HtcDfuFile {
             m_DfuSurfix.dwCRC[3] = m_DfuFilebuffer[crcIndex+3];
 
             crcfile = (m_DfuSurfix.dwCRC[0] & 0xFF) | ((m_DfuSurfix.dwCRC[1] & 0xFF)<<8) | ((m_DfuSurfix.dwCRC[2] & 0xFF)<<16) | ((m_DfuSurfix.dwCRC[3] & 0xFF)<<24);
-            Log.i(TAG,"crcfile" + crcfile);
+            Log.i(TAG,"crcfile=" + crcfile);
             if(crcfile != calculateCRC(m_DfuFilebuffer)){
                 Log.i(TAG,"CrC check fail");
                 result = false;
@@ -120,20 +123,10 @@ public class HtcDfuFile {
                 | ((m_DfuFilebuffer[FirmWareLengthIndex+2] & 0xFF)<<16) | ((m_DfuFilebuffer[FirmWareLengthIndex+3] & 0xFF)<<24);
 
        //get dfu file header;
-        FirmwareHeader = new String(m_DfuFilebuffer,FirmWareOffset,8,"GB2312");
+        FirmwareHeader = new String(m_DfuFilebuffer,FirmWareOffset,8,"utf-8");
         Log.i(TAG, "FirmwareHeader :" + FirmwareHeader.toString());
+        Log.i(TAG,"FirmWareLength=" + FirmWareLength);
 
-        //get system header;
-        FirmwareSysHeader = new String(m_DfuFilebuffer,FirmWareOffset+4096-48,8,"GB2312");
-        Log.i(TAG, "FirmwareSysHeader :" + FirmwareSysHeader.toString());
-
-        //get bl header;
-        FirmwareBlHeader = new String(m_DfuFilebuffer,FirmWareOffset+4096-48,8,"GB2312");
-        Log.i(TAG, "FirmwareBlHeader :" + FirmwareBlHeader.toString());
-
-        //get ccg4 header
-        FirmwareCCG4Header = new String(m_DfuFilebuffer,FirmWareOffset+88,4,"GB2312");
-        Log.i(TAG, "FirmwareCCG4Header :" + FirmwareCCG4Header.toString());
 
         if(FirmWareLength < 32) {
             result = false;
@@ -145,6 +138,9 @@ public class HtcDfuFile {
 
         Log.i(TAG,"Dfu file Path: " + m_DfuFilePath + "\n");
         Log.i(TAG,"Dfu file Size: " + m_DfuFilebuffer.length + " Bytes \n");
+        if( 134217728  != FirmWareStartAddress ){
+            Log.i(TAG,"Start Address err!" + FirmWareStartAddress);
+        }
         Log.i(TAG,"Start Address: 0x" + Integer.toHexString(FirmWareStartAddress));
         Log.i(TAG,"vid: 0x" + Integer.toHexString(m_vid));
         Log.i(TAG,"pid: 0x" + Integer.toHexString(m_pid));

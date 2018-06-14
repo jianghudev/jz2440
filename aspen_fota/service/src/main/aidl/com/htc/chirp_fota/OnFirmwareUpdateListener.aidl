@@ -1,5 +1,5 @@
 // OnFirmwareUpdateListener.aidl
-package com.htc.chirp_fota_service;
+package com.htc.chirp_fota;
 
 // Declare any non-default types here with import statements
 

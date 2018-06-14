@@ -4,9 +4,12 @@ import android.app.Service;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.hardware.usb.UsbManager;
+import android.os.Bundle;
 import android.os.IBinder;
+import android.os.RemoteException;
 import android.util.Log;
 
+import com.htc.chirp_fota.OnFirmwareUpdateListener;
 import com.htc.service.dfu.Facep_mcu;
 import com.htc.service.usb.Usb;
 
@@ -20,6 +23,7 @@ public class FotaService extends Service implements Usb.OnUsbChangeListener{
     private Thread facep_mcu_thread=null;
 
     private Facep_mcu f_mcu =null;
+    public OnFirmwareUpdateListener mUpdateListener = null;
 
     //public int curret_device  = -1;
     //public boolean DEVICE_STATE = false;
@@ -37,6 +41,8 @@ public class FotaService extends Service implements Usb.OnUsbChangeListener{
         registerReceiver(mUsb.getmUsbReceiver(), new IntentFilter(Usb.HTC_ACTION_USB_PERMISSION));
         registerReceiver(mUsb.getmUsbReceiver(), new IntentFilter(UsbManager.ACTION_USB_DEVICE_ATTACHED));
         registerReceiver(mUsb.getmUsbReceiver(), new IntentFilter(UsbManager.ACTION_USB_DEVICE_DETACHED));
+
+        setFirmwareUpdateListener(new myListener());
 
         ccg4_thread = new Thread(new Runnable() {
             public void run() {
@@ -104,7 +110,25 @@ public class FotaService extends Service implements Usb.OnUsbChangeListener{
 
 
 
+    public void setFirmwareUpdateListener(OnFirmwareUpdateListener l) {
+        mUpdateListener = l;
+    }
 
+    class myListener implements OnFirmwareUpdateListener{
+        @Override
+        public void onFirmwareUpdateStatusChanged(int device, int state, Bundle extra) throws RemoteException {
+            Log.i(TAG, "onFirmwareUpdateStatusChanged");
+        }
+        @Override
+        public void onFirmwareUpdateProgressChanged(int device, int progress) throws RemoteException {
+            Log.i(TAG, "onFirmwareUpdateProgressChanged");
+        }
+        @Override
+        public IBinder asBinder() {
+            Log.i(TAG, "asBinder");
+            return null;
+        }
+    }
 
 }
 

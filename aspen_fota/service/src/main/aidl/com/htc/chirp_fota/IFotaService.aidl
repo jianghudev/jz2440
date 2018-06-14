@@ -1,8 +1,8 @@
 // IFotaService.aidl
-package com.htc.chirp_fota_service;
+package com.htc.chirp_fota;
 
-import com.htc.chirp_fota_service.OnFirmwareUpdateListener;
-import com.htc.chirp_fota_service.IDeviceConnectedListener;
+import com.htc.chirp_fota.OnFirmwareUpdateListener;
+import com.htc.chirp_fota.IDeviceConnectedListener;
 // Declare any non-default types here with import statements
 
 interface IFotaService {

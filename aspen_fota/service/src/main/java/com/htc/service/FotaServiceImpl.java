@@ -14,9 +14,9 @@ import android.os.RemoteException;
 import android.os.SystemClock;
 import android.util.Log;
 
-import com.htc.chirp_fota_service.IDeviceConnectedListener;
-import com.htc.chirp_fota_service.IFotaService;
-import com.htc.chirp_fota_service.OnFirmwareUpdateListener;
+import com.htc.chirp_fota.IDeviceConnectedListener;
+import com.htc.chirp_fota.IFotaService;
+import com.htc.chirp_fota.OnFirmwareUpdateListener;
 import com.htc.service.usb.Usb;
 
 import java.io.File;

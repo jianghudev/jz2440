@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.htc.chirp_fota_service.com.htc.service.ActivityDialog">
+    tools:context="com.htc.chirp_fota.com.htc.service.ActivityDialog">
     <RelativeLayout
         android:layout_centerInParent="true"
         android:background="#6cb3ff"

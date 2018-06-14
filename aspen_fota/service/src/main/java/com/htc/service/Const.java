@@ -5,7 +5,7 @@ package com.htc.service;
  */
 
 public class Const {
-    public final static String G_TAG = "ChirpFota";
+    public final static String G_TAG = "AspenFota";
 
     public static final int CMD_FOTA_START = 'A';
     public static final int CMD_FOTA_TRANSFER = 'B';
