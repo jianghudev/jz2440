@@ -141,7 +141,7 @@ public class faceplace_mcu {
 
 
     public int enter_dfu_mode(){
-        int retryCount = 5;
+        int retryCount = 3;
         try {
             long file_size=mDfuFile.length();
             //ccg4_version =get_ccg4_ver(ccgfile);
@@ -169,16 +169,8 @@ public class faceplace_mcu {
                         continue;
                     }
                     if(Const.CMD_FOTA_START==Data.recv_array[0]){
-                        if (11== Data.recv_array[2]) {
-                            return 11;
-                        }else if (12== Data.recv_array[2]) {
-                            return 12;
-                        }else if (0== Data.recv_array[2]) {
-                            Log.d(TAG, "ccg4 start ack can't be 0");
-                        }else{
-                            Log.e(TAG, "err type="+Data.recv_array[2]);
-                        }
-                        break;
+                        Log.d(TAG, "faceplate reboot");
+                        return Data.recv_array[2];
                     }
                 }
             }

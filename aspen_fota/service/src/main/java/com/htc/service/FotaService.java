@@ -56,17 +56,7 @@ public class FotaService extends Service implements Usb.OnUsbChangeListener{
             }
         });
 
-        facep_mcu_thread = new Thread(new Runnable() {
-            public void run() {
-                try {
-                    Log.d(TAG, "faceplate sys update start");
-                    f_mcu.update_sys();
-                } catch (Exception e) {
-                    Log.d(TAG, facep_mcu_thread.getName()+" stop");
-                    e.printStackTrace();
-                }
-            }
-        });
+
 
         Log.d(TAG, "__jh__ onCreate done.");
     }
@@ -99,19 +89,37 @@ public class FotaService extends Service implements Usb.OnUsbChangeListener{
             }
             if(isConnected){
                 if ( 1 == type ) { //cdc
-                    ccg4_thread.start();
+                    //ccg4_thread.start();   //// todo
+                    f_mcu.enter_dfu_mode();
                 }else if(2 == type ){ //dfu
+                    facep_mcu_thread =null;
+                    facep_mcu_thread = new Thread(new Runnable() {
+                        public void run() {
+                            try {
+                                Log.d(TAG, "faceplate sys update start");
+                                f_mcu.update_sys();
+                            } catch (Exception e) {
+                                Log.d(TAG, facep_mcu_thread.getName()+" stop");
+                                e.printStackTrace();
+                            }
+                        }
+                    });
                     facep_mcu_thread.start();
                 }
             }else{
-                boolean facep_alive =facep_mcu_thread.isAlive();
-                boolean ccg_alive = ccg4_thread.isAlive();
-                Log.i(TAG, "facep_alive="+facep_alive+" ccg_alive="+ccg_alive);
-                if (ccg_alive) {
-                    ccg4_thread.interrupt();
+                if ( null !=facep_mcu_thread ) {
+                    boolean facep_alive =facep_mcu_thread.isAlive();
+                    Log.i(TAG, "facep_alive="+facep_alive);
+                    if (facep_alive) {
+                        facep_mcu_thread.interrupt();
+                    }
                 }
-                if (facep_alive) {
-                    facep_mcu_thread.interrupt();
+                if ( null !=ccg4_thread ) {
+                    boolean ccg_alive = ccg4_thread.isAlive();
+                    Log.i(TAG, "ccg_alive="+ccg_alive);
+                    if (ccg_alive) {
+                        ccg4_thread.interrupt();
+                    }
                 }
             }
 
