@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/miac_controller_new_layout_width"
+    android:layout_height="@dimen/miac_controller_new_layout_height"
+    android:padding="@dimen/miac_controller_new_layout_padding"
+    android:background="@drawable/mvr_setting_panel_bg">
+
+    <TextView
+        android:id="@+id/available_title"
+        style="@style/miac_controller_new_title_text_style_12"
+        android:layout_width="@dimen/miac_controller_new_title_width"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:gravity="center_horizontal"
+        android:text="@string/fw_available_title" />
+
+    <ImageView
+        android:id="@+id/available_imageview"
+        android:layout_width="@dimen/miac_controller_new_icon_fota_width"
+        android:layout_height="@dimen/miac_controller_new_icon_fota_height"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/miac_controller_new_icon_fota_margin"
+        android:layout_marginBottom="@dimen/miac_controller_new_icon_fota_margin"
+        android:layout_below="@+id/available_title"
+        android:background="@drawable/miac_controller_02"/>
+
+    <TextView
+        android:id="@+id/available_description"
+        style="@style/miac_controller_new_tips_text_style_10"
+        android:layout_width="@dimen/miac_controller_new_title_width"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/available_imageview"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
+        android:text="@string/fw_available_description" />
+
+</RelativeLayout>

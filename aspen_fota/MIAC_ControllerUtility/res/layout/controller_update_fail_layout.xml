@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/miac_controller_updating_layout_width"
+    android:layout_height="@dimen/miac_controller_updating_layout_height"
+    android:background="@drawable/mvr_payment_popup_bg_s">
+
+    <ImageView
+        android:id="@+id/wrong_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="18dp"
+        android:background="@drawable/ic_warning"/>
+
+    <TextView
+        android:id="@+id/fail_title"
+        android:layout_width="@dimen/miac_controller_layout_updating_title_width"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
+        android:layout_below="@+id/wrong_icon"
+        android:layout_marginTop="6dp"
+        android:layout_marginStart="@dimen/miac_controller_layout_updating_title_margin"
+        android:layout_marginEnd="@dimen/miac_controller_layout_updating_title_margin"
+        android:text="@string/fw_update_fail_title"
+        style="@style/miac_warning_title_text_style"/>
+
+    <TextView
+        android:id="@+id/fail_description"
+        android:layout_width="420dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
+        android:layout_below="@+id/fail_title"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="@dimen/miac_controller_layout_updating_title_margin"
+        android:layout_marginEnd="@dimen/miac_controller_layout_updating_title_margin"
+        android:text="@string/fw_update_fail_description"
+        style="@style/miac_fail_description_text_style"/>
+
+    <Button
+        android:id="@+id/fail_button"
+        android:layout_width="132dp"
+        android:layout_height="34dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/fail_description"
+        android:layout_marginTop="30dp"
+        android:text="@android:string/ok"
+        android:textSize="14dp"
+        android:textColor="@color/miac_title_text_color"
+        android:background="@drawable/button_background"/>
+
+</RelativeLayout>

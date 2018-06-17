@@ -1,0 +1,96 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="miac_title_text_style" >
+        <item name="android:textColor">@color/miac_title_text_color</item>
+        <item name="android:textSize">20dp</item>
+    </style>
+
+    <style name="miac_description_text_style" >
+        <item name="android:textColor">@color/miac_description_text_color</item>
+        <item name="android:textSize">14dp</item>
+    </style>
+
+    <style name="miac_warning_text_style">
+        <item name="android:textColor">@color/miac_warning_text_color</item>
+        <item name="android:textSize">14dp</item>
+    </style>
+
+    <style name="miac_updating_status_text_style">
+        <item name="android:textColor">@color/miac_title_text_color</item>
+        <item name="android:textSize">14dp</item>
+    </style>
+
+    <style name="miac_warning_title_text_style">
+        <item name="android:textColor">@color/miac_warning_text_color</item>
+        <item name="android:textSize">20dp</item>
+    </style>
+
+    <style name="miac_fail_description_text_style" >
+        <item name="android:textColor">@color/miac_description_text_color</item>
+        <item name="android:textSize">16dp</item>
+    </style>
+
+    <style name="miac_new_welcome_text_style">
+        <item name="android:textColor">@color/miac_title_text_color</item>
+        <item name="android:textSize">18dp</item>
+    </style>
+
+
+    <!-- For new version layout -->
+    <style name="miac_controller_new_title_text_style_10" >
+        <item name="android:textColor">@color/miac_new_title_text_color</item>
+        <item name="android:textSize">10dp</item>
+        <item name="android:shadowRadius">16</item>
+        <item name="android:shadowDx">4</item>
+        <item name="android:shadowDy">8</item>
+    </style>
+
+    <style name="miac_controller_new_title_text_style_12" >
+        <item name="android:textColor">@color/miac_new_title_text_color</item>
+        <item name="android:textSize">12dp</item>
+        <item name="android:shadowColor">@color/miac_new_title_shadow_color</item>
+        <item name="android:shadowRadius">16</item>
+        <item name="android:shadowDx">4</item>
+        <item name="android:shadowDy">8</item>
+    </style>
+
+    <style name="miac_controller_new_description_text_style_12" >
+        <item name="android:textColor">@color/miac_new_description_text_color</item>
+        <item name="android:textSize">12dp</item>
+        <item name="android:lineSpacingExtra">2dp</item>
+    </style>
+
+    <style name="miac_controller_new_tips_text_style_10" >
+        <item name="android:textColor">@color/miac_new_tips_text_color</item>
+        <item name="android:textSize">10dp</item>
+        <item name="android:lineSpacingExtra">2dp</item>
+    </style>
+
+    <style name="miac_controller_new_tips_text_style_10_alpha" >
+        <item name="android:textColor">@color/miac_new_tips_2_text_color</item>
+        <item name="android:textSize">10dp</item>
+        <item name="android:alpha">0.5</item>
+        <item name="android:lineSpacingExtra">2dp</item>
+    </style>
+
+    <style name="miac_controller_new_tips_text_style_9_alpha" >
+        <item name="android:textColor">@color/miac_new_tips_2_text_color</item>
+        <item name="android:textSize">9dp</item>
+        <item name="android:alpha">0.5</item>
+        <item name="android:lineSpacingExtra">2dp</item>
+    </style>
+
+    <style name="miac_controller_new_warning_text_style_10" >
+        <item name="android:textColor">@color/miac_new_warning_text_color</item>
+        <item name="android:textSize">10dp</item>
+    </style>
+
+</resources>

@@ -1,0 +1,38 @@
+<resources>
+    <string name="app_name">ControllerScanner</string>
+    <string name="error_bluetooth_not_supported">error! Bluetooth not supported</string>
+
+    <!-- Pair and FOTA UI  -->
+    <string name="pair_controller_title">Welcome to Vive Focus</string>
+    <string name="pair_controller_description">To get start, aim forward and hold the Home button</string>
+
+    <string name="pair_controller_not_found_title">Connect the controller</string>
+    <string name="pair_controller_not_found_hint">No controller found</string>
+    <string name="pair_controller_not_found_description">Make sure your controller’s battery has power then try again by aiming controller forward and hold the Home button</string>
+
+    <string name="fw_available_title">Controller update available</string>
+    <string name="fw_available_description">The controller needs an update for a better experience. During the update, you won’t be able to use the controller. The update will start now and will take a few minutes to complete</string>
+
+    <string name="fw_download_title">Updating controller</string>
+    <string name="fw_download_progress_description">Prepare for update…</string>
+    <string name="fw_download_description">The controller update is in progress. Keep the controller nearby and don’t turn off the headset</string>
+
+    <string name="fw_install_progress_description">Updating firmware…</string>
+
+    <string name="fw_update_success_title">Update success</string>
+    <string name="fw_update_success_description">Your controller has updated to the lasted version successfully</string>
+
+    <string name="fw_update_fail_title">Update failed</string>
+    <string name="fw_update_fail_description">Oops! Something went wrong! Please try again</string>
+
+    <string name="fw_update_low_battery_title">Replace the batteries</string>
+    <string name="fw_update_low_battery_hint">Controller is low battery</string>
+    <string name="fw_update_low_battery_description">The controller\'s battery is too low, please replace the battery before firmware update</string>
+
+    <string name="button_ok">OK</string>
+
+    <string name="pair_controller_description_new">Aim forward and long press\nHome button to continue</string>
+    <string name="pair_controller_description_new_render">Aim forward and long press\n{Home button} @ to continue</string>
+    <string name="pair_controller_searching">Searching the controller</string>
+    <string name="pair_controller_pair_new">To pair a new controller, press Volume button on headset</string>
+</resources>

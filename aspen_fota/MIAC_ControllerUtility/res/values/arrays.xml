@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="animation_press_home_btn">
+        <item>@drawable/recenter_0001</item>
+        <item>@drawable/recenter_0002</item>
+        <item>@drawable/recenter_0003</item>
+        <item>@drawable/recenter_0004</item>
+        <item>@drawable/recenter_0005</item>
+        <item>@drawable/recenter_0006</item>
+        <item>@drawable/recenter_0007</item>
+        <item>@drawable/recenter_0008</item>
+        <item>@drawable/recenter_0009</item>
+        <item>@drawable/recenter_0010</item>
+        <item>@drawable/recenter_0011</item>
+        <item>@drawable/recenter_0012</item>
+        <item>@drawable/recenter_0013</item>
+        <item>@drawable/recenter_0014</item>
+        <item>@drawable/recenter_0015</item>
+        <item>@drawable/recenter_0016</item>
+        <item>@drawable/recenter_0017</item>
+        <item>@drawable/recenter_0018</item>
+        <item>@drawable/recenter_0019</item>
+        <item>@drawable/recenter_0020</item>
+        <item>@drawable/recenter_0021</item>
+        <item>@drawable/recenter_0022</item>
+        <item>@drawable/recenter_0023</item>
+        <item>@drawable/recenter_0024</item>
+        <item>@drawable/recenter_0025</item>
+        <item>@drawable/recenter_0026</item>
+        <item>@drawable/recenter_0027</item>
+        <item>@drawable/recenter_0028</item>
+        <item>@drawable/recenter_0029</item>
+        <item>@drawable/recenter_0030</item>
+        <item>@drawable/recenter_0031</item>
+        <item>@drawable/recenter_0032</item>
+        <item>@drawable/recenter_0033</item>
+        <item>@drawable/recenter_0034</item>
+        <item>@drawable/recenter_0035</item>
+        <item>@drawable/recenter_0036</item>
+        <item>@drawable/recenter_0037</item>
+        <item>@drawable/recenter_0038</item>
+        <item>@drawable/recenter_0039</item>
+        <item>@drawable/recenter_0040</item>
+    </string-array>
+
+</resources>

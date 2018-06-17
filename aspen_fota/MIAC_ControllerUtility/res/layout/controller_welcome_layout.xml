@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/miac_controller_layout_width"
+    android:layout_height="@dimen/miac_controller_layout_height"
+    android:background="@drawable/mvr_setting_panel_bg">
+
+    <TextView
+        android:id="@+id/welcome_title"
+        android:layout_width="@dimen/miac_controller_layout_title_width"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="40dp"
+        android:text="@string/pair_controller_title"
+        style="@style/miac_title_text_style"/>
+
+    <ImageView
+        android:id="@+id/welcome_imageview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:layout_below="@+id/welcome_title"
+        android:background="@drawable/mia_controller_01"/>
+
+    <TextView
+        android:id="@+id/welcome_description"
+        android:layout_width="@dimen/miac_controller_layout_title_width"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
+        android:layout_below="@+id/welcome_imageview"
+        android:layout_marginTop="51dp"
+        android:layout_marginStart="@dimen/miac_controller_layout_description_margin"
+        android:layout_marginEnd="@dimen/miac_controller_layout_description_margin"
+        android:text="@string/pair_controller_description"
+        style="@style/miac_description_text_style"/>
+
+</RelativeLayout>

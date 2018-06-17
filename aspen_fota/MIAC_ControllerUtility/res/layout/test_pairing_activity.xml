@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/test_pairing_activity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".controllerscanner.test.TestPairingActivity">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="" />
+
+
+    <Button
+        android:id="@+id/bind"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:text="bind"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp" />
+
+    <Button
+        android:id="@+id/startScan"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:text="startScan"
+        android:layout_marginTop="50dp"
+        android:layout_below="@+id/bind"
+        android:layout_alignStart="@+id/bind" />
+
+    <Button
+        android:id="@+id/stopScan"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:text="stopScan"
+        android:layout_marginTop="50dp"
+        android:layout_below="@+id/startScan"
+        android:layout_alignStart="@+id/startScan" />
+
+    <Button
+        android:id="@+id/bind_fota_update_service"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:text="Bind fota udpate service"
+        android:layout_marginTop="50dp"
+        android:layout_below="@+id/stopScan"
+        android:layout_alignStart="@+id/startScan" />
+
+</RelativeLayout>

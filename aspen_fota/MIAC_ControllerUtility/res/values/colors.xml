@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="miac_title_text_color">#FFFFFF</color>
+    <color name="miac_description_text_color">#9DAABF</color>
+    <color name="miac_warning_text_color">#FF6D6D</color>
+    <color name="miac_updating_bar_color">#00B5E2</color>
+
+    <color name="miac_new_title_text_color">#FFFFFF</color>
+    <color name="miac_new_title_shadow_color">#80000000</color>
+    <color name="miac_new_description_text_color">#FFFFFF</color>
+    <color name="miac_new_tips_text_color">#9DAABF</color>
+    <color name="miac_new_tips_2_text_color">#FFFFFF</color>
+    <color name="miac_new_warning_text_color">#FF6D6D</color>
+    <color name="miac_new_description_highlight_color">#00B5E2</color>
+
+</resources>

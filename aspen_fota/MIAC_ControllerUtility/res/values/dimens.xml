@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="miac_controller_layout_width">550dp</dimen>
+    <dimen name="miac_controller_layout_height">332dp</dimen>
+    <dimen name="miac_controller_layout_title_width">330dp</dimen>
+    <dimen name="miac_controller_layout_title_height">22dp</dimen>
+    <dimen name="miac_controller_updating_layout_width">500dp</dimen>
+    <dimen name="miac_controller_updating_layout_height">178dp</dimen>
+    <dimen name="miac_controller_layout_updating_title_width">420dp</dimen>
+    <dimen name="miac_controller_layout_updating_title_height">22dp</dimen>
+    <dimen name="miac_new_controller_layout_width">390dp</dimen>
+    <dimen name="miac_new_controller_layout_height">332dp</dimen>
+
+
+    <dimen name="miac_controller_layout_description_margin">80dp</dimen>
+    <dimen name="miac_controller_layout_updating_title_margin">40dp</dimen>
+    <dimen name="miac_controller_layout_description_new_margin">30dp</dimen>
+
+
+    <!-- For new version layout -->
+    <dimen name="miac_controller_new_layout_width">260dp</dimen>
+    <dimen name="miac_controller_new_layout_height">200dp</dimen>
+    <dimen name="miac_controller_new_layout_padding">20dp</dimen>
+    <dimen name="miac_controller_new_layout_padding_small">10dp</dimen>
+    <dimen name="miac_controller_new_title_width">214dp</dimen>
+    <dimen name="miac_controller_new_title_width_big">234dp</dimen>
+
+    <dimen name="miac_controller_new_icon_searching_width">85dp</dimen>
+    <dimen name="miac_controller_new_icon_searching_height">85dp</dimen>
+    <dimen name="miac_controller_new_icon_searching_margin_top">8dp</dimen>
+    <dimen name="miac_controller_new_icon_searching_margin_top_b">18dp</dimen>
+    <dimen name="miac_controller_new_icon_searching_margin_bottom">12dp</dimen>
+    <dimen name="miac_controller_new_icon_searching_margin_bottom_b">16dp</dimen>
+    <dimen name="miac_controller_new_icon_searching_margin_start">60dp</dimen>
+    <dimen name="miac_controller_new_icon_searching_margin_end">60dp</dimen>
+    <dimen name="miac_controller_new_icon_searching_margin_start_small">70dp</dimen>
+    <dimen name="miac_controller_new_icon_searching_margin_end_small">70dp</dimen>
+    <dimen name="miac_controller_new_tips_searching_margin">4dp</dimen>
+
+    <dimen name="miac_controller_new_icon_battery_width">66dp</dimen>
+    <dimen name="miac_controller_new_icon_battery_height">88dp</dimen>
+    <dimen name="miac_controller_new_icon_battery_margin_top">14dp</dimen>
+    <dimen name="miac_controller_new_icon_battery_margin_bottom">16dp</dimen>
+    <dimen name="miac_controller_new_tips_battery_margin">6dp</dimen>
+
+    <dimen name="miac_controller_new_icon_warning_width">12dp</dimen>
+    <dimen name="miac_controller_new_icon_warning_height">12dp</dimen>
+    <dimen name="miac_controller_new_icon_warning_margin_end">2dp</dimen>
+
+    <dimen name="miac_controller_new_icon_fota_width">30dp</dimen>
+    <dimen name="miac_controller_new_icon_fota_height">88dp</dimen>
+    <dimen name="miac_controller_new_icon_fota_margin">16dp</dimen>
+
+    <dimen name="miac_controller_new_layout_oobe_width">200dp</dimen>
+    <dimen name="miac_controller_new_layout_oobe_height">160dp</dimen>
+    <dimen name="miac_controller_new_animation_recenter_width">85dp</dimen>
+    <dimen name="miac_controller_new_animation_recenter_height">85dp</dimen>
+</resources>

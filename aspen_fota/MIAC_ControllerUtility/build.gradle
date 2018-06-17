@@ -1,0 +1,99 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+
+apply plugin: 'com.android.application'
+
+allprojects {
+    repositories {
+        flatDir {
+            dirs 'libs'
+        }
+    }
+}
+
+android {
+    compileSdkVersion 26
+
+    buildToolsVersion '26.0.2'
+    defaultConfig {
+        applicationId "com.htc.miac.controllerutility"
+        minSdkVersion 19
+        targetSdkVersion 26
+        versionCode 20180201
+        versionName "1.0.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        buildConfigField "String", "PACKAGESIMPLENAME", "\"[vrscanner]\""
+        buildConfigField "String", "BUILD_TIMESTAMP", getDate()
+    }
+
+    signingConfigs {
+        config {
+                storeFile file("platform.jks")
+                storePassword "android"
+                keyAlias "platform"
+                keyPassword "android"
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
+        }
+
+        debug {
+        }
+    }
+
+    productFlavors {
+    }
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src']
+            jniLibs.srcDirs = ["libs"]
+            resources.srcDirs = ['src']
+            aidl.srcDirs = ['src']
+            renderscript.srcDirs = ['src']
+            res.srcDirs = ['res']
+            assets.srcDirs = ['assets']
+        }
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
+    }
+}
+
+String getDate() {
+    Date date = new Date();
+    String dates = "\""+date.format("yyyy-MM-dd hh:mm:ss", TimeZone.getTimeZone("UTC"))+"\"";
+    return dates;
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:26.+'
+    testCompile 'junit:junit:4.12'
+
+//    compile(name: 'gvr-keyboard', ext:'aar')
+//    compile(name: 'gvr-keyboardsupport-release', ext:'aar')
+//    compile(name: 'gvr-permissionsupport-release', ext:'aar')
+//    compile(name: 'gvr', ext:'aar')
+//    compile(name: 'unitygvr', ext:'aar')
+
+    compile(name: 'wavevr_client', ext:'aar')
+//    compile(name: 'wavevr_pidemo', ext:'aar')
+//    compile(name: 'wavevr_resdemo', ext:'aar')
+//    compile(name: 'wavevr_unity_plugin', ext:'aar')
+}

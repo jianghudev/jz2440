@@ -1,0 +1,38 @@
+<resources>
+    <string name="app_name">控制器掃描器</string><!--ControllerScanner-->
+    <string name="error_bluetooth_not_supported">錯誤！不支援藍牙</string><!--error! Bluetooth not supported.-->
+
+<!-- Pair and FOTA UI  -->
+    <string name="pair_controller_title">歡迎使用 Vive Focus</string><!--Welcome to MIA-->
+    <string name="pair_controller_description">若要開始使用，請向前對準並按住主畫面按鈕</string><!--To get start, aim forward and hold the Home button.-->
+
+    <string name="pair_controller_not_found_title">連接控制器</string><!--Connect the controller-->
+    <string name="pair_controller_not_found_hint">找不到控制器</string><!--No controller found-->
+    <string name="pair_controller_not_found_description">請確定控制器的電池具有足夠電力，然後重新嘗試向前對準控制器並按住主畫面按鈕</string><!--Make sure your controller’s battery has power then try again by aiming controller forward and hold the Home button.-->
+
+    <string name="fw_available_title">控制器有可用的更新</string><!--Controller update availabler-->
+    <string name="fw_available_description">您的控制器需要更新以獲得更好的體驗。更新期間控制器將停止運作。更新即將開始，過程將花費幾分鐘</string><!--Your controller needs to update for a better experience, the update process will take about 3 minutes and start automatically-->
+
+    <string name="fw_download_title">正在更新控制器</string><!--Updating controller-->
+    <string name="fw_download_progress_description">準備更新…</string><!--Prepare for update…-->
+    <string name="fw_download_description">控制器正在更新中。請確保控制器在頭戴式裝置附近，並請保持頭戴式裝置處於開機狀態</string><!--This may take a few minutes. In the meantime, keep your controller nearby.-->
+
+    <string name="fw_install_progress_description">正在更新韌體…</string><!--Updating firmware…-->
+
+    <string name="fw_update_success_title">更新成功</string><!--Update success-->
+    <string name="fw_update_success_description">您的控制器已成功更新至最新版本</string><!--Your controller has updated to the lasted version successfully.-->
+
+    <string name="fw_update_fail_title">更新失敗</string><!--Update failed-->
+    <string name="fw_update_fail_description">很抱歉！發生錯誤！請再試一次</string><!--Oops! Something went wrong! Please try again.-->
+
+    <string name="fw_update_low_battery_title">更換電池</string><!--Replace the batteries-->
+    <string name="fw_update_low_battery_hint">控制器的電池電量過低</string><!--Controller is low battery-->
+    <string name="fw_update_low_battery_description">控制器的電池電量過低，請先更換電池再進行韌體更新</string><!--The controller\'s battery is too low, please replace the battery before firmware update.-->
+
+    <string name="button_ok">確定</string><!--OK-->
+    
+    <string name="pair_controller_description_new">請對準前方並長按主選單按鈕以繼續</string>
+    <string name="pair_controller_description_new_render">請對準前方並長按{主選單按鈕} @ 以繼續</string>
+    <string name="pair_controller_searching">搜尋控制器</string>
+    <string name="pair_controller_pair_new">要配對新的控制器，請按下頭戴式裝置上的音量按鈕</string>
+</resources>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/miac_controller_layout_width"
+    android:layout_height="@dimen/miac_controller_layout_height"
+    android:background="@drawable/mvr_setting_panel_bg">
+
+    <TextView
+        android:id="@+id/disconnect_title"
+        android:layout_width="@dimen/miac_controller_layout_title_width"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="40dp"
+        android:layout_marginStart="@dimen/miac_controller_layout_description_margin"
+        android:layout_marginEnd="@dimen/miac_controller_layout_description_margin"
+        android:text="@string/pair_controller_not_found_title"
+        style="@style/miac_title_text_style"/>
+
+    <ImageView
+        android:id="@+id/disconnect_imageview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="38dp"
+        android:layout_below="@+id/disconnect_title"
+        android:background="@drawable/mia_controller_01"/>
+
+    <RelativeLayout
+        android:id="@+id/warning_group"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="43dp"
+        android:layout_below="@+id/disconnect_imageview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/warning_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_warning"/>
+
+        <TextView
+            android:id="@+id/warning_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/warning_icon"
+            android:layout_marginStart="2dp"
+            android:layout_centerVertical="true"
+            android:text="@string/pair_controller_not_found_hint"
+            style="@style/miac_warning_text_style"/>
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/disconnect_description"
+        android:layout_width="390dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
+        android:layout_below="@+id/warning_group"
+        android:layout_marginTop="6dp"
+        android:layout_marginStart="@dimen/miac_controller_layout_description_margin"
+        android:layout_marginEnd="@dimen/miac_controller_layout_description_margin"
+        android:text="@string/pair_controller_not_found_description"
+        style="@style/miac_description_text_style"/>
+
+</RelativeLayout>

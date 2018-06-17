@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/miac_controller_updating_layout_width"
+    android:layout_height="@dimen/miac_controller_updating_layout_height"
+    android:background="@drawable/mvr_payment_popup_bg_s">
+
+    <TextView
+        android:id="@+id/updating_title"
+        android:layout_width="@dimen/miac_controller_layout_updating_title_width"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="18dp"
+        android:layout_marginStart="@dimen/miac_controller_layout_updating_title_margin"
+        android:layout_marginEnd="@dimen/miac_controller_layout_updating_title_margin"
+        android:text="@string/fw_download_title"
+        style="@style/miac_title_text_style"/>
+
+    <TextView
+        android:id="@+id/updating_status_title"
+        android:layout_width="176dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/updating_title"
+        android:gravity="start"
+        android:layout_marginTop="26dp"
+        android:layout_marginStart="55dp"
+        android:text="@string/fw_install_progress_description"
+        style="@style/miac_updating_status_text_style"/>
+
+    <TextView
+        android:id="@+id/updating_percentage"
+        android:layout_width="35dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/updating_title"
+        android:layout_marginTop="26dp"
+        android:layout_toEndOf="@+id/updating_status_title"
+        android:layout_marginStart="179dp"
+        android:layout_marginEnd="55dp"
+        android:gravity="end"
+        android:text="0%"
+        android:visibility="gone"
+        style="@style/miac_description_text_style"/>
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="390dp"
+        android:layout_height="6dp"
+        android:id="@+id/progressBar"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/updating_status_title"
+        android:progressTint="@color/miac_updating_bar_color"
+        android:progressBackgroundTint="@color/miac_description_text_color"
+        android:indeterminateTint="@color/miac_updating_bar_color"
+        android:layout_marginTop="10dp"
+        android:indeterminate="true"
+        android:saveEnabled="false" />
+
+    <TextView
+        android:id="@+id/updating_description"
+        android:layout_width="390dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
+        android:layout_below="@+id/progressBar"
+        android:layout_marginTop="26dp"
+        android:layout_marginStart="55dp"
+        android:layout_marginEnd="55dp"
+        android:text="@string/fw_download_description"
+        style="@style/miac_description_text_style"/>
+
+</RelativeLayout>

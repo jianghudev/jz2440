@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/miac_controller_new_layout_width"
+    android:layout_height="@dimen/miac_controller_new_layout_height">
+
+    <RelativeLayout
+        android:layout_width="@dimen/miac_controller_new_layout_width"
+        android:layout_height="@dimen/miac_controller_new_layout_height"
+        android:background="@drawable/mvr_setting_panel_bg"
+        android:padding="@dimen/miac_controller_new_layout_padding">
+
+        <ImageView
+            android:id="@+id/welcome_imageview"
+            android:layout_width="@dimen/miac_controller_new_icon_searching_width"
+            android:layout_height="@dimen/miac_controller_new_icon_searching_height"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/miac_controller_new_icon_searching_margin_bottom_b"
+            android:layout_marginTop="@dimen/miac_controller_new_icon_searching_margin_top_b"
+            android:src="@drawable/recenter_0008" />
+
+        <TextView
+            android:id="@+id/welcome_description"
+            style="@style/miac_controller_new_description_text_style_12"
+            android:layout_width="@dimen/miac_controller_new_title_width"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/welcome_imageview"
+            android:layout_centerHorizontal="true"
+            android:gravity="center_horizontal"
+            android:text="@string/pair_controller_description_new" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/miac_controller_new_layout_width"
+    android:layout_height="@dimen/miac_controller_new_layout_height"
+    android:padding="@dimen/miac_controller_new_layout_padding"
+    android:background="@drawable/mvr_setting_panel_bg">
+
+    <TextView
+        android:id="@+id/low_battery_title"
+        android:layout_width="@dimen/miac_controller_new_title_width"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
+        android:text="@string/fw_update_low_battery_title"
+        style="@style/miac_controller_new_title_text_style_12"/>
+
+    <ImageView
+        android:id="@+id/low_battery_imageview"
+        android:layout_width="@dimen/miac_controller_new_icon_battery_width"
+        android:layout_height="@dimen/miac_controller_new_icon_battery_height"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/miac_controller_new_icon_battery_margin_top"
+        android:layout_marginBottom="@dimen/miac_controller_new_icon_battery_margin_bottom"
+        android:layout_below="@+id/low_battery_title"
+        android:background="@drawable/mia_controller_back"/>
+
+    <RelativeLayout
+        android:id="@+id/warning_group"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/low_battery_imageview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/warning_icon"
+            android:layout_width="@dimen/miac_controller_new_icon_warning_width"
+            android:layout_height="@dimen/miac_controller_new_icon_warning_height"
+            android:background="@drawable/miac_icon_warning"/>
+
+        <TextView
+            android:id="@+id/warning_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/warning_icon"
+            android:layout_marginStart="@dimen/miac_controller_new_icon_warning_margin_end"
+            android:layout_centerVertical="true"
+            android:text="@string/fw_update_low_battery_hint"
+            style="@style/miac_controller_new_warning_text_style_10"/>
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/low_battery_description"
+        android:layout_width="@dimen/miac_controller_new_title_width"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
+        android:layout_below="@+id/warning_group"
+        android:layout_marginTop="@dimen/miac_controller_new_tips_battery_margin"
+        android:text="@string/fw_update_low_battery_description"
+        style="@style/miac_controller_new_tips_text_style_10"/>
+
+</RelativeLayout>
