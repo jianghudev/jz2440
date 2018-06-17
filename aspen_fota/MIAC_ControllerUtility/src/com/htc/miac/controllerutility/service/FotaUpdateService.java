@@ -42,7 +42,7 @@ import java.util.concurrent.Executors;
  */
 
 public class FotaUpdateService extends Service {
-    private static final String TAG = "FotaUpdateService";
+    private static final String TAG = "AspenFota.client";
 
     private FotaUpdateBinder mBinder = new FotaUpdateBinder();
     private FinchServiceModel mFinchServiceModel;
@@ -140,7 +140,7 @@ public class FotaUpdateService extends Service {
             testCase();
         } else {
             mIsRetry = isRetry;
-            checkFotaUpdate(listener, deviceInfo, false);
+            checkFotaUpdate(listener, deviceInfo, true);
         }
     }
 
@@ -252,16 +252,15 @@ public class FotaUpdateService extends Service {
             } else {
                 Log.w(TAG, "mCheckFotaUpdateListener is null !");
             }
-            if (!mIsCheckFota) {
-                if (hasFOTA) {
-                    mFotaUpdateMessenger.sendEmptyMessage(MSG_ACTION_DOWNLOAD_FIRMWARE);
+            Log.d(TAG, "__jh__ mIsCheckFota="+mIsCheckFota+" hasFOTA="+hasFOTA);
+            if (hasFOTA) {
+                mFotaUpdateMessenger.sendEmptyMessage(MSG_ACTION_DOWNLOAD_FIRMWARE);
+            } else {
+                removeActionQueue();
+                if (mCheckFotaUpdateListener != null) {
+                    mCheckFotaUpdateListener.onStatusChanged(FotaServiceContract.STATE_NO_FOTA_UPDATE, mBleDevInfo);
                 } else {
-                    removeActionQueue();
-                    if (mCheckFotaUpdateListener != null) {
-                        mCheckFotaUpdateListener.onStatusChanged(FotaServiceContract.STATE_NO_FOTA_UPDATE, mBleDevInfo);
-                    } else {
-                        Log.d(TAG, "[CheckFirmwareUpdateTask] mCheckFotaUpdateListener is null");
-                    }
+                    Log.d(TAG, "[CheckFirmwareUpdateTask] mCheckFotaUpdateListener is null");
                 }
             }
         }
@@ -351,8 +350,10 @@ public class FotaUpdateService extends Service {
                 try {
                     float tempSize = mUtilsInstance.getFirmwareSize();
                     fileSize = tempSize * 1024 * 1024;
+                    Log.d(TAG, "__jh__ download fileSize1="+fileSize);
                 } catch (Exception e) {
                     fileSize = conn.getContentLength();
+                    Log.d(TAG, "__jh__ download fileSize2="+fileSize);
                     e.printStackTrace();
                 }
 
@@ -405,9 +406,9 @@ public class FotaUpdateService extends Service {
                 }
             }
             if (updateFile.exists()) {
-                int file_size = Integer.parseInt(String.valueOf(updateFile.length() / 1024));
+                int file_size = Integer.parseInt(String.valueOf(updateFile.length()) );
                 mDownloadPath = updateFile.getPath();
-                Log.d(TAG, "download file size " + file_size);
+                Log.d(TAG, "__jh__ download file size=" + file_size);
                 mFotaUpdateMessenger.sendEmptyMessage(MSG_ACTION_FOTA_UPDATE);
             } else {
                 sendDownloadError(FirmwareUpdateUtils.DOWNLOAD_FAIL_MSG_ERROR_CODE_3);

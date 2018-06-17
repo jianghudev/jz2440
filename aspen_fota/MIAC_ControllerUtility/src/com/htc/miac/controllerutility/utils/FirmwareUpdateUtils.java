@@ -39,7 +39,7 @@ import java.util.regex.Pattern;
  * Created by user on 2016/8/23.
  */
 public class FirmwareUpdateUtils {
-    private static final String TAG = "FirmwareUpdateUtils";
+    private static final String TAG = "AspenFota.client";
     private static Context mContext;
 
     public static final String CONNECT_MEDIA_UNKNOWN = "unknown";
@@ -122,7 +122,7 @@ public class FirmwareUpdateUtils {
 
     private static final String DEFAULT_UPDATE_VERSION = "0.0.005.0";
 
-    private static final boolean Htc_SECURITY_DEBUG_flag = false;
+    private static final boolean Htc_SECURITY_DEBUG_flag = true;
 
     public FirmwareUpdateUtils(Context context) {
         mContext = context;

@@ -32,7 +32,7 @@ import java.util.List;
  */
 
 public class TestPairingActivity extends Activity {
-    private String TAG = "[" + TestPairingActivity.class.getSimpleName() + "]";
+    private String TAG = "AspenFota.client";
     private final Handler handler = new Handler(Looper.getMainLooper());
     private ScannerService mScannerService;
     private ScannerService.IScannerService mIScannerService;

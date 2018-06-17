@@ -39,5 +39,5 @@ public class FotaServiceContract {
 
     public static final String FILE_PROVIDER_PACKAGE_NAME = "com.htc.miac.controllerutility.fileprovider";
 
-    public static final boolean DEBUG_CHECK_UPDATE = false;
+    public static final boolean DEBUG_CHECK_UPDATE = true;
 }
