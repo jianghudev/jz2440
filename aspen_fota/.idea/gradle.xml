@@ -9,7 +9,6 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/MIAC_ControllerUtility" />
-            <option value="$PROJECT_DIR$/client" />
             <option value="$PROJECT_DIR$/service" />
           </set>
         </option>
