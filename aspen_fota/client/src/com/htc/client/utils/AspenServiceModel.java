@@ -14,10 +14,12 @@ import android.os.Looper;
 import android.os.RemoteException;
 import android.util.Log;
 
-import com.finchtechnologies.fota.IFotaListener;
-import com.finchtechnologies.fota.IFotaService;
+import com.htc.service.IDeviceConnectedListener;
+import com.htc.service.OnFirmwareUpdateListener;
+import com.htc.service.IFotaService;
 
 import java.util.concurrent.Executors;
+
 
 /**
  * Created by hubin_jiang on 2018/6/18.
@@ -77,7 +79,9 @@ public class AspenServiceModel {
             isBinded = true;
             mAspenService = IFotaService.Stub.asInterface(service);
             try {
-                mAspenService.setDeviceListener(mFinchFotaListener);
+                mAspenService.setFirmwareUpdateListener(mFinchFotaListener);
+
+                mAspenService.setDeviceConnectedListener(mAspenConnectLister);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
@@ -95,51 +99,49 @@ public class AspenServiceModel {
         }
     };
 
-    private IFotaListener mFinchFotaListener = new IFotaListener.Stub() {
 
+    private IDeviceConnectedListener mAspenConnectLister =new IDeviceConnectedListener.Stub(){
         @Override
-        public void onDeviceStatusChanged(final int state, final Bundle extra) throws RemoteException {
-            Log.d(TAG, "state : " + state);
+        public void onConnectedStateStatusChanged(int device, boolean isConnected, int usb_state) throws RemoteException {
             mUIHandler.post(new Runnable() {
                 @Override
                 public void run() {
                     myDelegate delegate = getDelegate();
                     if (delegate != null) {
-                        delegate.onDeviceStatusChanged(state, extra);
-                    }
-                }
-            });
-        }
-
-        @Override
-        public void onFirmwareUpdateProgressChanged(final int progress) throws RemoteException {
-            mUIHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    myDelegate delegate = getDelegate();
-                    if (delegate != null) {
-                        delegate.onFirmwareUpdateProgressChanged(progress);
+                        //delegate.onServiceConnected();   //// todo
                     }
                 }
             });
         }
     };
 
-    @SuppressLint("StaticFieldLeak")
-    public void setMacAddress(final String addr) {
-        new AsyncTask<Void, Void, Void>() {
-
-            @Override
-            protected Void doInBackground(Void... voids) {
-                try {
-                    mAspenService.setMacAddress(addr);
-                } catch (Exception e) {
-                    Log.e(TAG, "Exception on setMacAddress", e);
+    private OnFirmwareUpdateListener mFinchFotaListener = new OnFirmwareUpdateListener.Stub() {
+        @Override
+        public void onFirmwareUpdateStatusChanged(int device, int state, Bundle extra) throws RemoteException {
+            Log.d(TAG, "state : " + state);
+            mUIHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    myDelegate delegate = getDelegate();
+                    if (delegate != null) {
+                        //delegate.onDeviceStatusChanged(state, extra);   //// todo
+                    }
                 }
-                return null;
-            }
-        }.executeOnExecutor(Executors.newFixedThreadPool(1));
-    }
+            });
+        }
+        @Override
+        public void onFirmwareUpdateProgressChanged(int device, final int progress) throws RemoteException {
+            mUIHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    myDelegate delegate = getDelegate();
+                    if (delegate != null) {
+                        delegate.onFirmwareUpdateProgressChanged(progress);  //// todo
+                    }
+                }
+            });
+        }
+    };
 
 
     @SuppressLint("StaticFieldLeak")
@@ -149,7 +151,7 @@ public class AspenServiceModel {
             @Override
             protected Bundle doInBackground(Void... voids) {
                 try {
-                    return mAspenService.getDeviceInfo();
+                    return mAspenService.getDeviceInfo(FotaServiceContract.TYPE_DEVICE_HMD); //TODO
                 } catch (Exception e) {
                     Log.e(TAG, "Exception on getDeviceInfo", e);
                 }
@@ -175,7 +177,7 @@ public class AspenServiceModel {
     public int getBatteryVoltageLevel() {
         int batteryLevel = -1;
         try {
-            batteryLevel = mAspenService.getBatteryVoltageLevel();
+            batteryLevel = mAspenService.getBatteryVoltageLevel(FotaServiceContract.TYPE_DEVICE_HMD);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -190,11 +192,7 @@ public class AspenServiceModel {
             @Override
             protected Boolean doInBackground(Void... voids) {
                 try {
-                    if (isItFirstAttempt) {
-                        return mAspenService.upgradeFirmware(uri);
-                    } else {
-                        return mAspenService.upgradeFirmwareOnDfuTarg(uri);
-                    }
+                    return mAspenService.upgradeFirmware(FotaServiceContract.TYPE_DEVICE_HMD,uri);
                 } catch (Exception e) {
                     Log.e(TAG, "Exception on upgradeFirmware", e);
                 }

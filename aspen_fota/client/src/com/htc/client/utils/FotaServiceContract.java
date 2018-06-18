@@ -40,4 +40,14 @@ public class FotaServiceContract {
     public static final String FILE_PROVIDER_PACKAGE_NAME = "com.htc.miac.controllerutility.fileprovider";
 
     public static final boolean DEBUG_CHECK_UPDATE = true;
+
+
+
+    public static final int TYPE_DEVICE_HMD = 1;
+    public static final int TYPE_DEVICE_3DOF = 2;
+    public static final int TYPE_DEVICE_DONGLE = 0;
+    public static final int TYPE_DEVICE_CONTROLLER0 = 1;
+    public static final int TYPE_DEVICE_CONTROLLER1 = 2;
+    public static final int TYPE_DEVICE_CAMERA = 3;
+
 }

@@ -736,14 +736,12 @@ public class FotaUpdateService extends Service {
         if (mIsRetry) {
             String dfuAddress = mSharedPrefManager.getDFUMacAddress();
             Log.d(TAG, "[setMacAddress] retry case : " + hashAddress(dfuAddress));
-            mAspenModel.setMacAddress(dfuAddress);
             mFotaTimeoutHandler.removeMessages(MSG_FOTA_SET_ADDRESS_TIME_OUT);
             mActionQueue.add(ACTION_START_FOTA_FOLLOW);
             checkFotaUpdate(mBleDevInfo, false);
         } else {
             mActionQueue.add(ACTION_REQUEST_DEVICE_INFO);
             Log.d(TAG, "[setMacAddress] normal case : " + hashAddress(mac));
-            mAspenModel.setMacAddress(mac);
         }
 
     }
