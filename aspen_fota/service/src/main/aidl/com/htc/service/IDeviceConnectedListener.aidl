@@ -1,5 +1,5 @@
 // IDeviceConnectedListener.aidl
-package com.htc.chirp_fota;
+package com.htc.service;
 
 // Declare any non-default types here with import statements
 interface IDeviceConnectedListener {

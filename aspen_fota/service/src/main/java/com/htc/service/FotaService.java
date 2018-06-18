@@ -9,7 +9,6 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
 
-import com.htc.chirp_fota.OnFirmwareUpdateListener;
 import com.htc.service.dfu.faceplace_mcu;
 import com.htc.service.usb.Usb;
 
