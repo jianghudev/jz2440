@@ -1,4 +1,4 @@
-package com.htc.miac.controllerutility.controllerscanner;
+package com.htc.client.controllerscanner;
 
 import android.Manifest;
 import android.app.Activity;
@@ -14,7 +14,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 
-import com.htc.miac.controllerutility.BuildConfig;
+import com.htc.client.BuildConfig;
 
 public class PermissionReqActivity extends Activity {
 

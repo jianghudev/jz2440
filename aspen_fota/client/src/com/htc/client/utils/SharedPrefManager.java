@@ -1,10 +1,10 @@
-package com.htc.miac.controllerutility.utils;
+package com.htc.client.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
-import com.htc.miac.controllerutility.controllerscanner.Logger;
+import com.htc.client.controllerscanner.Logger;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

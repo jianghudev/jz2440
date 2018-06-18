@@ -1,5 +1,5 @@
 // BleDevInfo.aidl.aidl
-package com.htc.vr.controllerscanner;
+package com.htc.client.vr;
 
 // Declare any non-default types here with import statements
 

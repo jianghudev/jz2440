@@ -1,4 +1,4 @@
-package com.htc.miac.controllerutility.utils;
+package com.htc.client.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -12,7 +12,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
 
-import com.htc.vr.controllerscanner.BleDevInfo;
+import com.htc.client.vr.BleDevInfo;
 
 import org.json.JSONArray;
 import org.json.JSONException;

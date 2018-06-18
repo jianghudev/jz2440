@@ -1,4 +1,4 @@
 // Controller.aidl
-package com.htc.vr.controllerscanner;
+package com.htc.client.vr;
 
 parcelable BleDev;

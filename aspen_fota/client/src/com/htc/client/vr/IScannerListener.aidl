@@ -1,8 +1,8 @@
 // IScannerListener.aidl
-package com.htc.vr.controllerscanner;
+package com.htc.client.vr;
 
-import com.htc.vr.controllerscanner.BleDev;
-import com.htc.vr.controllerscanner.BleDevInfo;
+import com.htc.client.vr.BleDev;
+import com.htc.client.vr.BleDevInfo;
 
 interface IScannerListener {
     void onScanStarted();

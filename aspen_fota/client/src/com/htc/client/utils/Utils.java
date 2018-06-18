@@ -1,10 +1,6 @@
-package com.htc.miac.controllerutility.utils;
+package com.htc.client.utils;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -18,9 +14,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.htc.miac.controllerutility.R;
-import com.htc.miac.controllerutility.controllerscanner.Logger;
-import com.htc.miac.controllerutility.widget.MiddleIconSpan;
+import com.htc.client.R;
+import com.htc.client.controllerscanner.Logger;
+import com.htc.client.widget.MiddleIconSpan;
 
 /**
  * Created by chihhang_chuang on 2017/11/8.

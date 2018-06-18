@@ -1,4 +1,4 @@
-package com.htc.miac.controllerutility.utils;
+package com.htc.client.utils;
 
 public class FotaServiceContract {
     public static final String DEVICE_MODEL_NAME = "model_name";

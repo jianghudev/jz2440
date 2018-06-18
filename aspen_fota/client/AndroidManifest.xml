@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.htc.miac.controllerutility"
+    package="com.htc.client"
     android:versionCode="20180201"
     android:versionName="1.0.0">
 
@@ -44,19 +44,19 @@
         tools:replace="android:theme">
 
         <service
-            android:name=".controllerscanner.ScannerService"
+            android:name="com.htc.client.controllerscanner.ScannerService"
             android:enabled="true"
             android:permission="com.htc.vr.controllerscanner.SCAN_DEVICE"
             android:exported="true"></service>
 
         ​<activity
-            android:name=".controllerscanner.PermissionReqActivity"
+            android:name="com.htc.client.controllerscanner.PermissionReqActivity"
             android:excludeFromRecents="true"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />​
         <!--android:theme="@android:style/Theme.NoDisplay" />-->
 
         <!-- <pairing> Test Use-->
-        <activity android:name=".controllerscanner.test.TestPairingActivity">
+        <activity android:name="com.htc.client.controllerscanner.test.TestPairingActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <!--<category android:name="android.intent.category.LAUNCHER" />-->
@@ -66,7 +66,7 @@
         </activity>
 
         <service
-            android:name=".service.FotaUpdateService"
+            android:name="com.htc.client.service.FotaUpdateService"
             android:exported="false"></service>
 
 
@@ -76,7 +76,7 @@
 
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.htc.miac.controllerutility.fileprovider"
+            android:authorities="com.htc.client.client.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

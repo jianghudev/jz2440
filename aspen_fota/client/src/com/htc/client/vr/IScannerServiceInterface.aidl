@@ -1,10 +1,11 @@
 // IScannerServiceInterface.aidl
-package com.htc.vr.controllerscanner;
+package com.htc.client.vr;
 
-import com.htc.vr.controllerscanner.IScannerListener;
-import com.htc.vr.controllerscanner.BleDev;
-import com.htc.vr.controllerscanner.BleDevInfo;
 import android.os.ParcelUuid;
+
+import com.htc.client.vr.IScannerListener;
+import com.htc.client.vr.BleDev;
+import com.htc.client.vr.BleDevInfo;
 
 interface IScannerServiceInterface {
     void start();

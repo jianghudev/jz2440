@@ -1,10 +1,8 @@
-package com.htc.miac.controllerutility.controllerscanner;
+package com.htc.client.controllerscanner;
 
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
-
-import com.htc.miac.controllerutility.BuildConfig;
 
 /**
  * Created by hugh_chen on 2017/10/24.

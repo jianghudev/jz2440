@@ -1,4 +1,4 @@
-package com.htc.vr.controllerscanner;
+package com.htc.client.vr;
 
 import android.os.Parcel;
 import android.os.Parcelable;

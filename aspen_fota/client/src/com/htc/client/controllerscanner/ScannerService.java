@@ -1,4 +1,4 @@
-package com.htc.miac.controllerutility.controllerscanner;
+package com.htc.client.controllerscanner;
 
 import android.Manifest;
 import android.annotation.TargetApi;
@@ -30,24 +30,23 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.htc.miac.controllerutility.BuildConfig;
-import com.htc.miac.controllerutility.R;
-import com.htc.miac.controllerutility.service.FotaUpdateService;
-import com.htc.miac.controllerutility.utils.FirmwareUpdateUtils;
-import com.htc.miac.controllerutility.utils.FotaServiceContract;
-import com.htc.miac.controllerutility.utils.SharedPrefManager;
-import com.htc.miac.controllerutility.utils.Utils;
-import com.htc.miac.controllerutility.utils.AnimationsContainer;
-import com.htc.vr.controllerscanner.BleDev;
-import com.htc.vr.controllerscanner.BleDevInfo;
-import com.htc.vr.controllerscanner.IScannerListener;
-import com.htc.vr.controllerscanner.IScannerServiceInterface;
+import com.htc.client.BuildConfig;
+import com.htc.client.R;
+import com.htc.client.service.FotaUpdateService;
+import com.htc.client.utils.FirmwareUpdateUtils;
+import com.htc.client.utils.FotaServiceContract;
+import com.htc.client.utils.SharedPrefManager;
+import com.htc.client.utils.Utils;
+import com.htc.client.utils.AnimationsContainer;
+import com.htc.client.vr.BleDev;
+import com.htc.client.vr.BleDevInfo;
+import com.htc.client.vr.IScannerListener;
+import com.htc.client.vr.IScannerServiceInterface;
 import com.htc.vr.sdk.overlay.VRCustomizeOverlay;
 import com.htc.vr.sdk.overlay.VROverlayParams;
 import com.htc.vr.sdk.overlay.VROverlayService;
@@ -75,15 +74,15 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.htc.miac.controllerutility.controllerscanner.ScannerService.ActionTypeName.ControllerLowBattery;
-import static com.htc.miac.controllerutility.controllerscanner.ScannerService.ActionTypeName.FOTADownload;
-import static com.htc.miac.controllerutility.controllerscanner.ScannerService.ActionTypeName.FOTAFailed;
-import static com.htc.miac.controllerutility.controllerscanner.ScannerService.ActionTypeName.FOTAInstall;
-import static com.htc.miac.controllerutility.controllerscanner.ScannerService.ActionTypeName.FOTASuccess;
-import static com.htc.miac.controllerutility.controllerscanner.ScannerService.ActionTypeName.FOTAUpdateAvailable;
-import static com.htc.miac.controllerutility.controllerscanner.ScannerService.ActionTypeName.Init;
-import static com.htc.miac.controllerutility.controllerscanner.ScannerService.ActionTypeName.NotFound;
-import static com.htc.miac.controllerutility.controllerscanner.ScannerService.ActionTypeName.ScreenOn;
+import static com.htc.client.controllerscanner.ScannerService.ActionTypeName.ControllerLowBattery;
+import static com.htc.client.controllerscanner.ScannerService.ActionTypeName.FOTADownload;
+import static com.htc.client.controllerscanner.ScannerService.ActionTypeName.FOTAFailed;
+import static com.htc.client.controllerscanner.ScannerService.ActionTypeName.FOTAInstall;
+import static com.htc.client.controllerscanner.ScannerService.ActionTypeName.FOTASuccess;
+import static com.htc.client.controllerscanner.ScannerService.ActionTypeName.FOTAUpdateAvailable;
+import static com.htc.client.controllerscanner.ScannerService.ActionTypeName.Init;
+import static com.htc.client.controllerscanner.ScannerService.ActionTypeName.NotFound;
+import static com.htc.client.controllerscanner.ScannerService.ActionTypeName.ScreenOn;
 
 public class ScannerService extends VROverlayService {
     private final static String TAG = "[" + BuildConfig.PACKAGESIMPLENAME + "]" + ScannerService.class.getSimpleName();

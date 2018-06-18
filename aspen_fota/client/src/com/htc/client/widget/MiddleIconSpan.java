@@ -1,7 +1,6 @@
-package com.htc.miac.controllerutility.widget;
+package com.htc.client.widget;
 
 
-import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;

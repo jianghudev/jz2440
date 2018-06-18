@@ -1,4 +1,4 @@
-package com.htc.miac.controllerutility.utils;
+package com.htc.client.utils;
 
 import android.os.Bundle;
 

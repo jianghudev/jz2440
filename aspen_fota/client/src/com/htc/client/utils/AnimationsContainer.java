@@ -1,4 +1,4 @@
-package com.htc.miac.controllerutility.utils;
+package com.htc.client.utils;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -11,8 +11,8 @@ import android.os.Looper;
 import android.widget.ImageView;
 
 
-import com.htc.miac.controllerutility.controllerscanner.Logger;
-import com.htc.miac.controllerutility.controllerscanner.ScannerService;
+import com.htc.client.controllerscanner.Logger;
+import com.htc.client.controllerscanner.ScannerService;
 
 import java.lang.ref.SoftReference;
 

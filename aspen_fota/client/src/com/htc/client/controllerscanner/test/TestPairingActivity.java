@@ -1,4 +1,4 @@
-package com.htc.miac.controllerutility.controllerscanner.test;
+package com.htc.client.controllerscanner.test;
 
 import android.app.Activity;
 import android.content.ComponentName;
@@ -16,14 +16,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.htc.miac.controllerutility.R;
-import com.htc.miac.controllerutility.controllerscanner.Logger;
-import com.htc.miac.controllerutility.controllerscanner.ScannerService;
-import com.htc.miac.controllerutility.service.FotaUpdateService;
-import com.htc.miac.controllerutility.utils.FirmwareUpdateUtils;
-import com.htc.vr.controllerscanner.BleDevInfo;
-import com.htc.vr.controllerscanner.BleDev;
-import com.htc.vr.controllerscanner.IScannerListener;
+import com.htc.client.R;
+import com.htc.client.controllerscanner.Logger;
+import com.htc.client.controllerscanner.ScannerService;
+import com.htc.client.service.FotaUpdateService;
+import com.htc.client.utils.FirmwareUpdateUtils;
+import com.htc.client.vr.BleDevInfo;
+import com.htc.client.vr.BleDev;
+import com.htc.client.vr.IScannerListener;
 
 import java.util.List;
 

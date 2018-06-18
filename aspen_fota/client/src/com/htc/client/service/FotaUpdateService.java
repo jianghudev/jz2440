@@ -1,4 +1,4 @@
-package com.htc.miac.controllerutility.service;
+package com.htc.client.service;
 
 import android.app.Service;
 import android.content.Context;
@@ -15,14 +15,14 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
 
-import com.htc.miac.controllerutility.controllerscanner.Logger;
-import com.htc.miac.controllerutility.utils.AspenServiceModel;
-import com.htc.miac.controllerutility.utils.FirmwareUpdateUtils;
-import com.htc.miac.controllerutility.utils.FirmwareUpdateUtils.CheckFotaUpdateListener;
-import com.htc.miac.controllerutility.utils.FotaServiceContract;
-import com.htc.miac.controllerutility.utils.SharedPrefManager;
-import com.htc.miac.controllerutility.utils.myDelegate;
-import com.htc.vr.controllerscanner.BleDevInfo;
+import com.htc.client.controllerscanner.Logger;
+import com.htc.client.utils.AspenServiceModel;
+import com.htc.client.utils.FirmwareUpdateUtils;
+import com.htc.client.utils.FirmwareUpdateUtils.CheckFotaUpdateListener;
+import com.htc.client.utils.FotaServiceContract;
+import com.htc.client.utils.SharedPrefManager;
+import com.htc.client.utils.myDelegate;
+import com.htc.client.vr.BleDevInfo;
 
 import org.json.JSONObject;
 
