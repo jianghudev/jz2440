@@ -46,7 +46,7 @@ public class FotaUpdateService extends Service {
     private static final String TAG = "AspenFota.client";
 
     private FotaUpdateBinder mBinder = new FotaUpdateBinder();
-    private AspenServiceModel mFinchServiceModel;
+    private AspenServiceModel mAspenModel;
     private FirmwareUpdateUtils mUtilsInstance;
 
     private Context mContext;
@@ -90,8 +90,8 @@ public class FotaUpdateService extends Service {
         Log.d(TAG, "[FotaUpdateService] onBind");
         mContext = getApplicationContext();
         mSharedPrefManager = new SharedPrefManager(mContext);
-        initFinchServiceModel();
-        mFinchServiceModel.bindService();
+        initAspenModel();
+        mAspenModel.bindService();
         mUtilsInstance = new FirmwareUpdateUtils(mContext);
         return mBinder;
     }
@@ -101,9 +101,9 @@ public class FotaUpdateService extends Service {
         super.onDestroy();
         Log.d(TAG, "onDestroy");
         try {
-            if (mFinchServiceModel != null) {
-                mFinchServiceModel.setDelegate(null);
-                mFinchServiceModel.unbindService();
+            if (mAspenModel != null) {
+                mAspenModel.setDelegate(null);
+                mAspenModel.unbindService();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -122,10 +122,10 @@ public class FotaUpdateService extends Service {
         }
     }
 
-    private void initFinchServiceModel() {
-        mFinchServiceModel = new AspenServiceModel(mContext);
+    private void initAspenModel() {
+        mAspenModel = new AspenServiceModel(mContext);
         AspenDelegate delegate = new AspenDelegate();
-        mFinchServiceModel.setDelegate(delegate);
+        mAspenModel.setDelegate(delegate);
     }
 
     public class FotaUpdateBinder extends Binder {
@@ -160,7 +160,7 @@ public class FotaUpdateService extends Service {
             if (deviceInfo != null && !TextUtils.isEmpty(deviceInfo.mAddr)) {
                 synchronized (mActionQueue) {
                     if (mActionQueue.isEmpty()) {
-                        if (mFinchServiceModel.isBinded()) {
+                        if (mAspenModel.isBinded()) {
                             setMacAddress(deviceInfo.mAddr);
                         } else {
                             mActionQueue.add(ACTION_REQUEST_DEVICE_INFO_ERROR_HANDLE);
@@ -429,7 +429,7 @@ public class FotaUpdateService extends Service {
     }
 
     private void startFotaUpdate() {
-        int level = mFinchServiceModel.getBatteryVoltageLevel();
+        int level = mAspenModel.getBatteryVoltageLevel();
         Log.d(TAG, "[startFotaUpdate] battery level : " + level);
         if (level == -1) {
             sendUpdateError(FirmwareUpdateUtils.INSTALL_FAILED_MSG_ERROR_CODE_2);
@@ -455,7 +455,7 @@ public class FotaUpdateService extends Service {
             Log.d(TAG, "[sendFirmware] uri : " + uri.toString() + ", is retry : " + mIsRetry + ", isItFirstAttempt : " + isItFirstAttempt);
             grantUriPermission(AspenServiceModel.SERVICE_PACKAGE, uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
             setDFUMacAddress(mBleDevInfo.mAddr);
-            mFinchServiceModel.upgradeFirmware(uri, isItFirstAttempt);
+            mAspenModel.upgradeFirmware(uri, isItFirstAttempt);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -500,7 +500,7 @@ public class FotaUpdateService extends Service {
                                 case ACTION_REQUEST_DEVICE_INFO:
                                     mFotaTimeoutHandler.removeMessages(MSG_FOTA_SET_ADDRESS_TIME_OUT);
                                     mActionQueue.add(ACTION_START_FOTA_FOLLOW);
-                                    mFinchServiceModel.getDeviceInfo();
+                                    mAspenModel.getDeviceInfo();
                                     break;
                             }
                         } else {
@@ -732,14 +732,14 @@ public class FotaUpdateService extends Service {
         if (mIsRetry) {
             String dfuAddress = mSharedPrefManager.getDFUMacAddress();
             Log.d(TAG, "[setMacAddress] retry case : " + hashAddress(dfuAddress));
-            mFinchServiceModel.setMacAddress(dfuAddress);
+            mAspenModel.setMacAddress(dfuAddress);
             mFotaTimeoutHandler.removeMessages(MSG_FOTA_SET_ADDRESS_TIME_OUT);
             mActionQueue.add(ACTION_START_FOTA_FOLLOW);
             checkFotaUpdate(mBleDevInfo, false);
         } else {
             mActionQueue.add(ACTION_REQUEST_DEVICE_INFO);
             Log.d(TAG, "[setMacAddress] normal case : " + hashAddress(mac));
-            mFinchServiceModel.setMacAddress(mac);
+            mAspenModel.setMacAddress(mac);
         }
 
     }
