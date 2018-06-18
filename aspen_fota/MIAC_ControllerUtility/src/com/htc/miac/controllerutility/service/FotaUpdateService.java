@@ -16,11 +16,12 @@ import android.util.Log;
 import android.util.Pair;
 
 import com.htc.miac.controllerutility.controllerscanner.Logger;
-import com.htc.miac.controllerutility.utils.FinchServiceModel;
+import com.htc.miac.controllerutility.utils.AspenServiceModel;
 import com.htc.miac.controllerutility.utils.FirmwareUpdateUtils;
 import com.htc.miac.controllerutility.utils.FirmwareUpdateUtils.CheckFotaUpdateListener;
 import com.htc.miac.controllerutility.utils.FotaServiceContract;
 import com.htc.miac.controllerutility.utils.SharedPrefManager;
+import com.htc.miac.controllerutility.utils.myDelegate;
 import com.htc.vr.controllerscanner.BleDevInfo;
 
 import org.json.JSONObject;
@@ -45,7 +46,7 @@ public class FotaUpdateService extends Service {
     private static final String TAG = "AspenFota.client";
 
     private FotaUpdateBinder mBinder = new FotaUpdateBinder();
-    private FinchServiceModel mFinchServiceModel;
+    private AspenServiceModel mFinchServiceModel;
     private FirmwareUpdateUtils mUtilsInstance;
 
     private Context mContext;
@@ -122,8 +123,8 @@ public class FotaUpdateService extends Service {
     }
 
     private void initFinchServiceModel() {
-        mFinchServiceModel = new FinchServiceModel(mContext);
-        FinchServiceModelDelegate delegate = new FinchServiceModelDelegate();
+        mFinchServiceModel = new AspenServiceModel(mContext);
+        AspenDelegate delegate = new AspenDelegate();
         mFinchServiceModel.setDelegate(delegate);
     }
 
@@ -452,7 +453,7 @@ public class FotaUpdateService extends Service {
         try {
             Uri uri = getFileUri();
             Log.d(TAG, "[sendFirmware] uri : " + uri.toString() + ", is retry : " + mIsRetry + ", isItFirstAttempt : " + isItFirstAttempt);
-            grantUriPermission(FinchServiceModel.SERVICE_PACKAGE, uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            grantUriPermission(AspenServiceModel.SERVICE_PACKAGE, uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
             setDFUMacAddress(mBleDevInfo.mAddr);
             mFinchServiceModel.upgradeFirmware(uri, isItFirstAttempt);
         } catch (Exception e) {
@@ -481,7 +482,7 @@ public class FotaUpdateService extends Service {
         return FileProvider.getUriForFile(mContext, FotaServiceContract.FILE_PROVIDER_PACKAGE_NAME, firmwareFile);
     }
 
-    private class FinchServiceModelDelegate implements FinchServiceModel.Delegate {
+    private class AspenDelegate implements myDelegate {
 
         @Override
         public void onDeviceStatusChanged(int state, Bundle extra) {

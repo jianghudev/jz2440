@@ -24,13 +24,7 @@ import java.util.concurrent.Executors;
  */
 
 public class AspenServiceModel {
-    public interface myDelegate {
-        void onDeviceStatusChanged(int state, Bundle bundle);
-        void onFirmwareUpdateProgressChanged(int progress);
-        void onDeviceInfoGet(Bundle info);
-        void onFotaError();
-        void onServiceConnected();
-    }
+
     private static final String TAG = "FinchServiceModel";
 
     public static final String SERVICE_PACKAGE = "com.finchtechnologies.fota";
