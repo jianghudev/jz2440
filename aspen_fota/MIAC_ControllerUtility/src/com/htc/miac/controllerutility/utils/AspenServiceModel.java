@@ -24,7 +24,7 @@ import java.util.concurrent.Executors;
  */
 
 public class AspenServiceModel {
-    public interface Delegate {
+    public interface myDelegate {
         void onDeviceStatusChanged(int state, Bundle bundle);
         void onFirmwareUpdateProgressChanged(int progress);
         void onDeviceInfoGet(Bundle info);
@@ -38,7 +38,7 @@ public class AspenServiceModel {
 
     private IFotaService mIFinchFotaService;
     private Handler mUIHandler = new Handler(Looper.getMainLooper());
-    private FinchServiceModel.Delegate mDelegate;
+    private myDelegate mDelegate;
     private boolean isBinded = false;
 
     private Context mContext;
@@ -67,11 +67,11 @@ public class AspenServiceModel {
         isBinded = false;
     }
 
-    public void setDelegate(FinchServiceModel.Delegate delegate) {
+    public void setDelegate(myDelegate delegate) {
         mDelegate = delegate;
     }
 
-    public FinchServiceModel.Delegate getDelegate() {
+    public myDelegate getDelegate() {
         return mDelegate;
     }
 
@@ -87,7 +87,7 @@ public class AspenServiceModel {
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
-            FinchServiceModel.Delegate delegate = getDelegate();
+            myDelegate delegate = getDelegate();
             if (delegate != null) {
                 delegate.onServiceConnected();
             } else {
@@ -109,7 +109,7 @@ public class AspenServiceModel {
             mUIHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    FinchServiceModel.Delegate delegate = getDelegate();
+                    myDelegate delegate = getDelegate();
                     if (delegate != null) {
                         delegate.onDeviceStatusChanged(state, extra);
                     }
@@ -122,7 +122,7 @@ public class AspenServiceModel {
             mUIHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    FinchServiceModel.Delegate delegate = getDelegate();
+                    myDelegate delegate = getDelegate();
                     if (delegate != null) {
                         delegate.onFirmwareUpdateProgressChanged(progress);
                     }
@@ -162,7 +162,7 @@ public class AspenServiceModel {
 
             @Override
             protected void onPostExecute(Bundle info) {
-                FinchServiceModel.Delegate delegate = getDelegate();
+                myDelegate delegate = getDelegate();
                 if (delegate != null) {
                     if (info != null) {
                         delegate.onDeviceInfoGet(info);
@@ -205,7 +205,7 @@ public class AspenServiceModel {
             @Override
             protected void onPostExecute(Boolean result) {
                 if (!result) {
-                    FinchServiceModel.Delegate delegate = getDelegate();
+                    myDelegate delegate = getDelegate();
                     if (delegate != null) {
                         delegate.onFotaError();
                     }
