@@ -144,8 +144,10 @@ public class FirmwareUpdateUtils {
         JSONObject checkin = new JSONObject();
         String deviceInfo = "";
         if (FotaServiceContract.DEBUG_CHECK_UPDATE) {
-            deviceVesrion = "1.03.001.1";
-            SN = "fa74raj00030";
+
+            deviceVesrion = "0.0.001.0";
+            //SN = "fa74raj00030";
+            SN = "123456789012345";
             deviceModeNumber = "2Q25100";
         }
         setCurrentFirmwareVersion(deviceVesrion);
