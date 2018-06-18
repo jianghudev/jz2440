@@ -37,7 +37,7 @@ import android.widget.Toast;
 
 import com.htc.client.BuildConfig;
 import com.htc.client.R;
-import com.htc.client.service.FotaUpdateService;
+import com.htc.client.FotaUpdateService;
 import com.htc.client.utils.FirmwareUpdateUtils;
 import com.htc.client.utils.FotaServiceContract;
 import com.htc.client.utils.SharedPrefManager;

@@ -1,5 +1,6 @@
-package com.htc.client.service;
+package com.htc.client;
 
+import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -290,6 +291,7 @@ public class FotaUpdateService extends Service {
         downloadTask.executeOnExecutor(Executors.newFixedThreadPool(1));
     }
 
+    @SuppressLint("StaticFieldLeak")
     private class DownloadTask extends AsyncTask<Void, Void, Void> {
 
         @Override
@@ -431,6 +433,8 @@ public class FotaUpdateService extends Service {
     private void startFotaUpdate() {
         int level = mAspenModel.getBatteryVoltageLevel();
         Log.d(TAG, "[startFotaUpdate] battery level : " + level);
+        //level=100;
+        Log.d(TAG, "just debug, we set level="+level+" mIsRetry="+mIsRetry);
         if (level == -1) {
             sendUpdateError(FirmwareUpdateUtils.INSTALL_FAILED_MSG_ERROR_CODE_2);
         } else {

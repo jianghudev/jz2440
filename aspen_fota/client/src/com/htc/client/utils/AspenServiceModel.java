@@ -30,7 +30,7 @@ public class AspenServiceModel {
     public static final String SERVICE_PACKAGE = "com.finchtechnologies.fota";
     private static final String SERVICE_CLASS = SERVICE_PACKAGE + ".FotaService";
 
-    private IFotaService mIFinchFotaService;
+    private IFotaService mAspenService;
     private Handler mUIHandler = new Handler(Looper.getMainLooper());
     private myDelegate mDelegate;
     private boolean isBinded = false;
@@ -75,9 +75,9 @@ public class AspenServiceModel {
         public void onServiceConnected(ComponentName name, IBinder service) {
             Log.d(TAG, "onServiceConnected");
             isBinded = true;
-            mIFinchFotaService = IFotaService.Stub.asInterface(service);
+            mAspenService = IFotaService.Stub.asInterface(service);
             try {
-                mIFinchFotaService.setDeviceListener(mFinchFotaListener);
+                mAspenService.setDeviceListener(mFinchFotaListener);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
@@ -132,7 +132,7 @@ public class AspenServiceModel {
             @Override
             protected Void doInBackground(Void... voids) {
                 try {
-                    mIFinchFotaService.setMacAddress(addr);
+                    mAspenService.setMacAddress(addr);
                 } catch (Exception e) {
                     Log.e(TAG, "Exception on setMacAddress", e);
                 }
@@ -141,13 +141,15 @@ public class AspenServiceModel {
         }.executeOnExecutor(Executors.newFixedThreadPool(1));
     }
 
+
+    @SuppressLint("StaticFieldLeak")
     public void getDeviceInfo() {
         new AsyncTask<Void, Void, Bundle>() {
 
             @Override
             protected Bundle doInBackground(Void... voids) {
                 try {
-                    return mIFinchFotaService.getDeviceInfo();
+                    return mAspenService.getDeviceInfo();
                 } catch (Exception e) {
                     Log.e(TAG, "Exception on getDeviceInfo", e);
                 }
@@ -173,22 +175,25 @@ public class AspenServiceModel {
     public int getBatteryVoltageLevel() {
         int batteryLevel = -1;
         try {
-            batteryLevel = mIFinchFotaService.getBatteryVoltageLevel();
+            batteryLevel = mAspenService.getBatteryVoltageLevel();
         } catch (Exception e) {
             e.printStackTrace();
         }
         return batteryLevel;
     }
 
+
+
+    @SuppressLint("StaticFieldLeak")
     public void upgradeFirmware(final Uri uri, final boolean isItFirstAttempt) {
-        new AsyncTask<Void, Void, Boolean>() {
+         new  AsyncTask<Void, Void, Boolean>() {
             @Override
             protected Boolean doInBackground(Void... voids) {
                 try {
                     if (isItFirstAttempt) {
-                        return mIFinchFotaService.upgradeFirmware(uri);
+                        return mAspenService.upgradeFirmware(uri);
                     } else {
-                        return mIFinchFotaService.upgradeFirmwareOnDfuTarg(uri);
+                        return mAspenService.upgradeFirmwareOnDfuTarg(uri);
                     }
                 } catch (Exception e) {
                     Log.e(TAG, "Exception on upgradeFirmware", e);

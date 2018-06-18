@@ -63,7 +63,6 @@ android {
         // but continue the build even when errors are found:
         abortOnError false
     }
-    buildToolsVersion '26.0.0'
 }
 
 String getDate() {

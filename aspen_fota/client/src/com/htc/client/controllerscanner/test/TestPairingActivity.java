@@ -19,7 +19,7 @@ import android.widget.TextView;
 import com.htc.client.R;
 import com.htc.client.controllerscanner.Logger;
 import com.htc.client.controllerscanner.ScannerService;
-import com.htc.client.service.FotaUpdateService;
+import com.htc.client.FotaUpdateService;
 import com.htc.client.utils.FirmwareUpdateUtils;
 import com.htc.client.vr.BleDevInfo;
 import com.htc.client.vr.BleDev;
