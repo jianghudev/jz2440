@@ -1,5 +1,6 @@
 package com.htc.miac.controllerutility.utils;
 
+import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -132,6 +133,7 @@ public class FinchServiceModel {
         }
     };
 
+    @SuppressLint("StaticFieldLeak")
     public void setMacAddress(final String addr) {
         new AsyncTask<Void, Void, Void>() {
 

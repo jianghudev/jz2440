@@ -2,6 +2,7 @@
 
 
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 
 allprojects {
     repositories {
@@ -93,7 +94,11 @@ dependencies {
 //    compile(name: 'unitygvr', ext:'aar')
 
     compile(name: 'wavevr_client', ext:'aar')
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 //    compile(name: 'wavevr_pidemo', ext:'aar')
 //    compile(name: 'wavevr_resdemo', ext:'aar')
 //    compile(name: 'wavevr_unity_plugin', ext:'aar')
+}
+repositories {
+    mavenCentral()
 }
