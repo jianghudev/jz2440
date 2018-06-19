@@ -456,7 +456,7 @@ public class FotaUpdateService extends Service {
         mFotaTimeoutHandler.sendEmptyMessageDelayed(MSG_FOTA_UPDATE_TIME_OUT, FOTA_UPDATE_TIME_OUT);
         try {
             Uri uri = getFileUri();
-            Log.d(TAG, "[sendFirmware] uri : " + uri.toString() + ", is retry : " + mIsRetry + ", isItFirstAttempt : " + isItFirstAttempt);
+            Log.d(TAG, "__jh__ [sendFirmware] uri : " + uri.toString() + ", is retry : " + mIsRetry + ", isItFirstAttempt : " + isItFirstAttempt);
             grantUriPermission(AspenServiceModel.SERVICE_PACKAGE, uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
             //setDFUMacAddress(mBleDevInfo.mAddr);
             mAspenModel.upgradeFirmware(uri, isItFirstAttempt);
@@ -479,8 +479,8 @@ public class FotaUpdateService extends Service {
             outputStream.write(new byte[1024]);
             outputStream.close();
         } else {
-            int file_size = Integer.parseInt(String.valueOf(firmwareFile.length() / 1024));
-            Log.d(TAG, "file exist ! : " + file_size);
+            int file_size = Integer.parseInt(String.valueOf(firmwareFile.length() ));
+            Log.d(TAG, "file exist, size=" + file_size);
         }
 
         return FileProvider.getUriForFile(mContext, FotaServiceContract.FILE_PROVIDER_PACKAGE_NAME, firmwareFile);

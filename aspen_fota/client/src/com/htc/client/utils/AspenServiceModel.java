@@ -193,6 +193,7 @@ public class AspenServiceModel {
             @Override
             protected Boolean doInBackground(Void... voids) {
                 try {
+                    Log.e(TAG, "start AsyncTask upgradeFirmware");
                     return mAspenService.upgradeFirmware(FotaServiceContract.TYPE_DEVICE_HMD  , uri);
                 } catch (Exception e) {
                     Log.e(TAG, "Exception on upgradeFirmware", e);
