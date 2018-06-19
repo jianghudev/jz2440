@@ -115,183 +115,66 @@ public class FotaServiceImpl extends IFotaService.Stub {
     public String get_aspen_device_info(){
         UsbTunnelData Data = new UsbTunnelData();
         Data.send_array[0] = 'p';
-        Data.send_array[1] = 0x0;
+        Data.send_array[1] = 0x00;
         Data.send_array[2] = 0x0D;
         Data.send_array_count = 3;
         Data.recv_array_count = Data.recv_array.length;
         Data.wait_resp_ms = 2;
         return get_aspen_prop(Data);
     }
+    //get device is hmd or ctrl
+    public String get_aspen_device_class(){
+        UsbTunnelData Data = new UsbTunnelData();
+        Data.send_array[0] = 'p';
+        Data.send_array[1] = 0x00;
+        Data.send_array[2] = 0x11;
+        Data.send_array_count = 3;
+        Data.recv_array_count = Data.recv_array.length;
+        Data.wait_resp_ms = 2;
+        return get_aspen_prop(Data);
+    }
+    //get mode number
+    public String get_aspen_model_number(){
+        UsbTunnelData Data = new UsbTunnelData();
+        Data.send_array[0] = 'p';
+        Data.send_array[1] = 0x00;
+        Data.send_array[2] = 0x01;
+        Data.send_array_count = 3;
+        Data.recv_array_count = Data.recv_array.length;
+        Data.wait_resp_ms = 2;
+        return get_aspen_prop(Data);
+    }
+    //get serial number
+    public String get_aspen_serial_number(){
+        UsbTunnelData Data = new UsbTunnelData();
+        Data.send_array[0] = 'p';
+        Data.send_array[1] = 0x00;
+        Data.send_array[2] = 0x02;
+        Data.send_array_count = 3;
+        Data.recv_array_count = Data.recv_array.length;
+        Data.wait_resp_ms = 2;
+        return get_aspen_prop(Data);
+    }
 
-
-    public Bundle getDeviceInfo(int device /* 1 for HMD, 2 for Controller */ )
-    {
+    public Bundle getDeviceInfo(int device){
+        Bundle dev_info = new Bundle();
         int retryCnt = 3;
         if(device != 1) {
             Log.i(TAG,"err! device=" + device);
             return null;
         }
-            Log.i(TAG, "open usb ,before get device info");
-            mUsbDevice = mUsb.getUsbDevice();
+        if(mUsb.USB_STATE == 1) {
+            String str1 = get_aspen_device_info();
+            String str2 = get_aspen_device_class();
+            String str3 = get_aspen_model_number();
+            String str4 = get_aspen_serial_number();
 
-            if(mUsbDevice != null){
-                mUsb.openDevice(mUsbDevice);
-                mUsb.tryClaimDevice(mUsbDevice);
-            }
-            if(mUsb.USB_STATE == 1) {
-                Bundle dev_info = new Bundle();
-                int ret = 0;
-                int inMax = 0;
-                int count = 0;
-                retryCnt = 3;
-                inMax = mEpIn.getMaxPacketSize();
-                Log.i(TAG,"inMax=" + inMax);
-                byte buffer[] = new byte[inMax];
-                byte buffer1[] = new byte[inMax];
-                byte buffer2[] = new byte[inMax];
-                byte buffer3[] = new byte[inMax];
-        //        String getdeviceinf_cmd = "A3";
-                byte getversion_cmd[] = new byte[8];
-
-                getversion_cmd[0] = 'p';
-                getversion_cmd[1] = 0x00;
-                getversion_cmd[2] = 0x0D;
-
-                //do while ,waiting device return;
-                Log.i(TAG,"enter getDeviceInfo!");
-                if(mUsb.mfotaConnection == null) {
-                    Log.i(TAG,"mUsbConnection is null");
-                }
-                if(mEpOut == null) {
-                    Log.i(TAG,"mEpOut is null");
-                }
-                try{
-                    Thread.sleep(1000);
-                    ret = Usb.sendToEndpoint(mUsb.mfotaConnection, mEpOut,getversion_cmd);
-//                    Log.i(TAG,"ret="+ret);
-
-                    do {
-                        count = mUsb.mfotaConnection.bulkTransfer(mEpIn, buffer, buffer.length, 200);
-                        if (count > 0) {
-                            Log.i(TAG,"get data success");
-                            break;
-                        } else {
-                            Log.i(TAG,"get data fail");
-                        }
-                        retryCnt --;
-                    } while (retryCnt > 0);
-                    if(count > 0) {
-                        String str1 = new String(buffer, 0, count);
-//                    String str1 = new String(buffer,"UTF-8");
-//                        Log.i(TAG, "DeviceInfo = " + str1);
-                        dev_info.putString("DeviceInfo", str1);
-                    }
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-
-                //get device is hmd or ctrl
-
-                byte getdevice_cmd[] = new byte[8];
-                getdevice_cmd[0] = 'p';
-                getdevice_cmd[1] = 0x00;
-                getdevice_cmd[2] = 0x11;
-
-                ret = Usb.sendToEndpoint(mUsb.mfotaConnection, mEpOut, getdevice_cmd);
-//                Log.i(TAG,"ret="+ret);
-
-                retryCnt = 3;
-                try{
-                    do {
-                        count = mUsb.mfotaConnection.bulkTransfer(mEpIn, buffer1, buffer1.length, 200);
-        //                Thread.sleep(1000);
-                        if (count > 0) {
-                            Log.i(TAG,"get data success");
-                            break;
-                        } else {
-                            Log.i(TAG,"get data fail");
-                        }
-                        retryCnt --;
-                    } while (retryCnt > 0);
-                        if(count>0) {
-                            String str2 = new String(buffer1, 0, count);
-//                            Log.i(TAG, "count=" + count);
-//                            Log.i(TAG, "DeviceClass = " + str2);
-                            dev_info.putString("DeviceClass", str2);
-                        }
-
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-
-                //get mode number
-
-                byte getmode_cmd[] = new byte[8];
-                getmode_cmd[0] = 'p';
-                getmode_cmd[1] = 0x00;
-                getmode_cmd[2] = 0x01;
-
-                ret = Usb.sendToEndpoint(mUsb.mfotaConnection, mEpOut, getmode_cmd);
-//                Log.i(TAG,"ret="+ret);
-
-                retryCnt = 3;
-                try{
-                    do {
-                        count = mUsb.mfotaConnection.bulkTransfer(mEpIn, buffer2, buffer2.length, 200);
-        //                Thread.sleep(1000);
-                        if (count > 0) {
-                            Log.i(TAG,"get data success");
-                            break;
-                        } else {
-                            Log.i(TAG,"get data fail");
-                        }
-                        retryCnt --;
-                    } while (retryCnt > 0);
-        //            String str3 = new String(buffer2,"UTF-8");
-                    String str3 = new String(buffer2,0,count);
-//                    Log.i(TAG,"count="+count);
-//                    Log.i(TAG,"ModeNumber = " + str3);
-                    dev_info.putString("ModeNumber",str3);
-
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-
-                //get serial number
-
-                byte getserial_cmd[] = new byte[8];
-                getserial_cmd[0] = 'p';
-                getserial_cmd[1] = 0x00;
-                getserial_cmd[2] = 0x02;
-
-                ret = Usb.sendToEndpoint(mUsb.mfotaConnection, mEpOut, getserial_cmd);
-//                Log.i(TAG,"ret="+ret);
-
-                retryCnt = 3;
-                try{
-                    do {
-                        count = mUsb.mfotaConnection.bulkTransfer(mEpIn, buffer3, buffer3.length, 200);
-        //                Thread.sleep(1000);
-                        if (count > 0) {
-                            Log.i(TAG,"get data success");
-                            break;
-                        } else {
-                            Log.i(TAG,"get data fail");
-                        }
-                        retryCnt --;
-                    } while (retryCnt > 0);
-        //            String str4 = new String(buffer3,"UTF-8");
-                    String str4 = new String(buffer3,0,count);
-//                    Log.i(TAG,"count="+count);
-//                    Log.i(TAG,"SerialNumber = " + str4);
-                    dev_info.putString("SerialNumber",str4);
-
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-                mUsb.release();
-                return dev_info;
-            }
+            dev_info.putString("DeviceInfo", str1);
+            dev_info.putString("DeviceClass", str2);
+            dev_info.putString("ModeNumber",str3);
+            dev_info.putString("SerialNumber",str4);
+            return dev_info;
+        }
         return null;
     }
 
