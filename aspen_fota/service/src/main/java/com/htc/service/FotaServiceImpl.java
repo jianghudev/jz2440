@@ -155,7 +155,6 @@ public class FotaServiceImpl extends IFotaService.Stub {
         Data.wait_resp_ms = 2;
         return get_aspen_prop(Data);
     }
-
     public Bundle getDeviceInfo(int device){
         Bundle dev_info = new Bundle();
         int retryCnt = 3;
@@ -178,55 +177,25 @@ public class FotaServiceImpl extends IFotaService.Stub {
         return null;
     }
 
-    public int getBatteryVoltageLevel(int device)
-    {
-//        Log.i(TAG, "open usb ,before get Battery Voltage");
-        int bat_value = 0;
-        if(device == 2){
-//            Log.d(TAG," get ctrl battery"); // need add  interface by ble
-        }else if (device == 1) {
-            mUsbDevice = mUsb.getUsbDevice();
-            if(mUsbDevice != null){
-                mUsb.openDevice(mUsbDevice);
-                mUsb.tryClaimDevice(mUsbDevice);
-            }
-            int ret = 0, count = 0;
-            int inMax = mEpIn.getMaxPacketSize();
-            byte buffer[] = new byte[inMax];
-            byte getbatinfo_cmd[] = new byte[8];
-            getbatinfo_cmd[0] = 'c';
-            getbatinfo_cmd[1] = 0x01;
-            getbatinfo_cmd[2] = 0x41;
-            getbatinfo_cmd[3] = 0x00;
-            getbatinfo_cmd[4] = 0x04;
-//            Log.i(TAG, "enter getBatteryVoltageLevel!");
-            ret = Usb.sendToEndpoint(mUsb.mfotaConnection, mEpOut, getbatinfo_cmd);
-
-            int retryCnt = 3;
-            try {
-                do {
-                    count = mUsb.mfotaConnection.bulkTransfer(mEpIn, buffer, buffer.length, 200);
-
-                    if (count >= 0) {
-                        Log.i(TAG, "get BatteryVoltageLevel success");
-//                        Log.i(TAG, "count = " + count);
-                        break;
-                    } else {
-                        Thread.sleep(2000);
-                        Log.i(TAG, "get BatteryVoltageLevel fail");
-                    }
-                    retryCnt--;
-                } while (retryCnt > 0);
-                String str = new String(buffer, 0, count);
-//                Log.i(TAG, "BatteryVoltageLevel = " + str);
-                bat_value = Integer.parseInt(str);
-//                Log.i(TAG, "BatteryVoltageLevel = " + bat_value);
-                mUsb.release();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+    public String get_aspen_battery_level(){
+        UsbTunnelData Data = new UsbTunnelData();
+        Data.send_array[0] = 'c';
+        Data.send_array[1] = 0x01;
+        Data.send_array[2] = 0x41;
+        Data.send_array[3] = 0x00;
+        Data.send_array[4] = 0x04;
+        Data.send_array_count = 5;
+        Data.recv_array_count = Data.recv_array.length;
+        Data.wait_resp_ms = 2;
+        return get_aspen_prop(Data);
+    }
+    public int getBatteryVoltageLevel(int device){
+        if (device == 1) {
+            String str = get_aspen_battery_level();
+            int bat_value = Integer.parseInt(str);
+            return bat_value;
         }
-        return bat_value;
+        return 0;
     }
 
 
