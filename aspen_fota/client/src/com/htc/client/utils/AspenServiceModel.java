@@ -44,7 +44,7 @@ public class AspenServiceModel {
     }
 
     public boolean bindService() {
-        Log.i(TAG, "bindService");
+        Log.i(TAG, "__jh__ aidl bindService");
         boolean isBind = false;
         try {
             Intent intent = new Intent();

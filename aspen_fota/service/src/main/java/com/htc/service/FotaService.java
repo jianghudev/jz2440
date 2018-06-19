@@ -57,7 +57,7 @@ public class FotaService extends Service implements Usb.OnUsbChangeListener{
 
 
 
-        Log.d(TAG, "__jh__ onCreate done.");
+        Log.d(TAG, "__jh__ FotaService onCreate done.");
     }
 
 
@@ -70,7 +70,7 @@ public class FotaService extends Service implements Usb.OnUsbChangeListener{
 
     @Override
     public IBinder onBind(Intent intent) {
-        Log.i(TAG, "Fotaservice onBinder.");
+        Log.i(TAG, "FotaService onBinder.");
         return fs;
     }
 
