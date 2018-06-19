@@ -7,7 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.htc.aspen_fota.service.R;
+import com.htc.service.R;
 
 public class ActivityDialog extends AppCompatActivity {
     private static final String TAG=Const.G_TAG;

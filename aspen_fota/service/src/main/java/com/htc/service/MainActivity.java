@@ -9,7 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.util.Log;
 
-import com.htc.aspen_fota.service.R;
+import com.htc.service.R;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG=Const.G_TAG;
