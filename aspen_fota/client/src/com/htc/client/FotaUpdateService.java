@@ -433,7 +433,7 @@ public class FotaUpdateService extends Service {
     private void startFotaUpdate() {
         int level = mAspenModel.getBatteryVoltageLevel();
         Log.d(TAG, "[startFotaUpdate] battery level : " + level);
-        //level=100;
+        level=100;
         Log.d(TAG, "just debug, we set level="+level+" mIsRetry="+mIsRetry);
         if (level == -1) {
             sendUpdateError(FirmwareUpdateUtils.INSTALL_FAILED_MSG_ERROR_CODE_2);
@@ -458,7 +458,7 @@ public class FotaUpdateService extends Service {
             Uri uri = getFileUri();
             Log.d(TAG, "[sendFirmware] uri : " + uri.toString() + ", is retry : " + mIsRetry + ", isItFirstAttempt : " + isItFirstAttempt);
             grantUriPermission(AspenServiceModel.SERVICE_PACKAGE, uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            setDFUMacAddress(mBleDevInfo.mAddr);
+            //setDFUMacAddress(mBleDevInfo.mAddr);
             mAspenModel.upgradeFirmware(uri, isItFirstAttempt);
         } catch (Exception e) {
             e.printStackTrace();

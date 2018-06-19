@@ -380,7 +380,10 @@ public class FotaServiceImpl extends IFotaService.Stub {
     {
         curret_device = device;
         startTime = SystemClock.elapsedRealtime();
-        Log.d(TAG, "start time = " + startTime);
+        Log.d(TAG, "__jh__ FotaServiceImpl upgradeFirmware start time = " + startTime);
+        if (device == 1) {
+            return false;
+        }
         if(mUpdateListener == null) {
             Log.e(TAG, "Listener is not be set before upgradeFirmware() is called");
             return false;

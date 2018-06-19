@@ -27,9 +27,9 @@ import java.util.concurrent.Executors;
 
 public class AspenServiceModel {
 
-    private static final String TAG = "FinchServiceModel";
+    private static final String TAG = "AspenFota.client";
 
-    public static final String SERVICE_PACKAGE = "com.finchtechnologies.fota";
+    public static final String SERVICE_PACKAGE = "com.htc.service";
     private static final String SERVICE_CLASS = SERVICE_PACKAGE + ".FotaService";
 
     private IFotaService mAspenService;
@@ -50,6 +50,7 @@ public class AspenServiceModel {
             Intent intent = new Intent();
             intent.setClassName(SERVICE_PACKAGE, SERVICE_CLASS);
             isBind = mContext.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+            Log.d(TAG, "__jh__ isBind="+isBind);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -75,7 +76,7 @@ public class AspenServiceModel {
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            Log.d(TAG, "onServiceConnected");
+            Log.d(TAG, "__jh__ onServiceConnected");
             isBinded = true;
             mAspenService = IFotaService.Stub.asInterface(service);
             try {
@@ -192,7 +193,7 @@ public class AspenServiceModel {
             @Override
             protected Boolean doInBackground(Void... voids) {
                 try {
-                    return mAspenService.upgradeFirmware(FotaServiceContract.TYPE_DEVICE_HMD,uri);
+                    return mAspenService.upgradeFirmware(FotaServiceContract.TYPE_DEVICE_HMD  , uri);
                 } catch (Exception e) {
                     Log.e(TAG, "Exception on upgradeFirmware", e);
                 }
