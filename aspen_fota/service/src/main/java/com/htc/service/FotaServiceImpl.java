@@ -212,11 +212,7 @@ public class FotaServiceImpl extends IFotaService.Stub {
             return false;
         }
         if (curret_device == 1) {
-            mUsbDevice = mUsb.getUsbDevice();
-            if(mUsbDevice != null){
-                mUsb.openDevice(mUsbDevice);
-                mUsb.tryClaimDevice(mUsbDevice);
-            }
+
             if (true == mbDuringUpdating) {
                 Log.e(TAG, "Another upgrade request is running");
                 return false;
@@ -252,6 +248,9 @@ public class FotaServiceImpl extends IFotaService.Stub {
                             inputStream.close();
                         }
                         Log.i("Fota", "unzip done.");
+                        if (device == 1) {
+                            return ;
+                        }
                         //2. parse
                         //3. reboot device to bootloader
                         Log.i(TAG, writeDfuFiles.get(0).toString());
@@ -282,22 +281,21 @@ public class FotaServiceImpl extends IFotaService.Stub {
     {
         mDeviceConnectedListener = l;
         Log.i(TAG,"set connect listener");
-        mUsbDevice = mUsb.getUsbDevice();
-        if(mUsbDevice != null && (mUsb.mfotaUsbManager.hasPermission(mUsbDevice))){
-            DEVICE_STATE = true;
-            curret_device = 1;
-            try {
-                Log.i(TAG, "connected! ,DEVICE_STATE = " + DEVICE_STATE + " Usb.USB_STATE = " + Usb.USB_STATE);
-                mDeviceConnectedListener.onConnectedStateStatusChanged(curret_device, DEVICE_STATE, Usb.USB_STATE);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+//        mUsbDevice = mUsb.getUsbDevice();
+//        if(mUsbDevice != null && (mUsb.mfotaUsbManager.hasPermission(mUsbDevice))){
+//            DEVICE_STATE = true;
+//            curret_device = 1;
+//            try {
+//                Log.i(TAG, "connected! ,DEVICE_STATE = " + DEVICE_STATE + " Usb.USB_STATE = " + Usb.USB_STATE);
+//                mDeviceConnectedListener.onConnectedStateStatusChanged(curret_device, DEVICE_STATE, Usb.USB_STATE);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 
     public Boolean updateImage(int device)
     {
-
         return true;
     }
     private List<File> unZip(InputStream inputStream) throws Exception {
