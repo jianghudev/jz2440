@@ -128,7 +128,6 @@ public class FotaService extends Service implements Usb.OnUsbChangeListener{
     }
 
 
-
     public void setFirmwareUpdateListener(OnFirmwareUpdateListener l) {
         mUpdateListener = l;
     }

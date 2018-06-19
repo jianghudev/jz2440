@@ -32,11 +32,8 @@ public class FotaServiceImpl extends IFotaService.Stub {
     public final static int STATE_ERROR = 2;
     public final static int STATE_COMPLETED = 3;
 
-    public static int BLE_STATE = 3;//ble connect success;
 
     public boolean DEVICE_STATE = false;
-    public boolean BLE_DEVICE_STATE = false;
-    public boolean isMove = false;
 
     public Usb mUsb;
     public UsbDevice mUsbDevice;
@@ -45,15 +42,12 @@ public class FotaServiceImpl extends IFotaService.Stub {
     public UsbEndpoint mEpIn;
     public UsbEndpoint mEpOut;
 
-    boolean bootloader_Image = false;
     boolean upgradeImageall = false;
     boolean mbDuringUpdating = false;
-    boolean mbldfu = false;
     long startTime = 0;
 
     OnFirmwareUpdateListener mUpdateListener = null;
     IDeviceConnectedListener mDeviceConnectedListener = null;
-    int deviceListener = 0;
 
     private Context mContext;
     public FotaServiceImpl(Context mContext)
