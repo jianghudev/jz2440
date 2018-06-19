@@ -30,14 +30,14 @@ public class FotaServiceContract {
     public final static String FIRMWARE_REVISION = "FIRMWARE_REVISION";
     public final static String SOFTWARE_REVISION = "SOFTWARE_REVISION";
 
-    public static final String FILE_FOLDER_NAME = "firmware";
+    public static final String FILE_FOLDER_NAME = "aspen_fota"; ////real dir is "firmware/" at file_paths.xml
     public static final String AUTO_TEST_FOTA = "auto_test_fota.txt";
 
     public static final String FILE_NAME = "firmware.zip";
     public static final String CTRL_FILE_NAME = "fota_dfu_package_ctrl.zip";
     public static final String HMD_FILE_NAME = "fota_dfu_package_hmd.zip";
 
-    public static final String FILE_PROVIDER_PACKAGE_NAME = "com.htc.miac.controllerutility.fileprovider";
+    public static final String FILE_PROVIDER_PACKAGE_NAME = "com.htc.client.fileprovider";
 
     public static final boolean DEBUG_CHECK_UPDATE = true;
 

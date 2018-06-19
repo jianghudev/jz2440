@@ -91,8 +91,7 @@ public class FotaUpdateService extends Service {
         Log.d(TAG, "[FotaUpdateService] onBind");
         mContext = getApplicationContext();
         mSharedPrefManager = new SharedPrefManager(mContext);
-        initAspenModel();
-        mAspenModel.bindService();
+        init_aspen_model();
         mUtilsInstance = new FirmwareUpdateUtils(mContext);
         return mBinder;
     }
@@ -123,10 +122,11 @@ public class FotaUpdateService extends Service {
         }
     }
 
-    private void initAspenModel() {
+    private void init_aspen_model() {
         mAspenModel = new AspenServiceModel(mContext);
         AspenDelegate delegate = new AspenDelegate();
         mAspenModel.setDelegate(delegate);
+        mAspenModel.bind_FotaService();
     }
 
     public class FotaUpdateBinder extends Binder {
@@ -411,7 +411,8 @@ public class FotaUpdateService extends Service {
             if (updateFile.exists()) {
                 int file_size = Integer.parseInt(String.valueOf(updateFile.length()) );
                 mDownloadPath = updateFile.getPath();
-                Log.d(TAG, "__jh__ download file size=" + file_size);
+                Log.d(TAG, "download file path=" + mDownloadPath);
+                Log.d(TAG, "download file size=" + file_size);
                 mFotaUpdateMessenger.sendEmptyMessage(MSG_ACTION_FOTA_UPDATE);
             } else {
                 sendDownloadError(FirmwareUpdateUtils.DOWNLOAD_FAIL_MSG_ERROR_CODE_3);
@@ -431,10 +432,13 @@ public class FotaUpdateService extends Service {
     }
 
     private void startFotaUpdate() {
-        int level = mAspenModel.getBatteryVoltageLevel();
-        Log.d(TAG, "[startFotaUpdate] battery level : " + level);
-        level=100;
-        Log.d(TAG, "just debug, we set level="+level+" mIsRetry="+mIsRetry);
+        int level =100;
+        if (100 == level  ) {
+            Log.d(TAG, "just debug, we set level="+level+" mIsRetry="+mIsRetry);
+        }else{
+            level = mAspenModel.getBatteryVoltageLevel();
+            Log.d(TAG, "battery level=" + level);
+        }
         if (level == -1) {
             sendUpdateError(FirmwareUpdateUtils.INSTALL_FAILED_MSG_ERROR_CODE_2);
         } else {
@@ -455,11 +459,11 @@ public class FotaUpdateService extends Service {
     private void sendFirmware(boolean isItFirstAttempt) {
         mFotaTimeoutHandler.sendEmptyMessageDelayed(MSG_FOTA_UPDATE_TIME_OUT, FOTA_UPDATE_TIME_OUT);
         try {
-            Uri uri = getFileUri();
-            Log.d(TAG, "__jh__ [sendFirmware] uri : " + uri.toString() + ", is retry : " + mIsRetry + ", isItFirstAttempt : " + isItFirstAttempt);
-            grantUriPermission(AspenServiceModel.SERVICE_PACKAGE, uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            Uri m_uri = getFileUri();
+            Log.d(TAG, "__jh__ uri="+m_uri.toString()+" retry="+mIsRetry+" first=" + isItFirstAttempt);
+            grantUriPermission(AspenServiceModel.SERVICE_PACKAGE, m_uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
             //setDFUMacAddress(mBleDevInfo.mAddr);
-            mAspenModel.upgradeFirmware(uri, isItFirstAttempt);
+            mAspenModel.upgradeFirmware(m_uri, isItFirstAttempt);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -467,20 +471,19 @@ public class FotaUpdateService extends Service {
 
     private Uri getFileUri() throws IOException {
         String path = mDownloadPath;
-        //Log.d(TAG, "[getFileUri] path : " + path);
         File firmwareFile = new File(path);
-        Uri uri = Uri.parse(firmwareFile.toString());
+        //Uri uri = Uri.parse(firmwareFile.toString());
         //Log.d(TAG, "[getFileUri] uri : " + uri.getPath());
 
         if (!firmwareFile.exists()) {
             Log.d(TAG, "file not exist !");
-
             FileOutputStream outputStream = new FileOutputStream(firmwareFile);
             outputStream.write(new byte[1024]);
             outputStream.close();
         } else {
             int file_size = Integer.parseInt(String.valueOf(firmwareFile.length() ));
             Log.d(TAG, "file exist, size=" + file_size);
+            Log.d(TAG, "path : " + path);
         }
 
         return FileProvider.getUriForFile(mContext, FotaServiceContract.FILE_PROVIDER_PACKAGE_NAME, firmwareFile);

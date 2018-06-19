@@ -67,7 +67,7 @@ public class TestPairingActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if (!mBound) {
-                    Logger.d(TAG, "call bindService");
+                    Logger.d(TAG, "call bind_FotaService");
                     bindService(new Intent(TestPairingActivity.this, ScannerService.class), mConnection, Context.BIND_AUTO_CREATE);
                 }
             }

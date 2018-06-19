@@ -43,19 +43,18 @@ public class AspenServiceModel {
         mContext = context;
     }
 
-    public boolean bindService() {
-        Log.i(TAG, "__jh__ aidl bindService");
-        boolean isBind = false;
+    public boolean bind_FotaService() {
         try {
+            Log.i(TAG, "__jh__ aidl bind_FotaService");
             Intent intent = new Intent();
             intent.setClassName(SERVICE_PACKAGE, SERVICE_CLASS);
-            isBind = mContext.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+            boolean isBind = mContext.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
             Log.d(TAG, "__jh__ isBind="+isBind);
+            return isBind;
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        return isBind;
+        return false;
     }
 
     public void unbindService() {
