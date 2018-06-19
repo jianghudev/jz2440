@@ -230,66 +230,6 @@ public class FotaServiceImpl extends IFotaService.Stub {
     }
 
 
-
-
-
-    private final BroadcastReceiver mUpdateStatusReceiver = new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Log.i(TAG,"receive status *********************0");
-            String action = intent.getAction();
-
-            if ("com.android.UpdateStatusBroadcast".equals(action)) {
-                Log.i(TAG,"com.android.UpdateStatusBroadcast");
-                int device = intent.getIntExtra("device", -1);
-                int status = intent.getIntExtra("status", -1);
-                Bundle b = intent.getBundleExtra("extra");
-                if(status == STATE_ERROR) {
-                    Log.d(TAG, "device = " + device + " status = STATE_ERROR ");
-                }
-                if(status == STATE_UPDATING) {
-                    Log.d(TAG, "device = " + device + " status = STATE_UPDATING");
-                }
-                if(status == STATE_COMPLETED) {
-                    Log.d(TAG, "device = " + device + " status = STATE_COMPLETED");
-                }
-                try {
-                    mUpdateListener.onFirmwareUpdateStatusChanged(device, status, b);
-
-                } catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-
-            }
-        }
-    };
-
-    private final BroadcastReceiver mUpdateProgressReceiver = new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Log.i(TAG,"receive process *********************1");
-            String action = intent.getAction();
-
-            if ("com.android.UpdateProgressBroadcast".equals(action)) {
-                Log.i(TAG,"received com.android.UpdateProgressBroadcast");
-                int device = intent.getIntExtra("device", -1);
-                int progress = intent.getIntExtra("progress", 0);
-                Log.d(TAG,"device = " + device + " progress = " + progress);
-                try {
-                    mUpdateListener.onFirmwareUpdateProgressChanged(device,progress);
-
-                } catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-
-            }
-        }
-    };
-
     public boolean upgradeFirmware(final int device, final Uri uri)
     {
         curret_device = device;
