@@ -15,9 +15,11 @@ import android.os.SystemClock;
 import android.util.Log;
 
 import com.htc.service.usb.Usb;
+import com.htc.service.usb.UsbTunnelData;
 
 import java.io.File;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -88,11 +90,47 @@ public class FotaServiceImpl extends IFotaService.Stub {
     public void reGetDeviceStatus(){
         //do nothing
     }
+
+
+    public String get_aspen_prop(UsbTunnelData  uData){
+        int retryCount = 3;
+        while(retryCount-- >0 ){
+            try {
+                if (mUsb.RequestCdcData(uData) == true) {
+                    if ( uData.recv_array_count >0 ) {
+                        String ret_str = new String(uData.recv_array, 0, uData.recv_array_count, "UTF-8");
+                        return ret_str;
+                    }
+                }
+                Thread.sleep(100);
+            } catch (InterruptedException e ) {
+                e.printStackTrace();
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    public String get_aspen_device_info(){
+        UsbTunnelData Data = new UsbTunnelData();
+        Data.send_array[0] = 'p';
+        Data.send_array[1] = 0x0;
+        Data.send_array[2] = 0x0D;
+        Data.send_array_count = 3;
+        Data.recv_array_count = Data.recv_array.length;
+        Data.wait_resp_ms = 2;
+        return get_aspen_prop(Data);
+    }
+
+
     public Bundle getDeviceInfo(int device /* 1 for HMD, 2 for Controller */ )
     {
-        Log.i(TAG,"enter getdevice info, device = " + device);
         int retryCnt = 3;
-        if(device == 1){
+        if(device != 1) {
+            Log.i(TAG,"err! device=" + device);
+            return null;
+        }
             Log.i(TAG, "open usb ,before get device info");
             mUsbDevice = mUsb.getUsbDevice();
 
@@ -101,7 +139,7 @@ public class FotaServiceImpl extends IFotaService.Stub {
                 mUsb.tryClaimDevice(mUsbDevice);
             }
             if(mUsb.USB_STATE == 1) {
-                Bundle devinf = new Bundle();
+                Bundle dev_info = new Bundle();
                 int ret = 0;
                 int inMax = 0;
                 int count = 0;
@@ -146,7 +184,7 @@ public class FotaServiceImpl extends IFotaService.Stub {
                         String str1 = new String(buffer, 0, count);
 //                    String str1 = new String(buffer,"UTF-8");
 //                        Log.i(TAG, "DeviceInfo = " + str1);
-                        devinf.putString("DeviceInfo", str1);
+                        dev_info.putString("DeviceInfo", str1);
                     }
                 }catch (Exception e){
                     e.printStackTrace();
@@ -179,7 +217,7 @@ public class FotaServiceImpl extends IFotaService.Stub {
                             String str2 = new String(buffer1, 0, count);
 //                            Log.i(TAG, "count=" + count);
 //                            Log.i(TAG, "DeviceClass = " + str2);
-                            devinf.putString("DeviceClass", str2);
+                            dev_info.putString("DeviceClass", str2);
                         }
 
                 }catch (Exception e){
@@ -213,7 +251,7 @@ public class FotaServiceImpl extends IFotaService.Stub {
                     String str3 = new String(buffer2,0,count);
 //                    Log.i(TAG,"count="+count);
 //                    Log.i(TAG,"ModeNumber = " + str3);
-                    devinf.putString("ModeNumber",str3);
+                    dev_info.putString("ModeNumber",str3);
 
                 }catch (Exception e){
                     e.printStackTrace();
@@ -246,15 +284,14 @@ public class FotaServiceImpl extends IFotaService.Stub {
                     String str4 = new String(buffer3,0,count);
 //                    Log.i(TAG,"count="+count);
 //                    Log.i(TAG,"SerialNumber = " + str4);
-                    devinf.putString("SerialNumber",str4);
+                    dev_info.putString("SerialNumber",str4);
 
                 }catch (Exception e){
                     e.printStackTrace();
                 }
                 mUsb.release();
-                return devinf;
+                return dev_info;
             }
-        }
         return null;
     }
 
