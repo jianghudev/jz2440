@@ -1,8 +1,6 @@
 package com.htc.service;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.hardware.usb.UsbDevice;
@@ -36,6 +34,8 @@ public class FotaServiceImpl extends IFotaService.Stub {
 
 
     public boolean DEVICE_STATE = false;
+
+    private Upgrade_Thread my_upgradeThread=null;
 
     public Usb mUsb;
     public UsbDevice mUsbDevice;
@@ -92,14 +92,18 @@ public class FotaServiceImpl extends IFotaService.Stub {
     }
 
 
-    public String get_aspen_prop(UsbTunnelData  uData){
+    public String get_aspen_prop(UsbTunnelData  uData, boolean need_result){
         int retryCount = 3;
         while(retryCount-- >0 ){
             try {
                 if (mUsb.RequestCdcData(uData) == true) {
-                    if ( uData.recv_array_count >0 ) {
-                        String ret_str = new String(uData.recv_array, 0, uData.recv_array_count, "UTF-8");
-                        return ret_str;
+                    if(need_result) {
+                        if (uData.recv_array_count > 0) {
+                            String ret_str = new String(uData.recv_array, 0, uData.recv_array_count, "UTF-8");
+                            return ret_str;
+                        }
+                    }else{
+                        return null; //// no need cdc result
                     }
                 }
                 Thread.sleep(100);
@@ -120,7 +124,7 @@ public class FotaServiceImpl extends IFotaService.Stub {
         Data.send_array_count = 3;
         Data.recv_array_count = Data.recv_array.length;
         Data.wait_resp_ms = 2;
-        return get_aspen_prop(Data);
+        return get_aspen_prop(Data,true);
     }
     //get device is hmd or ctrl
     public String get_aspen_device_class(){
@@ -131,7 +135,7 @@ public class FotaServiceImpl extends IFotaService.Stub {
         Data.send_array_count = 3;
         Data.recv_array_count = Data.recv_array.length;
         Data.wait_resp_ms = 2;
-        return get_aspen_prop(Data);
+        return get_aspen_prop(Data,true);
     }
     //get mode number
     public String get_aspen_model_number(){
@@ -142,7 +146,7 @@ public class FotaServiceImpl extends IFotaService.Stub {
         Data.send_array_count = 3;
         Data.recv_array_count = Data.recv_array.length;
         Data.wait_resp_ms = 2;
-        return get_aspen_prop(Data);
+        return get_aspen_prop(Data,true);
     }
     //get serial number
     public String get_aspen_serial_number(){
@@ -153,7 +157,7 @@ public class FotaServiceImpl extends IFotaService.Stub {
         Data.send_array_count = 3;
         Data.recv_array_count = Data.recv_array.length;
         Data.wait_resp_ms = 2;
-        return get_aspen_prop(Data);
+        return get_aspen_prop(Data,true);
     }
     public Bundle getDeviceInfo(int device){
         Bundle dev_info = new Bundle();
@@ -187,7 +191,7 @@ public class FotaServiceImpl extends IFotaService.Stub {
         Data.send_array_count = 5;
         Data.recv_array_count = Data.recv_array.length;
         Data.wait_resp_ms = 2;
-        return get_aspen_prop(Data);
+        return get_aspen_prop(Data,true);
     }
     public int getBatteryVoltageLevel(int device){
         if (device == 1) {
@@ -198,77 +202,77 @@ public class FotaServiceImpl extends IFotaService.Stub {
         return 0;
     }
 
+    public void set_aspen_reboot(){
+        UsbTunnelData Data = new UsbTunnelData();
+        Data.send_array[0] = 'c';
+        Data.send_array[1] = 0x01;
+        Data.send_array[2] = 0x41;
+        Data.send_array[3] = 0x00;
+        Data.send_array[4] = 0x02;//reboot to bootloader
+        Data.send_array_count = 5;
+        Data.recv_array_count = Data.recv_array.length;
+        Data.wait_resp_ms = 0;
+        get_aspen_prop(Data,false);
+    }
 
-    public boolean upgradeFirmware(final int device, final Uri uri)
-    {
+    private class Upgrade_Thread extends Thread{
+        private Uri mUri=null;
+        private int mDevice=0;
+        public Upgrade_Thread(Uri aUri, int aDevice) {
+            this.mUri = aUri;
+            this.mDevice = aDevice;
+        }
+        @Override
+        public void run() {
+            try {
+                InputStream inputStream = null;
+                Bundle updateInfo = new Bundle();
+                mbDuringUpdating = true;
+                Log.i(TAG, "fota_uri=" + mUri.toString());
+                inputStream = mContext.getContentResolver().openInputStream(mUri);
+                if (inputStream != null) {
+                    writeDfuFiles = unZip(inputStream);
+                    mUpdateListener.onFirmwareUpdateStatusChanged(mDevice, STATE_START, updateInfo);
+                    inputStream.close();
+                }
+                Log.i("Fota", "unzip done.");
+                Log.i(TAG, writeDfuFiles.get(0).toString());
+                if (writeDfuFiles.size() > 0) {
+                    Log.i("Fota", "unzip success.");
+                    Log.i(TAG, " reboot to bootloader");
+                    set_aspen_reboot();
+                    upgradeImageall = true;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    public boolean upgradeFirmware(final int device, final Uri uri){
         curret_device = device;
         startTime = SystemClock.elapsedRealtime();
-        Log.d(TAG, "__jh__ FotaServiceImpl upgradeFirmware start time = " + startTime);
-        if (device == 1) {
+        Log.d(TAG, "start upgradeFirmware  device=" +device);
+        if (1 != device) {
+            Log.e(TAG, "err! device=" +device);
             return false;
         }
-        if(mUpdateListener == null) {
-            Log.e(TAG, "Listener is not be set before upgradeFirmware() is called");
+        if (Usb.USB_STATE != 1) {
+            Log.e(TAG, "Usb mode is err!");
             return false;
         }
-        if (curret_device == 1) {
-
-            if (true == mbDuringUpdating) {
-                Log.e(TAG, "Another upgrade request is running");
-                return false;
-            }
-
-            if (Usb.USB_STATE != 1) {
-                Log.e(TAG, "Usb mode is not cdc before upgradeFirmware() is called");
-                return false;
-            }
-            new Thread() {
-                @Override
-                public void run() {
-                    InputStream inputStream = null;
-                    Bundle updateInfo = new Bundle();
-                    byte reboot_cmd[] = new byte[8];
-                    reboot_cmd[0] = 'c';
-                    reboot_cmd[1] = 0x01;
-                    reboot_cmd[2] = 0x41;
-                    reboot_cmd[3] = 0x00;
-                    reboot_cmd[4] = 0x02;//reboot to bootloader
-                    int ret;
-                    mbDuringUpdating = true;
-                    try {
-                        //1.unzip
-                        Log.i(TAG, "Hmd_Uri=" + uri.toString());
-                        inputStream = mContext.getContentResolver().openInputStream(uri);
-                        if (inputStream != null) {
-                            // TODO : read data from InputString
-                            writeDfuFiles = unZip(inputStream);
-                            mUpdateListener.onFirmwareUpdateStatusChanged(device, STATE_START, updateInfo);
-
-                            // remember to close it after use.
-                            inputStream.close();
-                        }
-                        Log.i("Fota", "unzip done.");
-                        if (device == 1) {
-                            return ;
-                        }
-                        //2. parse
-                        //3. reboot device to bootloader
-                        Log.i(TAG, writeDfuFiles.get(0).toString());
-                        if (writeDfuFiles.size() > 0) {
-                            Log.i("Fota", "unzip success.");
-                            ret = Usb.sendToEndpoint(mUsb.mfotaConnection, mEpOut, reboot_cmd);
-                            Log.i(TAG, " reboot to bootloader ret=" + ret);
-                            if (ret != -1) {
-                                upgradeImageall = true;
-                                Log.i(TAG, "send reboot command success.");
-                            }
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }.start();
+        if(null == mUpdateListener) {
+            Log.e(TAG, "mUpdateListener is null");
+            return false;
         }
+        if (mbDuringUpdating) {
+            Log.e(TAG, "Another upgrade request is running");
+            return false;
+        }
+
+        my_upgradeThread = new Upgrade_Thread(uri,device);
+        my_upgradeThread.start();
         return true;
     }
 
